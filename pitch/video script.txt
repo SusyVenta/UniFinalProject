@@ -1,0 +1,36 @@
+Hello everyone. 
+
+For my final project I want to develop a web application called TripMates, which allows friends to plan and track trips collaboratively. 
+
+I have chosen the second idea of the Advanced Web development template: a web application that helps people collaborate more effectively.
+
+Why would people need an application to plan trips together? 
+
+Let's look at some statistics about travel booking in 2023. 
+
+The majority of American adults prefer booking their trips online, especially from their phone. 
+Travelers visit on average 38 websites to finalize and book their travel plans. 
+The biggest frustration standing in the way of planning a trip is the fact of having to compare different options. 
+
+TripMates aims to be the first social network application on the market that facilitates planning 
+trips as a group online, minimizing the so called "analysis paralysis" associated with the planning process. 
+
+The idea of developing this app comes from the personal experience of planning trips as a group of friends.  
+Everyone has different date preferences, people post different options on a chat. There is no systematic way to track these options and the 
+result is that it takes forever to make any decision. 
+
+With TripMates instead, users can enter personal date and destination preferences and find common availability. 
+
+Tripmates recognizes its users needs: having to compare different trip options and overcome the "analysis paralysis".
+Users can prepare different trip options, assign research tasks to their friends, and let friends vote to facilitate decision making.
+
+This way, TripMates allows to finalize your trip plans faster. 
+
+On top of this, through gamification, TripMates introduces competition and it motivates its users to travel and share visited locations 
+with their friendsthrough a scratch-map view. 
+
+_______________________
+Looking online, the 4 most popular, most similar projects I could find are the following. 
+
+
+ 
