@@ -46,11 +46,28 @@
         * download all similar apps on the store, explore features. critically evaluate.
         * referencing guidelines https://onlinelibrary.london.ac.uk/support/referencing 
 * Design
-    * weeks 6 - 11
+    * weeks 6 - 11: 
+    * developing a design document. Sections:
+        * project overview
+        * domain and users
+        * justify features based on domani and users 
+        * structure of the project: design of UI, software architecture
+        * key technologies and methods
+        * work plan, Gantt chart with key milestones and how i plan to reach milestones
+        * evaluation plan: how / with what techniques will I evaluate is project is succesful
     * design the project. architecture, algorithms, methods, techniques
     * build work plan (agile software projects - milestones, Gantt chart, critical path chart)
     * evaluation plan: how will I know the project works? testing, unit testing, etc. success criteria.
     * first prototype
+    * testing: 
+        * does your background research support your project design?
+        * test design with users: show wireframes
+        * feature prototype testing
+    * marking criteria:
+        * is the design of the project clear and of high quality? 
+        * is the project concept justified based on the domain and users? 
+        * is the workplan explained in enough detail?  Have you got a suitable number of milestones? And is it feasible? can you justify that you can do this?
+        * is the evaluation strategy appropriate to the aims of the project? 
 * Development - implementation + testing
     * programming
     * testing
