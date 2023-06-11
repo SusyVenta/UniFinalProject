@@ -59,6 +59,15 @@
     * build work plan (agile software projects - milestones, Gantt chart, critical path chart)
     * evaluation plan: how will I know the project works? testing, unit testing, etc. success criteria.
     * first prototype
+        * implement working prototype for most fundamental features
+            * in video:
+                * show functioning prototype and most important aspects of code
+                * say what's missing in prototype and what's next
+            * no need to use real DB, use dictionary and just simulate calls
+        * Marking criteria.
+            * is the feature prototype of high quality? 
+            * is the feature prototype technically challenging?
+            * does the report successfully evaluate the feature prototype and show suitable improvements if appropriate? 
     * testing: 
         * does your background research support your project design?
         * test design with users: show wireframes
