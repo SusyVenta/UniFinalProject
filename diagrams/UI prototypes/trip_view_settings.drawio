@@ -1,0 +1,83 @@
+<mxfile host="app.diagrams.net" modified="2023-06-19T16:18:06.964Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="skzMNEn-tcpT2fvD1GwI" version="21.5.0" type="device">
+  <diagram name="Page-1" id="GP6qwp7ApCpyK-i6ryjM">
+    <mxGraphModel dx="794" dy="1107" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="20" y="100" width="370" height="610" as="geometry" />
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-2" value="Gr&amp;nbsp; &amp;nbsp;o&amp;nbsp; upTripper" style="html=1;shadow=0;dashed=0;fillColor=#F8F9FA;strokeColor=none;fontSize=16;fontColor=#181819;align=left;spacing=15;" parent="1" vertex="1">
+          <mxGeometry x="20" y="100" width="370" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-3" value="Username" style="fillColor=none;strokeColor=none;fontSize=14;fontColor=#7C7C7D;align=center;" parent="73GZ3ZYPHvLhtCgpesZh-2" vertex="1">
+          <mxGeometry width="50" height="40" relative="1" as="geometry">
+            <mxPoint x="300" y="5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-4" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.location;" parent="73GZ3ZYPHvLhtCgpesZh-2" vertex="1">
+          <mxGeometry x="30" y="10.158333333333335" width="28.24" height="29.683333333333334" as="geometry" />
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-5" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.user;" parent="73GZ3ZYPHvLhtCgpesZh-2" vertex="1">
+          <mxGeometry x="260" y="10.153333333333334" width="30" height="29.683333333333334" as="geometry" />
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-26" value="" style="group" parent="1" vertex="1" connectable="0">
+          <mxGeometry x="30" y="160" width="360" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-119" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="73GZ3ZYPHvLhtCgpesZh-26" vertex="1">
+          <mxGeometry x="10" y="10" width="280" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-27" value="Title of my trip" style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.rrect;rSize=5;html=1;whiteSpace=wrap;align=left;spacing=15;spacingLeft=40;fontSize=14;" parent="73GZ3ZYPHvLhtCgpesZh-26" vertex="1">
+          <mxGeometry width="350" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-118" value="" style="html=1;dashed=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.gmdl.edit;strokeColor=none;fillColor=#737373;shadow=0;sketch=0;" parent="73GZ3ZYPHvLhtCgpesZh-26" vertex="1">
+          <mxGeometry x="320" y="10" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-120" value="" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.marginRect2;rectMarginTop=32;strokeColor=#666666;gradientColor=none;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="40" y="210" width="350" height="490" as="geometry" />
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-121" value="Participants" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.rrect;rSize=0;fontSize=17;" parent="73GZ3ZYPHvLhtCgpesZh-120" vertex="1">
+          <mxGeometry width="90" height="25" relative="1" as="geometry">
+            <mxPoint x="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-122" value="Itinerary" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.rrect;rSize=0;fontSize=17;fontStyle=0;fontColor=#999999;" parent="73GZ3ZYPHvLhtCgpesZh-120" vertex="1">
+          <mxGeometry width="70" height="25" relative="1" as="geometry">
+            <mxPoint x="100" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-124" value="" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.topButton;rSize=5;strokeColor=#314354;fillColor=#647687;resizeWidth=1;movable=0;deletable=1;fontColor=#ffffff;" parent="73GZ3ZYPHvLhtCgpesZh-120" vertex="1">
+          <mxGeometry width="298.780487804878" height="7" relative="1" as="geometry">
+            <mxPoint y="25" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oP36SIvCgkWLBQfdX1qb-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="73GZ3ZYPHvLhtCgpesZh-120" source="73GZ3ZYPHvLhtCgpesZh-163">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="390" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-163" value="Delete trip" style="rounded=1;fillColor=#0057D8;strokeColor=none;html=1;whiteSpace=wrap;fontColor=#ffffff;align=center;verticalAlign=middle;fontStyle=0;fontSize=12;sketch=0;" parent="73GZ3ZYPHvLhtCgpesZh-120" vertex="1">
+          <mxGeometry x="14" y="50" width="86" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="OBYgA5Wvsaz-4haqOb0p-1" value="Polls" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.rrect;rSize=0;fontSize=17;fontStyle=0;" parent="73GZ3ZYPHvLhtCgpesZh-120" vertex="1">
+          <mxGeometry x="170" width="70" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="oP36SIvCgkWLBQfdX1qb-1" value="" style="endArrow=classic;html=1;rounded=0;entryX=-0.014;entryY=0.233;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="73GZ3ZYPHvLhtCgpesZh-120" target="oP36SIvCgkWLBQfdX1qb-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="230" y="170" as="sourcePoint" />
+            <mxPoint x="430" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4zo4bbLcgdqmMq1SkeDr-9" value="Settings" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.rrect;rSize=0;fontSize=17;fontStyle=0;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" parent="1" vertex="1">
+          <mxGeometry x="270" y="210" width="70" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="oP36SIvCgkWLBQfdX1qb-2" value="section will contain options on privacy, &lt;br&gt;after MVP launch (to make plans public)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="420" y="420" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="oP36SIvCgkWLBQfdX1qb-3" value="Triggers modal asking confirmation, then modal to confirm deletion, then redirects home" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="440" y="250" width="120" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-06-18T15:57:04.402Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="QG04mpW4fdFVdx0vCHWf" version="21.4.0" type="device">
+<mxfile host="app.diagrams.net" modified="2023-06-19T15:56:01.487Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="VOTAFLhTGSOHmrU55e8B" version="21.5.0" type="device">
   <diagram name="Page-1" id="LRZ05Uo7-R6V8OTwhh7I">
-    <mxGraphModel dx="2074" dy="1124" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="794" dy="1107" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -20,22 +20,6 @@
         </mxCell>
         <mxCell id="GwVYzrCeqbtHM0dImgiu-5" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.user;" parent="GwVYzrCeqbtHM0dImgiu-2" vertex="1">
           <mxGeometry x="260" y="10.153333333333334" width="30" height="29.683333333333334" as="geometry" />
-        </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-10" value="&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;Yes" style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.rrect;rSize=5;strokeColor=#CED4DA;html=1;whiteSpace=wrap;fillColor=#FFFFFF;fontColor=#7D868C;align=left;spacingLeft=80;spacing=15;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="90" y="300" width="300" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-11" value="" style="shape=triangle;direction=south;fillColor=#343A40;strokeColor=none;perimeter=none;" parent="GwVYzrCeqbtHM0dImgiu-10" vertex="1">
-          <mxGeometry x="1" y="0.5" width="7" height="3" relative="1" as="geometry">
-            <mxPoint x="-17" y="1" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-12" value="" style="shape=triangle;direction=north;fillColor=#343A40;strokeColor=none;perimeter=none;" parent="GwVYzrCeqbtHM0dImgiu-10" vertex="1">
-          <mxGeometry x="1" y="0.5" width="7" height="3" relative="1" as="geometry">
-            <mxPoint x="-17" y="-4" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-13" value="Have all participants already agreed on the dates?" style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.leftButton;strokeColor=#6C757D;gradientColor=inherit;fontColor=inherit;fillColor=#ffffff;rSize=5;perimeter=none;whiteSpace=wrap;resizeHeight=1;fontSize=14;align=left;spacing=15;" parent="GwVYzrCeqbtHM0dImgiu-10" vertex="1">
-          <mxGeometry width="190" height="60" relative="1" as="geometry" />
         </mxCell>
         <mxCell id="GwVYzrCeqbtHM0dImgiu-24" value="" style="endArrow=classic;html=1;rounded=0;entryX=-0.02;entryY=0.424;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="GwVYzrCeqbtHM0dImgiu-18" target="GwVYzrCeqbtHM0dImgiu-19" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -294,7 +278,7 @@
           <mxGeometry x="171.46341463414635" y="147.5" width="27.073170731707318" height="30" as="geometry" />
         </mxCell>
         <mxCell id="GwVYzrCeqbtHM0dImgiu-168" value="Choose..." style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.rrect;rSize=5;strokeColor=#CED4DA;html=1;whiteSpace=wrap;fillColor=#FFFFFF;fontColor=#7D868C;align=left;spacingLeft=80;spacing=15;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="90" y="590" width="350" height="40" as="geometry" />
+          <mxGeometry x="90" y="560" width="350" height="40" as="geometry" />
         </mxCell>
         <mxCell id="GwVYzrCeqbtHM0dImgiu-169" value="" style="shape=triangle;direction=south;fillColor=#343A40;strokeColor=none;perimeter=none;" parent="GwVYzrCeqbtHM0dImgiu-168" vertex="1">
           <mxGeometry x="1" y="0.5" width="7" height="3" relative="1" as="geometry">
@@ -339,16 +323,16 @@
             <mxPoint x="480" y="580" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-327" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GwVYzrCeqbtHM0dImgiu-320" target="GwVYzrCeqbtHM0dImgiu-323" edge="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="GwVYzrCeqbtHM0dImgiu-327" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.299;entryY=-0.033;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="gqZuJKqUtUvezQukOgWk-13" target="gqZuJKqUtUvezQukOgWk-15" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="314" as="sourcePoint" />
+            <mxPoint x="520" y="290" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-328" value="open modal" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="GwVYzrCeqbtHM0dImgiu-327" vertex="1" connectable="0">
+        <mxCell id="GwVYzrCeqbtHM0dImgiu-328" value="other option" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="GwVYzrCeqbtHM0dImgiu-327" vertex="1" connectable="0">
           <mxGeometry x="0.2889" y="-3" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
-        </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-320" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.help;" parent="1" vertex="1">
-          <mxGeometry x="400" y="315" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="GwVYzrCeqbtHM0dImgiu-321" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry x="510" y="60" width="235" height="120" as="geometry" />
@@ -368,23 +352,35 @@
         <mxCell id="GwVYzrCeqbtHM0dImgiu-23" value="closes the modal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="GwVYzrCeqbtHM0dImgiu-321" vertex="1">
           <mxGeometry x="175" y="90" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-322" value="" style="group" parent="1" vertex="1" connectable="0">
-          <mxGeometry x="510" y="200" width="300" height="120" as="geometry" />
+        <mxCell id="gqZuJKqUtUvezQukOgWk-1" value="Choose..." style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.rrect;rSize=5;strokeColor=#CED4DA;html=1;whiteSpace=wrap;fillColor=#FFFFFF;fontColor=#7D868C;align=left;spacingLeft=80;spacing=15;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="610" width="350" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-324" value="OK" style="rounded=1;fillColor=#0057D8;strokeColor=none;html=1;whiteSpace=wrap;fontColor=#ffffff;align=center;verticalAlign=middle;fontStyle=0;fontSize=12;sketch=0;" parent="GwVYzrCeqbtHM0dImgiu-322" vertex="1">
-          <mxGeometry x="51" y="97" width="58" height="23" as="geometry" />
-        </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-325" value="" style="endArrow=classic;html=1;rounded=0;" parent="GwVYzrCeqbtHM0dImgiu-322" target="GwVYzrCeqbtHM0dImgiu-326" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="100" y="110" as="sourcePoint" />
-            <mxPoint x="110" y="150" as="targetPoint" />
+        <mxCell id="gqZuJKqUtUvezQukOgWk-2" value="" style="shape=triangle;direction=south;fillColor=#343A40;strokeColor=none;perimeter=none;" vertex="1" parent="gqZuJKqUtUvezQukOgWk-1">
+          <mxGeometry x="1" y="0.5" width="7" height="3" relative="1" as="geometry">
+            <mxPoint x="-17" y="1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-326" value="closes the modal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="GwVYzrCeqbtHM0dImgiu-322" vertex="1">
-          <mxGeometry x="175" y="90" width="60" height="30" as="geometry" />
+        <mxCell id="gqZuJKqUtUvezQukOgWk-3" value="" style="shape=triangle;direction=north;fillColor=#343A40;strokeColor=none;perimeter=none;" vertex="1" parent="gqZuJKqUtUvezQukOgWk-1">
+          <mxGeometry x="1" y="0.5" width="7" height="3" relative="1" as="geometry">
+            <mxPoint x="-17" y="-4" as="offset" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="GwVYzrCeqbtHM0dImgiu-323" value="If you select &#39;YES&#39;, participants will only be asked if they&#39;re ok with selected dates. If &#39;NO&#39; is selected, all participants will be asked their dates availabilities in order to find common availability" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="520" y="200" width="300" height="120" as="geometry" />
+        <mxCell id="gqZuJKqUtUvezQukOgWk-4" value="How many days are you willing to travel in total?" style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.leftButton;strokeColor=#6C757D;gradientColor=inherit;fontColor=inherit;fillColor=#ffffff;rSize=5;perimeter=none;whiteSpace=wrap;resizeHeight=1;fontSize=14;align=left;spacing=15;" vertex="1" parent="gqZuJKqUtUvezQukOgWk-1">
+          <mxGeometry width="200" height="40" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gqZuJKqUtUvezQukOgWk-5" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="gqZuJKqUtUvezQukOgWk-1">
+          <mxGeometry x="220" y="5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="gqZuJKqUtUvezQukOgWk-13" value="Ask all participants when they&#39;re available before finalizing dates" style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.rrect;rSize=5;strokeColor=#505050;strokeWidth=1;fillColor=#ffffff;fontColor=#777777;whiteSpace=wrap;align=left;verticalAlign=middle;fontStyle=0;fontSize=18;spacing=20;" vertex="1" parent="1">
+          <mxGeometry x="90" y="290" width="350" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqZuJKqUtUvezQukOgWk-14" value="" style="shape=triangle;direction=south;fillColor=#495057;strokeColor=none;perimeter=none;" vertex="1" parent="gqZuJKqUtUvezQukOgWk-13">
+          <mxGeometry x="1" y="0.5" width="10" height="5" relative="1" as="geometry">
+            <mxPoint x="-17" y="-2.5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gqZuJKqUtUvezQukOgWk-15" value="Propose dates and ask participants to accept or decline" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="495" y="305" width="320" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

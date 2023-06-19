@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-06-18T15:55:30.501Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="mfQLPYa_Ti-a_bG4d3NB" version="21.4.0" type="device">
+<mxfile host="app.diagrams.net" modified="2023-06-19T16:11:44.942Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="Ql5tqmA6MErRVXOQ2LYT" version="21.5.0" type="device">
   <diagram name="Page-1" id="GP6qwp7ApCpyK-i6ryjM">
-    <mxGraphModel dx="2074" dy="1124" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="794" dy="1107" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -290,11 +290,8 @@
         <mxCell id="73GZ3ZYPHvLhtCgpesZh-173" value="&lt;ul&gt;&lt;li&gt;0/1 friends still need to confirm their availability&lt;/li&gt;&lt;li&gt;Common dates so far:&amp;nbsp;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;15-20 july&lt;/li&gt;&lt;li&gt;25-30 July&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="73GZ3ZYPHvLhtCgpesZh-120" vertex="1">
           <mxGeometry x="10" y="120" width="330" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="OBYgA5Wvsaz-4haqOb0p-1" value="Polls" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.rrect;rSize=0;fontSize=17;fontStyle=0;" vertex="1" parent="73GZ3ZYPHvLhtCgpesZh-120">
+        <mxCell id="OBYgA5Wvsaz-4haqOb0p-1" value="Polls" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.rrect;rSize=0;fontSize=17;fontStyle=0;" parent="73GZ3ZYPHvLhtCgpesZh-120" vertex="1">
           <mxGeometry x="170" width="70" height="25" as="geometry" />
-        </mxCell>
-        <mxCell id="73GZ3ZYPHvLhtCgpesZh-166" value="Opens modal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="560" y="100" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="73GZ3ZYPHvLhtCgpesZh-168" value="Are you sure you want to remove &amp;lt;Friend name&amp;gt; from your trip? They will not be notified but will no longer be able to find your trip." style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="30" y="760" width="230" height="100" as="geometry" />
@@ -311,15 +308,30 @@
         <mxCell id="73GZ3ZYPHvLhtCgpesZh-178" value="Itinerary tab is blocked until all participants confirm availability" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="410" y="45" width="180" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="73GZ3ZYPHvLhtCgpesZh-165" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" target="73GZ3ZYPHvLhtCgpesZh-81" edge="1" source="73GZ3ZYPHvLhtCgpesZh-163">
+        <mxCell id="4zo4bbLcgdqmMq1SkeDr-1" value="Abandon trip" style="rounded=1;fillColor=#0057D8;strokeColor=none;html=1;whiteSpace=wrap;fontColor=#ffffff;align=center;verticalAlign=middle;fontStyle=0;fontSize=12;sketch=0;" vertex="1" parent="1">
+          <mxGeometry x="278.38" y="265" width="86" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="4zo4bbLcgdqmMq1SkeDr-4" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.32;entryY=1.156;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="4zo4bbLcgdqmMq1SkeDr-5">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="120" y="280" as="sourcePoint" />
-            <mxPoint x="170" y="230" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="400" y="290" />
-              <mxPoint x="550" y="100" />
-            </Array>
+            <mxPoint x="360" y="270" as="sourcePoint" />
+            <mxPoint x="690" y="100" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="4zo4bbLcgdqmMq1SkeDr-5" value="If owner, requires assigning ownership to someone else first. &lt;br&gt;If no participants, delete trip" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="465" y="115" width="350" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4zo4bbLcgdqmMq1SkeDr-7" value="" style="endArrow=classic;html=1;rounded=0;entryX=-0.017;entryY=0.019;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="73GZ3ZYPHvLhtCgpesZh-163" target="73GZ3ZYPHvLhtCgpesZh-81">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="267" as="sourcePoint" />
+            <mxPoint x="595" y="205" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="73GZ3ZYPHvLhtCgpesZh-166" value="Opens modal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="395" y="180" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4zo4bbLcgdqmMq1SkeDr-9" value="Settings" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.rrect;rSize=0;fontSize=17;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="270" y="210" width="70" height="25" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
