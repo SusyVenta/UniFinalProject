@@ -1,33 +1,13 @@
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from "firebase/analytics";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { homeRouter} from "./routes/home.js";
-import { firebaseConfig } from "./config/firebaseConfig.js";
-
 import functions from "firebase-functions";
 import express from "express";
 import path from "path";
-import url from "url";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-initializeApp(firebaseConfig);
 
-const app = express();  
-
-// enable folder /public - contains css files.
-app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css")); // redirect CSS bootstrap
-app.use(
-  "/my_js",
-  express.static(__dirname + "/node_modules/bootstrap/dist/js")
-);
-app.use("/my_js", express.static(__dirname + "/node_modules/jquery/dist"));
-
-// enable to use ejs
-app.set("view engine", "ejs");
+const router = new express.Router();
 
 // initialize other services
 //const analytics = getAnalytics(firebaseApp);
@@ -46,8 +26,14 @@ app.set("view engine", "ejs");
     }
 }); */
 
-/* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
-app.use("/home", homeRouter);
+/* ENDPOINT: http://localhost:5004/home */
+router.get("/", (request, response) => {
+    console.log("test 2");
+    let indexPath = path.join(__dirname, '..',"views/home.ejs");
+    let payload = {};
+    response.render(indexPath, payload);
+  });
+
 /*
 // create firestore collection
 const newTestCollection = collection(db, "new_test_collection");
@@ -64,4 +50,4 @@ async function getCities(db) {
   }
   */
 
-export const exportedapp = functions.https.onRequest(app);
+export const homeRouter = router;
