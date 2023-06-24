@@ -50,9 +50,9 @@
 5) if you need to clone repo and reinstall dependencies:
    ```
    cd "C:\Users\ventafri\Desktop\Uni\year 3\UniFinalProject"
-   npm install 
+   npm install --save 
    cd "C:\Users\ventafri\Desktop\Uni\year 3\UniFinalProject\functions"
-   npm install 
+   npm install --save 
    ```
 
 7) Follow instructions to use webpack https://firebase.google.com/docs/web/module-bundling#using_firebase_with_webpack in order to minimize packages used
