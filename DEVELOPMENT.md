@@ -2,15 +2,36 @@
 
 [Firebase docs](https://firebase.google.com/docs/web/setup)
 
-1) Create project in Firebase console. https://console.firebase.google.com/ 
-  - project created at https://console.firebase.google.com/project/grouptripper-8c189/overview
-2) click on <> to set up hosting. App nickname: 'grouptripper'
-3) Go to root of the project: `cd "C:\Users\ventafri\Desktop\Uni\year 3\UniFinalProject"`
-4) `npm init`
-5) Install packages for the first time and update dependencies in package.json
-   - `npm install firebase firebase-tools express ejs moment --save`
-   - Development dependency: `npm install webpack webpack-cli --save -D`
-   - `npm install --global serve` then `serve dist/` to see static file
+1) Create project in Firebase console. 
+  - https://console.firebase.google.com/ 
+  - project created at https://console.firebase.google.com/project/grouptripper-3c7f1/overview
+  - create firestore database, region EU from console
+    - created DB: https://console.firebase.google.com/project/grouptripper-3c7f1/firestore/data/
+    - For now, DB allows access from anyone. TODO: [define security rules](https://firebase.google.com/docs/rules/get-started?hl=en)
+      ```
+      rules_version = '2';
+
+        service cloud.firestore {
+            match /databases/{database}/documents {
+                match /{document=**} {
+                allow read, write: if true;
+                }
+            }
+        }
+      ```
+      set to false to allow no access
+  - set Default GCP resource location to eur3 from https://console.firebase.google.com/project/grouptripper-3c7f1/settings/general
+  - click on <> from project console overview to set up hosting. App nickname: 'grouptripper'. Keep firebaseConfig on the side (A)
+3) Create node project 
+  - `cd "C:\Users\ventafri\Desktop\Uni\year 3\UniFinalProject"`
+  - `npm init`
+  - Install packages for the first time and update dependencies in package.json
+    - `npm install firebase firebase-tools express ejs moment --save`
+    - `npm install -g firebase-tools`
+    - Development dependency: `npm install webpack webpack-cli --save -D`
+
+
+
 6) create /src/index.js and paste content gotten from Firebase console. It's safe to have on client side: https://www.youtube.com/watch?v=rQvOAnNvcNQ&t=97s min 2:20. Need to use these 2 to secure app:
    - https://firebase.google.com/docs/rules
    - https://firebase.google.com/docs/app-check/web/recaptcha-provider 
@@ -18,10 +39,24 @@
    `npm run build`
 
 7) Deploy firebase hosting
-   - firebase login
-   - firebase init
+   - `firebase login:ci` (https://firebase.google.com/docs/cli#sign-in-test-cli)
+     - Success! Use this token to login on a CI server: '1//09I3knoa81iJFCgYIARAAGAkSNwF-L9Ir0HFPAA71Zn_4cWn8q1EZtvcbMOrEVo-yiFswFVdbpDVEzwyvERE8q0pHI1SqpSHK6q8' Example: firebase deploy --token "$FIREBASE_TOKEN"
+     - `firebase projects:list --token "1//09I3knoa81iJFCgYIARAAGAkSNwF-L9Ir0HFPAA71Zn_4cWn8q1EZtvcbMOrEVo-yiFswFVdbpDVEzwyvERE8q0pHI1SqpSHK6q8"`
+   - `firebase init --token "1//09I3knoa81iJFCgYIARAAGAkSNwF-L9Ir0HFPAA71Zn_4cWn8q1EZtvcbMOrEVo-yiFswFVdbpDVEzwyvERE8q0pHI1SqpSHK6q8"`
    - firebase deploy
-   - view site at https://grouptripper-8c189.web.app/
+   - view site at https://grouptripper-3c7f1.web.app
+
+
+8) setup database
+   - https://console.firebase.google.com/project/grouptripper-8c189/firestore
+   - create database: region EU
+   - database available at: https://console.firebase.google.com/project/grouptripper-8c189/firestore/data/~2F
+   - For now, DB allows access from anyone. TODO: [define security rules](https://firebase.google.com/docs/rules/get-started?hl=en)
+
+```
+firebase emulators:start
+http://localhost:5004/home
+```
 
 
 

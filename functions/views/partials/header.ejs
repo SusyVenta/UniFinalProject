@@ -1,0 +1,39 @@
+<header>
+  <!-- Top navigation bar - collapsible on small screens - always stays at the top even when scrolling-->
+  <nav class="navbar sticky-top navbar-fixed-top">
+    <div class="navbar-header">
+      <img id="logo" src="https://c8.alamy.com/comp/2E4C6GC/you-and-me-lettering-hand-drawn-isolated-on-white-background-decorated-with-hearts-and-floral-elements-text-quote-motivation-vector-illustration-2E4C6GC.jpg">
+      <ul id="navbar-left" class="nav navbar-nav navbar-right">
+        <li>
+          <form method="GET" action="/">
+            <input style="border-style: hidden; background-color: white;" class="home-redirect" type="submit" value="Home">
+          </form>
+        </li>
+      </ul>
+    </div>
+    <!-- Links in this part collapse within three lines menu on small screen -->
+    <div id="topNavbar">
+      <!-- Sign in/ log out links -->
+      <div class="hide-when-signed-in">
+        <span id="sign-in-header" class="auth" auth="show-sign-in-form">Sign In</span>
+        <button id="create-user-header" class="auth btn btn-secondary" auth="show-create-user-form">Create User</button>
+      </div>
+      <div class="hide-when-signed-out">
+        <p id="user_id_navbar"></p>
+        <p id="welcome-message"></p>
+        <span id="profile">Profile</span>
+        <button class="auth btn btn-secondary" auth="sign-out">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero image and call for action at top of the page, below navbar -->
+  <div class="below-navbar">
+    <div class="hero-image">
+      <div class="hero-text">
+        <h1 id="hero-text">You & Me</h1>
+        <h2>Planning the perfect wedding, made easy</h2>
+      </div>
+    </div>
+  </div>
+</header>
