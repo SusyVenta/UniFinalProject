@@ -60,8 +60,20 @@
 
 
      - 
-   - firebase deploy
+   - firebase deploy -m "Deploying the best new feature ever."
    - view site at https://grouptripper-3c7f1.web.app
+
+# useful links: 
+
+- for firebase.json config: 
+  - https://firebase.google.com/docs/hosting/full-config 
+  - https://lucidar.me/en/firebase/express-web-server-on-firebase/ 
+
+- Test, preview, deploy: https://firebase.google.com/docs/hosting/test-preview-deploy 
+- Roll back deployment: https://firebase.google.com/docs/cli#roll_back_deploys and other CLi commands
+- Billing monitoring instructions: https://firebase.google.com/docs/projects/billing/avoid-surprise-bills#set-up-budget-alert-emails 
+
+
 
 
 
