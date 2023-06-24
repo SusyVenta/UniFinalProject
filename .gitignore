@@ -1,2 +1,4 @@
 /node_modules
 /functions/node_modules
+ui-debug.log
+firebase-debug.log

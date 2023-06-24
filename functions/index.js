@@ -46,8 +46,9 @@ app.set("view engine", "ejs");
     }
 }); */
 
+
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
-app.use("/home", homeRouter);
+app.use("/", homeRouter);
 /*
 // create firestore collection
 const newTestCollection = collection(db, "new_test_collection");

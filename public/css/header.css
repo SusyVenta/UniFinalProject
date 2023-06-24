@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+#profile:hover{
+  cursor: pointer;
+}
+
+#topNavbar {
+  margin-right: 1.5rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
+  /* --------------------------------- Hero image and overlayed content -------------------------------- */
+.hero-image {
+    /* "linear-gradient" to add a darken background effect to the image. 
+    This makes the text easier to read */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://img.freepik.com/free-photo/wedding-flowers_182029-217.jpg");
+  
+    /* Set a specific height */
+    height: 20vh;
+  
+    /* Position and center the image to scale nicely on all screens */
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+  }
+  
+  /* Place text in the middle of the image */
+  .hero-text {
+    align-self: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    font-family:"Lobster", cursive;
+    display:flex;
+    justify-content: center;
+  }
+
+  .hero-text > h1{
+    margin-top: 40px;
+    font-size: 4rem;
+  }
+
+  .hero-text > h2{
+    margin-top: 130px;
+    font-size: 1.8rem;
+  }
+
+  /* ----------- phone view - 1 column only ------ */
+@media only screen and (max-width: 600px) {
+  .hero-text {
+    align-self: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    font-family:"Lobster", cursive;
+    display:flex;
+    justify-content: center;
+  }
+
+  #hero-text{
+    margin-top: 20px;
+    font-size: 3rem;
+    position: absolute;
+  }
+
+  .hero-text > h2{
+    margin-top: 80px;
+    font-size: 1.5rem;
+  }
+}
+
+/* --------------------------------- Nav Bar -------------------------------- */
+.navbar{
+    background: white;/* #20c997; */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.navbar-header{
+  display: flex;
+}
+
+.navbar-inverse .navbar-nav>li>a{
+    color: white;
+}
+
+#logo{
+  margin-left: 10px;
+  position: relative;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 140px;
+    height: 100px;
+}
+
+.nav.navbar-nav.navbar-right > li > a{
+    color:black;
+    text-decoration: none;
+}
+
+.nav.navbar-nav.navbar-right > li > a:hover, .nav.navbar-nav.navbar-right > li > a:active{
+    color:#757167;
+    text-decoration: none;
+}
+
+#navbar-right{
+  display: flex;
+  flex-direction: row;
+}
+
+#navbar-left{
+  margin-left: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+#navbar-right > *{
+  margin-right: 10px;
+  color: white
+}
+
+/* Make body content start after nav bar */
+.below-navbar{
+    padding-top: 0px;
+}
+
+.home-redirect{
+  width: fit-content;
+}
+
+/* ---------------breadcrumbs --------------------------*/
+#breadcrumb, h1{
+  position:absolute;
+}
+
+#breadcrumb{
+  padding: 10px;
+  top: 0%;
+  left: 0%;
+  margin: 0;
+  width: fit-content;
+}
+
+.breadcrumb{
+  background-color: white;
+  padding: 5px;
+}
+
+.breadcrumb>.active{
+  color:black;
+}
+
+.breadcrumb>li>a{
+  color: black;
+}
+
