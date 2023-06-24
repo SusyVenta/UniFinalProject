@@ -10,6 +10,10 @@ import functions from "firebase-functions";
 import express from "express";
 import path from "path";
 import url from "url";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Safe to have on client side: https://www.youtube.com/watch?v=rQvOAnNvcNQ&t=97s min 2:20
 const firebaseConfig = {
@@ -46,6 +50,7 @@ myapp.set("view engine", "ejs");
     }
 }); */
 
+
 myapp.get("/home", (request, response) => {
     console.log("test 2");
     let indexPath = path.join(__dirname, "views/home.ejs");
@@ -53,7 +58,12 @@ myapp.get("/home", (request, response) => {
     response.render(indexPath, payload);
   });
 
+  const router = new express.Router();
+  router.get("/", (req, res) => {
+    res.send(`<h1>Example page</h1>`);
+});
 
+myapp.use("/example", router);
 /*
 // create firestore collection
 const newTestCollection = collection(db, "new_test_collection");
