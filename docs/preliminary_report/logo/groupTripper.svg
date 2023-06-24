@@ -25,12 +25,12 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.914906"
-     inkscape:cx="127.33549"
-     inkscape:cy="562.89936"
+     inkscape:cx="128.42849"
+     inkscape:cy="563.99237"
      inkscape:window-width="1918"
      inkscape:window-height="2054"
      inkscape:window-x="1652"
-     inkscape:window-y="138"
+     inkscape:window-y="0"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1" />
   <defs
@@ -57,8 +57,8 @@
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:96px;font-family:'Century Gothic';-inkscape-font-specification:'Century Gothic';white-space:pre;shape-inside:url(#rect772);fill:#000000"><tspan
          x="85.253906"
          y="348.38448"
-         id="tspan180"><tspan
-           style="-inkscape-font-specification:'Century Gothic, Normal'"
-           id="tspan178">GroupTripper</tspan></tspan></text>
+         id="tspan958"><tspan
+           style="font-weight:bold;-inkscape-font-specification:'Century Gothic, Bold'"
+           id="tspan956">GroupTripper</tspan></tspan></text>
   </g>
 </svg>

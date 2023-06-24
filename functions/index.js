@@ -25,6 +25,7 @@ app.use(
   express.static(__dirname + "/node_modules/bootstrap/dist/js")
 );
 app.use("/my_js", express.static(__dirname + "/node_modules/jquery/dist"));
+app.use(express.static(__dirname + '/public'));
 
 // enable to use ejs
 app.set("view engine", "ejs");
