@@ -2,19 +2,21 @@ import { initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { homeRouter} from "./routes/home.js";
 import { firebaseConfig } from "./config/firebaseConfig.js";
-
 import functions from "firebase-functions";
 import express from "express";
 import path from "path";
 import url from "url";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { homeRouter} from "./routers/home.js";
+import { authenticationRouter} from "./routers/authentication.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
 
 const app = express();  
 
@@ -50,6 +52,7 @@ app.set("view engine", "ejs");
 
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
 app.use("/", homeRouter);
+app.use("/auth", authenticationRouter);
 /*
 // create firestore collection
 const newTestCollection = collection(db, "new_test_collection");

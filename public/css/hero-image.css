@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css?family=Open Sans');
+
+  /* --------------------------------- Hero image and overlayed content -------------------------------- */
+.hero-image {
+    /* "linear-gradient" to add a darken background effect to the image. 
+    This makes the text easier to read */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://img.freepik.com/free-vector/hand-drawn-travel-background_52683-85109.jpg?w=2000");
+  
+    /* Set a specific height */
+    height: 20vh;
+  
+    /* Position and center the image to scale nicely on all screens */
+    background-position: 0% 90%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+  }
+  
+  /* Place text in the middle of the image */
+  .hero-text {
+    align-self: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    font-family:"Open Sans";
+    display:flex;
+    justify-content: center;
+  }
+
+  .hero-text > h1{
+    margin-top: 40px;
+    font-size: 4rem;
+  }
+
+  .hero-text > h2{
+    margin-top: 130px;
+    font-size: 1.8rem;
+  }
+
+  /* ----------- phone view - 1 column only ------ */
+@media only screen and (max-width: 600px) {
+  .hero-text {
+    align-self: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    font-family:"Open Sans";
+    display:flex;
+    justify-content: center;
+  }
+
+  #hero-text{
+    margin-top: 20px;
+    font-size: 3rem;
+    position: absolute;
+  }
+
+  .hero-text > h2{
+    margin-top: 80px;
+    font-size: 1.5rem;
+  }
+}

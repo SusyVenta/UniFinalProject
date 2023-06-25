@@ -63,6 +63,17 @@
    - firebase deploy -m "Deploying the best new feature ever."
    - view site at https://grouptripper-3c7f1.web.app
 
+8) create budget alerts:
+   - https://firebase.google.com/docs/projects/billing/avoid-surprise-bills#set-up-budget-alert-emails 
+   - https://cloud.google.com/billing/docs/how-to/budgets?hl=it
+   - create budget: 'budget_grouptripper'
+   - amount: specified amount 10 euros
+   - alerts via email billing owners when: 
+     - forecasted expense = 5 euros
+     - actual expense is 5 euros
+     - actual expense is 10 euros
+   - all budgets: https://console.cloud.google.com/billing/010523-E34926-64B7B7/budgets?hl=it&organizationId=0
+
 # useful links: 
 
 - for firebase.json config: 
@@ -71,7 +82,9 @@
 
 - Test, preview, deploy: https://firebase.google.com/docs/hosting/test-preview-deploy 
 - Roll back deployment: https://firebase.google.com/docs/cli#roll_back_deploys and other CLi commands
-- Billing monitoring instructions: https://firebase.google.com/docs/projects/billing/avoid-surprise-bills#set-up-budget-alert-emails 
+- https://cloud.google.com/billing/docs/how-to/budgets-programmatic-notifications?hl=it
+- implementing content in multiple languages: https://developers.google.com/search/blog/2010/09/unifying-content-under-multilingual
+- svg to ico: https://redketchup.io/icon-editor
 
 
 

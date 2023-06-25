@@ -1,0 +1,54 @@
+#auth-background {
+  background-image: linear-gradient(coral,#FF5555);
+  height: calc(100vh - 90px); /* 90px is height of navbar*/
+}
+
+#auth-container-2 {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  justify-content: flex-start; 
+  align-items: center;
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  flex-wrap: wrap;
+  margin-top: calc(var(--bs-gutter-y) * -1);
+  margin-right: calc(var(--bs-gutter-x) * -.5);
+  margin-left: calc(var(--bs-gutter-x) * -.5);
+  position: relative;
+}
+
+#auth-container-2 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-start; 
+}
+
+#auth-container-3 {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.card{
+  border-radius: 1rem;
+  width: 100%;
+}
+
+#authentication-image-container {
+  background-image:url(https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp);
+  background-size:cover;
+  min-width: 350px;
+  border-radius: 1rem 0 0 1rem;
+  background-position: center;
+}
+
+@media only screen and (max-width: 600px) {
+  #auth-background {
+    background-image: linear-gradient(coral,#FF5555);
+    min-height: calc(100vh - 50px); /* 50px is height of navbar*/
+    height: fit-content;
+  }
+  
+}

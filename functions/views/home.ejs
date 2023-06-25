@@ -2,18 +2,25 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
-
   <!-- SHARED HEAD -->
   <%- include('partials/sharedHead') %>
+
+  <!-- Title tag in the browser and Google results -->
+  <title>GroupTripper | Group Trip Planning App</title>
+  <meta property="og:title" content="GroupTripper: best free group trip planner app" data-rh="true">
+  <meta property="twitter:title" content="GroupTripper: best free group trip planner app" data-rh="true">
+  <meta name="description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta name="twitter:description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:image:alt" content="Screenshot of GroupTripper: one view for your map and itinerary" data-rh="true">
+
+  <!-- css -->
+  <link rel="stylesheet" href="/css/hero-image.css">
 </head>
 
 <body>
-  <!-- header partial -->
   <%- include('partials/header'); %>
+  <%- include('partials/heroImage'); %>
   <h1>HI! from /home</h1>
 </body>
 
