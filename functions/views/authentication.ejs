@@ -65,13 +65,15 @@
                         class="form-control form-control-lg" required=true autocomplete="one-time-code"
                         pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&-_])[A-Za-z\d@$!%*?&-_]{8,12}$"/>
                       <label class="form-label" for="password">Password</label>
-                      <ul id="pw-description">
-                        <li>between 8 and 12 characters long</li>
-                        <li>at least 1 uppercase letter</li>
-                        <li>at least 1 lowercase letter</li>
-                        <li>at least 1 number</li>
-                        <li>at least 1 symbol of: @$!%*?&-_</li>
-                      </ul>
+                      <% if (authType === "signup") { %>
+                        <ul id="pw-description">
+                          <li>between 8 and 12 characters long</li>
+                          <li>at least 1 uppercase letter</li>
+                          <li>at least 1 lowercase letter</li>
+                          <li>at least 1 number</li>
+                          <li>at least 1 symbol of: @$!%*?&-_</li>
+                        </ul>
+                      <% } %>
                     </div>
 
                     <div class="pt-1 mb-4">

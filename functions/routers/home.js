@@ -28,7 +28,6 @@ const router = new express.Router();
 
 /* ENDPOINT: http://localhost:5004/home */
 router.get("/", (request, response) => {
-    console.log("test 2");
     let indexPath = path.join(__dirname, '..',"views/home.ejs");
     let payload = {};
     response.render(indexPath, payload);
