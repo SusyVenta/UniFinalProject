@@ -5,6 +5,7 @@ import { check, validationResult } from 'express-validator';
 import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { loadPersistence, savePersistence } from "../utils/auth/authPersistence.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -30,11 +31,13 @@ export function authenticationRouter(auth){
               // reload the sigup page, which will display a modal with error message
               let payload = {authType: "login", errorCode: 400, 
                             errorMessage: "Please verify your email before logging in!"};
+              savePersistence(auth);
               response.status(400).render(authTemplate, payload);
             })
           } else {
             // 
             console.log("logged in!");
+            savePersistence(auth);
             response.status(200).redirect("/");
           }
         })
@@ -113,7 +116,8 @@ export function authenticationRouter(auth){
       .then((userCredential) => {
         // If the new account was created, the user is signed in automatically.
         const user = userCredential.user;
-
+        savePersistence(auth);
+        
         updateProfile(user, {
           displayName: request.body.name + " " + request.body.surname
         });
@@ -124,6 +128,7 @@ export function authenticationRouter(auth){
           signOut(auth).then(() => {
             let payload = {authType: "signup", errorCode: 200, title: "Thank you!", 
                           errorMessage: "Please verify your email, then log in"};
+            savePersistence(auth);
             response.status(200).render(authTemplate, payload);
           })
           

@@ -1,4 +1,5 @@
 /node_modules
 /functions/node_modules
+/functions/utils/auth/tmp/*
 ui-debug.log
 firebase-debug.log

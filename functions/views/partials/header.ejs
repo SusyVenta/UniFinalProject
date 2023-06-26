@@ -8,11 +8,39 @@
         </li>
       </ul>
     </div>
-    <!-- Links in this part collapse within three lines menu on small screen -->
     <div id="topNavbar">
-      <!-- Sign in/ log out links -->
-      <a class="navbarlink" href="/auth/login" rel="nofollow">Log in</a>
-      <a class="navbarlink" href="/auth/signup" rel="nofollow">Sign up</a>
+      <% if ((typeof userIsAuthenticated != 'undefined') && (userIsAuthenticated === true)) { %>
+        <i class="fa fa-bars"></i>
+        <a class="navbarlink" href="/profile" rel="nofollow">Profile</a>
+
+
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Right-aligned menu example
+            <i class="fa fa-bars"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><button class="dropdown-item" type="button">Action</button></li>
+            <li><button class="dropdown-item" type="button">Another action</button></li>
+            <li><button class="dropdown-item" type="button">Something else here</button></li>
+          </ul>
+        </div>
+      <% } else { %>
+        <!-- Sign in/ log out links -->
+        <a class="navbarlink" href="/auth/login" rel="nofollow">Log in</a>
+        <a class="navbarlink" href="/auth/signup" rel="nofollow">Sign up</a>
+
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-bars"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><button class="dropdown-item" type="button">Action</button></li>
+            <li><button class="dropdown-item" type="button">Another action</button></li>
+            <li><button class="dropdown-item" type="button">Something else here</button></li>
+          </ul>
+        </div>
+      <% } %>
     </div>
   </nav>
 </header>

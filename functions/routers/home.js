@@ -31,23 +31,28 @@ export function homeRouter(auth) {
       let indexPath = path.join(__dirname, '..',"views/home.ejs");
       console.log("-----------------currentUser: " + auth.currentUser);
       onAuthStateChanged(auth, (user) => {
+        /* user is an object with the following properties:
+         displayName, email, emailVerified <bool>, phoneNumber, photoURL, isAnonymous: false,
+          tenantId, ...
+        */
         console.log("-----------------user: " + user);
         console.log(user);
+        let isAuthenticated;
         if (user) {
           // User is signed in, see docs for a list of available properties
           // https://firebase.google.com/docs/reference/js/auth.user
           const uid = user.uid;
           console.log("-----------------uid: " + uid);
-          console.log(uid);
+          isAuthenticated = true;
           // ...
         } else {
           // User is signed out
           // ...
+          isAuthenticated = false;
         }
+        let payload = {userIsAuthenticated: isAuthenticated};
+        response.render(indexPath, payload);
       });
-
-      let payload = {};
-      response.render(indexPath, payload);
     });
 
   /*
