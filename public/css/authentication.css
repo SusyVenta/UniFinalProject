@@ -44,6 +44,11 @@
   background-position: center;
 }
 
+#pw-description {
+  color: gray;
+  font-size: small;
+}
+
 @media only screen and (max-width: 600px) {
   #auth-background {
     background-image: linear-gradient(coral,#FF5555);
