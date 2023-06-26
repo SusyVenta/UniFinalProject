@@ -1,4 +1,7 @@
 import functions from "firebase-functions";
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from "../config/firebaseConfig.js";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import express from "express";
 import { check, validationResult } from 'express-validator';
 import path from "path";
@@ -9,6 +12,10 @@ const __dirname = dirname(__filename);
 
 
 const router = new express.Router();
+
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+
 
 // initialize other services
 //const analytics = getAnalytics(firebaseApp);
@@ -29,25 +36,26 @@ const router = new express.Router();
 
 /* ENDPOINT: http://localhost:5004/auth/login */
 router.get("/login", (request, response) => {
-    let indexPath = path.join(__dirname, '..',"views/authentication.ejs");
+    let authTemplate = path.join(__dirname, '..',"views/authentication.ejs");
     let payload = {authType: "login"};
-    response.render(indexPath, payload);
+    response.render(authTemplate, payload);
   });
 
 router.get("/signup", (request, response) => {
-  let indexPath = path.join(__dirname, '..',"views/authentication.ejs");
-  let payload = {authType: "signup"};
-  response.render(indexPath, payload);
+  let authTemplate = path.join(__dirname, '..',"views/authentication.ejs");
+  let payload = {authType: "signup", errorCode: null, errorMessage: null};
+  response.render(authTemplate, payload);
 });
 
 router.post(
   "/signup", [ 
-    check("name").trim().escape().isLength({ min: 1 }),
-    check("surname").trim().escape().isLength({ min: 1 }),
-    check('email').isEmail().normalizeEmail(),
+    check("name").trim().escape().isLength({ min: 1 }).withMessage('Name must contain at least one letter'),
+    check("surname").trim().escape().isLength({ min: 1 }).withMessage('Surname must contain at least one letter'),
+    check('email').isEmail().normalizeEmail().withMessage('Email address is invalid'),
     // https://express-validator.github.io/docs/api/validation-chain/#isstrongpassword
     check('password').isStrongPassword({
       minLength: 8,
+      maxLength: 12,
       minLowercase: 1,
       minUppercase: 1,
       minNumbers: 1,
@@ -59,18 +67,55 @@ router.post(
       pointsForContainingUpper: 10,
       pointsForContainingNumber: 10,
       pointsForContainingSymbol: 10,
-    }),
-    check("termsandconditions").trim().escape().isLength({ min: 2 }),
+    }).withMessage('Password must be between 8 and 12 characters long, contain at least 1 uppercase letter,' +
+                   'at least 1 lowercase letter, at least 1 number, and at least one symbol'),
+    check("termsandconditions").trim().escape().isLength({ min: 2 }).withMessage('Terms and conditions must be accepted to register'),
   ], 
   (request, response) => {
-  console.log(request.body);
-  const result = validationResult(request);
-  console.log(result);
-  if (request.body.termsandconditions != "on") {
-    response.status(400);
-    response.send("Terms and conditions must be accepted in order to register" );
-  }
+    let authTemplate = path.join(__dirname, '..',"views/authentication.ejs");
 
+    try {
+      // throw error if anything fails in the validation
+      const result = validationResult(request);
+      result.throw();
+      // accessing request.body.<attribute> now returns sanitized input as specified above
+    } catch (e) {
+      // reload the sigup page, which will display a modal with error message
+      let payload = {authType: "signup", errorCode: 400, errorMessage: e.array({ onlyFirstError: true })[0].msg};
+      response.status(400).render(authTemplate, payload);
+    }
+
+    if (request.body.termsandconditions != "on") {
+      // reload the sigup page, which will display a modal with error message
+      let payload = {authType: "signup", errorCode: 400, 
+                     errorMessage: "Terms and conditions must be accepted in order to register"};
+      response.status(400).render(authTemplate, payload);
+    }
+
+    console.log('request.get(Content-Type: ' + request.get('Content-Type'));
+    if (request.get('Content-Type') === 'application/json') {
+       // response.send("sendign back json response" );
+       
+    } else {
+      // response.send("sendign back html response" );
+    }
+
+    // create user in database 
+    createUserWithEmailAndPassword(auth, request.body.email, request.body.password)
+    .then((userCredential) => {
+      // If the new account was created, the user is signed in automatically.
+      const user = userCredential.user;
+      response.send("created user: " + user);
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // reload the sigup page, which will display a modal with error message
+      let payload = {authType: "signup", errorCode: 400, 
+                     errorMessage: errorCode + "\n" + errorMessage};
+      response.status(400).render(authTemplate, payload);
+    });
 });
 
 /*

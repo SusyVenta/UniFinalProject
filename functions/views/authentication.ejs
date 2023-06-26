@@ -37,26 +37,25 @@
                       <div class="form-outline mb-4">
                         <input id="name" type="name" autocomplete="one-time-code" name="name" 
                           class="form-control form-control-lg" required=true 
-                          pattern="[a-zA-Z]{2,}"
-                          oninvalid="setCustomValidity('Must be at least 2 letters')"
+                          pattern="^[a-zA-Z]{1,}$"
+                          oninvalid="setCustomValidity('Must contain only letters')"
                           oninput="setCustomValidity('')"/>
                         <label class="form-label" for="name">Name</label>
                       </div>
                       <div class="form-outline mb-4">
                         <input type="surname" id="surname" name="surname" autocomplete="one-time-code" 
                         class="form-control form-control-lg" required=true
-                        pattern="[a-zA-Z]{2,}"
-                          oninvalid="setCustomValidity('Must be at least 2 letters')"
+                        pattern="^[a-zA-Z]{1,}$"
+                          oninvalid="setCustomValidity('Must contain only letters')"
                           oninput="setCustomValidity('')"/>
                         <label class="form-label" for="surname">Surname</label>
                       </div>
                      <% } %>
-                     
+
                     <!-- Email validation -->
                     <div class="form-outline mb-4">
                       <input type="email" id="email" name="email" class="form-control form-control-lg" 
-                        required=true autocomplete="one-time-code"
-                        pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"/>
+                        required=true autocomplete="one-time-code"/>
                       <label class="form-label" for="email">Email address</label>
                     </div>
                     
@@ -108,6 +107,38 @@
       </div>
     </div>
   </section>
+  <% if ( !(errorCode === null) ) { %>
+    <!-- Open modal on page load in case there were any errors with form submission -->
+    <section>
+      <script type="text/javascript">
+        $(window).on('load', function() {
+            $('#error-modal').modal('show');
+        });
+
+        function closeModal(){
+          $('#error-modal').modal('hide');
+        };
+      </script>
+      <!-- modal displaying potential errors -->
+      <div id="error-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Ops! Looks like something went wrong</h5>
+            </div>
+            <div class="modal-body">
+              <p>Error code: <%= errorCode %></p>
+              <p>Error message: <%= errorMessage %></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+  <% } %>
 </body>
 
 </html>

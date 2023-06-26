@@ -55,15 +55,11 @@
    npm install --save 
    ```
 
-7) Follow instructions to use webpack https://firebase.google.com/docs/web/module-bundling#using_firebase_with_webpack in order to minimize packages used
-   `npm run build`
-
-
-     - 
+6) Deploying site
    - firebase deploy -m "Deploying the best new feature ever."
    - view site at https://grouptripper-3c7f1.web.app
 
-8) create budget alerts:
+7) create budget alerts:
    - https://firebase.google.com/docs/projects/billing/avoid-surprise-bills#set-up-budget-alert-emails 
    - https://cloud.google.com/billing/docs/how-to/budgets?hl=it
    - create budget: 'budget_grouptripper'
@@ -73,6 +69,11 @@
      - actual expense is 5 euros
      - actual expense is 10 euros
    - all budgets: https://console.cloud.google.com/billing/010523-E34926-64B7B7/budgets?hl=it&organizationId=0
+
+8) Enable authentication with email and password:
+   - https://firebase.google.com/docs/auth/web/password-auth
+   - enabled email and password from console
+   - 
 
 # useful links: 
 

@@ -35,7 +35,7 @@ app.set("view engine", "ejs");
 // initialize other services
 //const analytics = getAnalytics(firebaseApp);
 
-//const auth = getAuth(app);
+const auth = getAuth(firebaseApp);
 
 //const db = getFirestore(app);
 
