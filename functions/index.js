@@ -51,8 +51,8 @@ const auth = getAuth(firebaseApp);
 
 
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
-app.use("/", homeRouter);
-app.use("/auth", authenticationRouter);
+app.use("/", homeRouter(auth));
+app.use("/auth", authenticationRouter(auth));
 /*
 // create firestore collection
 const newTestCollection = collection(db, "new_test_collection");
