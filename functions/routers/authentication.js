@@ -21,37 +21,6 @@ export function authenticationRouter(auth){
     }
   );
 
-  router.post("/login", (request, response) => {
-      let authTemplate = path.join(__dirname, '..',"views/authentication.ejs");
-
-      signInWithEmailAndPassword(auth, request.body.email, request.body.password)
-        .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
-          if (!user.emailVerified === true) {
-            signOut(auth).then(() => {
-              // reload the sigup page, which will display a modal with error message
-              let payload = {authType: "login", statusCode: 400, authInfoTitle: authInfoErrorTitle,
-                            authInfoMessage: "Please verify your email before logging in!"};
-              response.status(400).render(authTemplate, payload);
-            })
-          } else {
-            // 
-            console.log("logged in!");
-            response.status(200).redirect("/");
-          }
-        })
-        .catch((error) => {
-          const statusCode = error.code;
-          const authInfoMessage = error.message;
-          // reload the sigup page, which will display a modal with error message
-          let payload = {authType: "login", statusCode: 400, authInfoTitle: authInfoErrorTitle,
-                        authInfoMessage: statusCode + "\n" + authInfoMessage};
-          response.status(400).render(authTemplate, payload);
-        });
-      }
-  );
-
   router.get("/signup", (request, response) => {
     let authTemplate = path.join(__dirname, '..',"views/authentication.ejs");
     let payload = {authType: "signup", statusCode: null, authInfoMessage: null, authInfoTitle: null};

@@ -26,7 +26,7 @@ export function homeRouter(auth) {
       }
   }); */
 
-  /* ENDPOINT: http://localhost:5004/home */
+
   router.get("/", (request, response) => {
       let indexPath = path.join(__dirname, '..',"views/home.ejs");
       console.log("-----------------currentUser: " + auth.currentUser);

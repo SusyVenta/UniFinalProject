@@ -1,5 +1,5 @@
 // Safe to have on client side: https://www.youtube.com/watch?v=rQvOAnNvcNQ&t=97s min 2:20
-export const firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyDtHeMzVRqgQzT1hzxAchIkreKc0fIQD8o",
     authDomain: "grouptripper-3c7f1.firebaseapp.com",
     projectId: "grouptripper-3c7f1",

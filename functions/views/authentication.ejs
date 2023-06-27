@@ -11,6 +11,17 @@
 
   <!-- css -->
   <link rel="stylesheet" href="/css/authentication.css">
+
+  <!-- JS -->
+  <script type="module">
+    import { logIn } from "/js/authentication.js"; 
+
+    if (document.contains(document.getElementById("login-button"))) {
+      let loginButton = document.getElementById("login-button");
+      loginButton.addEventListener('click', function() { logIn(); });
+    };
+    
+  </script>
 </head>
 
 <body>
@@ -78,7 +89,7 @@
 
                     <div class="pt-1 mb-4">
                       <% if (authType === "login") { %>
-                      <input class="btn btn-dark btn-lg btn-block" type="submit" value="Login">
+                      <button id="login-button" type="button" class="btn btn-dark btn-lg btn-block">Log In</button>
                       <% } else { %>
                         <div class="form-outline mb-4">
                           <input type="checkbox" id="termsandconditions" name="termsandconditions" required=true>
@@ -109,37 +120,33 @@
       </div>
     </div>
   </section>
-  <% if ( !(statusCode === null) ) { %>
-    <!-- Open modal on page load in case there were any errors with form submission -->
-    <section>
-      <script type="text/javascript">
-        $(window).on('load', function() {
-            $('auth-info-modal').modal('show');
-        });
-
-        function closeModal(){
-          $('#auth-info-modal').modal('hide');
-        };
-      </script>
-      <!-- modal displaying authentication-related errors / info messages -->
-      <div id="auth-info-modal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title"><%= authInfoTitle %></h5>
-            </div>
-            <div class="modal-body">
-              <p>Status code: <%= statusCode %></p>
-              <p>Message: <%= authInfoMessage %></p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">OK</button>
-            </div>
+  <section>
+    <!-- modal displaying authentication-related errors / info messages -->
+    <div id="auth-info-modal" class="modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="auth-info-title"><%= authInfoTitle %></h5>
+          </div>
+          <div class="modal-body">
+            <p id="auth-info-status-code">Status code: <%= statusCode %></p>
+            <p id="auth-info-message">Message: <%= authInfoMessage %></p>
+          </div>
+          <div class="modal-footer">
+            <button id="auth-info-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
           </div>
         </div>
       </div>
-    </section>
-    
+    </div>
+  </section>
+  <% if ( !(statusCode === null) ) { %>
+    <!-- Open modal on page load in case there were any errors with form submission -->
+    <script type="text/javascript">
+      $(window).on('load', function() {
+        let modal = new bootstrap.Modal(document.getElementById("auth-info-modal"), {});
+        modal.show();
+      });
+    </script>
   <% } %>
 </body>
 
