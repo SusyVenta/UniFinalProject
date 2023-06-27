@@ -11,7 +11,6 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { homeRouter} from "./routers/home.js";
 import { authenticationRouter} from "./routers/authentication.js";
-import { loadPersistence } from "./utils/auth/authPersistence.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -37,8 +36,6 @@ app.set("view engine", "ejs");
 //const analytics = getAnalytics(firebaseApp);
 
 const auth = getAuth(firebaseApp);
-
-await loadPersistence(auth);
 
 //const db = getFirestore(app);
 

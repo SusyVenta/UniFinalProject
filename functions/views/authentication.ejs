@@ -109,28 +109,28 @@
       </div>
     </div>
   </section>
-  <% if ( !(errorCode === null) ) { %>
+  <% if ( !(statusCode === null) ) { %>
     <!-- Open modal on page load in case there were any errors with form submission -->
     <section>
       <script type="text/javascript">
         $(window).on('load', function() {
-            $('#error-modal').modal('show');
+            $('auth-info-modal').modal('show');
         });
 
         function closeModal(){
-          $('#error-modal').modal('hide');
+          $('#auth-info-modal').modal('hide');
         };
       </script>
-      <!-- modal displaying potential errors -->
-      <div id="error-modal" class="modal" tabindex="-1" role="dialog">
+      <!-- modal displaying authentication-related errors / info messages -->
+      <div id="auth-info-modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Ops! Looks like something went wrong</h5>
+              <h5 class="modal-title"><%= authInfoTitle %></h5>
             </div>
             <div class="modal-body">
-              <p>Error code: <%= errorCode %></p>
-              <p>Error message: <%= errorMessage %></p>
+              <p>Status code: <%= statusCode %></p>
+              <p>Message: <%= authInfoMessage %></p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">OK</button>

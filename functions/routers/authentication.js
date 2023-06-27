@@ -5,16 +5,18 @@ import { check, validationResult } from 'express-validator';
 import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { loadPersistence, savePersistence } from "../utils/auth/authPersistence.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const authInfoErrorTitle = "Ops! Looks like something went wrong";
+const authInfoSuccessTitle = "Success!";
 
 export function authenticationRouter(auth){
   const router = new express.Router();
 
   router.get("/login", (request, response) => {
       let authTemplate = path.join(__dirname, '..',"views/authentication.ejs");
-      let payload = {authType: "login", errorCode: null, errorMessage: null};
+      let payload = {authType: "login", statusCode: null, authInfoMessage: null, authInfoTitle: null};
       response.render(authTemplate, payload);
     }
   );
@@ -29,24 +31,22 @@ export function authenticationRouter(auth){
           if (!user.emailVerified === true) {
             signOut(auth).then(() => {
               // reload the sigup page, which will display a modal with error message
-              let payload = {authType: "login", errorCode: 400, 
-                            errorMessage: "Please verify your email before logging in!"};
-              savePersistence(auth);
+              let payload = {authType: "login", statusCode: 400, authInfoTitle: authInfoErrorTitle,
+                            authInfoMessage: "Please verify your email before logging in!"};
               response.status(400).render(authTemplate, payload);
             })
           } else {
             // 
             console.log("logged in!");
-            savePersistence(auth);
             response.status(200).redirect("/");
           }
         })
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
+          const statusCode = error.code;
+          const authInfoMessage = error.message;
           // reload the sigup page, which will display a modal with error message
-          let payload = {authType: "login", errorCode: 400, 
-                        errorMessage: errorCode + "\n" + errorMessage};
+          let payload = {authType: "login", statusCode: 400, authInfoTitle: authInfoErrorTitle,
+                        authInfoMessage: statusCode + "\n" + authInfoMessage};
           response.status(400).render(authTemplate, payload);
         });
       }
@@ -54,7 +54,7 @@ export function authenticationRouter(auth){
 
   router.get("/signup", (request, response) => {
     let authTemplate = path.join(__dirname, '..',"views/authentication.ejs");
-    let payload = {authType: "signup", errorCode: null, errorMessage: null};
+    let payload = {authType: "signup", statusCode: null, authInfoMessage: null, authInfoTitle: null};
     response.render(authTemplate, payload);
   });
 
@@ -92,14 +92,16 @@ export function authenticationRouter(auth){
         // accessing request.body.<attribute> now returns sanitized input as specified above
       } catch (e) {
         // reload the sigup page, which will display a modal with error message
-        let payload = {authType: "signup", errorCode: 400, errorMessage: e.array({ onlyFirstError: true })[0].msg};
+        let payload = {authType: "signup", statusCode: 400, 
+                       authInfoMessage: e.array({ onlyFirstError: true })[0].msg,
+                       authInfoTitle: authInfoErrorTitle};
         response.status(400).render(authTemplate, payload);
       }
 
       if (request.body.termsandconditions != "on") {
         // reload the sigup page, which will display a modal with error message
-        let payload = {authType: "signup", errorCode: 400, 
-                      errorMessage: "Terms and conditions must be accepted in order to register"};
+        let payload = {authType: "signup", statusCode: 400, authInfoTitle: authInfoErrorTitle,
+                      authInfoMessage: "Terms and conditions must be accepted in order to register"};
         response.status(400).render(authTemplate, payload);
       }
 
@@ -116,8 +118,7 @@ export function authenticationRouter(auth){
       .then((userCredential) => {
         // If the new account was created, the user is signed in automatically.
         const user = userCredential.user;
-        savePersistence(auth);
-        
+
         updateProfile(user, {
           displayName: request.body.name + " " + request.body.surname
         });
@@ -126,30 +127,29 @@ export function authenticationRouter(auth){
         sendEmailVerification(user)
         .then(() => {
           signOut(auth).then(() => {
-            let payload = {authType: "signup", errorCode: 200, title: "Thank you!", 
-                          errorMessage: "Please verify your email, then log in"};
-            savePersistence(auth);
+            let payload = {authType: "signup", statusCode: 200, title: "Thank you!", authInfoTitle: authInfoSuccessTitle,
+                          authInfoMessage: "Please verify your email, then log in"};
             response.status(200).render(authTemplate, payload);
           })
           
         })
         .catch((error) => {
           // display internal server error if fails to send email
-          const errorCode = error.code;
-          const errorMessage = error.message;
+          const statusCode = error.code;
+          const authInfoMessage = error.message;
           // reload the sigup page, which will display a modal with error message
-          let payload = {authType: "signup", errorCode: 500, 
-                        errorMessage: errorCode + "\n" + errorMessage};
+          let payload = {authType: "signup", statusCode: 500, authInfoTitle: authInfoErrorTitle,
+                        authInfoMessage: statusCode + "\n" + authInfoMessage};
           response.status(500).render(authTemplate, payload);
         });
         
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        const statusCode = error.code;
+        const authInfoMessage = error.message;
         // reload the sigup page, which will display a modal with error message
-        let payload = {authType: "signup", errorCode: 400, 
-                      errorMessage: errorCode + "\n" + errorMessage};
+        let payload = {authType: "signup", statusCode: 400, authInfoTitle: authInfoErrorTitle,
+                      authInfoMessage: statusCode + "\n" + authInfoMessage};
         response.status(400).render(authTemplate, payload);
       });
 
