@@ -66,7 +66,7 @@ export function logIn() {
     })
     .then(() => {
         // A page redirect would suffice as the persistence is set to NONE.
-        return firebase.auth().signOut();
+        return signOut(auth);
     })
     .then(() => {
         // redirect home
