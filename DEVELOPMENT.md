@@ -44,7 +44,7 @@
 5) start emulator and test locally
     ```
     cd "C:\Users\ventafri\Desktop\Uni\year 3\UniFinalProject"
-    firebase emulators:start
+    firebase emulators:start --only firestore,functions,hosting   <-- otherwise there are auth problems in verifying tokens
     http://localhost:5004/home
     ```
 5) if you need to clone repo and reinstall dependencies:
@@ -73,7 +73,9 @@
 8) Enable authentication with email and password:
    - https://firebase.google.com/docs/auth/web/password-auth
    - enabled email and password from console
-   - 
+9) Use Firebase Admin SDK for backend
+    - https://console.firebase.google.com/project/grouptripper-3c7f1/settings/serviceaccounts/adminsdk
+    - 
 
 # useful links: 
 

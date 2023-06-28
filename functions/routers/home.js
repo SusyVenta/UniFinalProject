@@ -2,11 +2,10 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { onAuthStateChanged } from "firebase/auth";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export function homeRouter(auth) {
+export function homeRouter(clientAuth, adminAuth) {
   const router = new express.Router();
 
   // initialize other services
@@ -29,28 +28,30 @@ export function homeRouter(auth) {
 
   router.get("/", (request, response) => {
       let indexPath = path.join(__dirname, '..',"views/home.ejs");
-      console.log("-----------------currentUser: " + auth.currentUser);
-      onAuthStateChanged(auth, (user) => {
-        /* user is an object with the following properties:
-         displayName, email, emailVerified <bool>, phoneNumber, photoURL, isAnonymous: false,
-          tenantId, ...
-        */
-        console.log("-----------------user: " + user);
-        console.log(user);
-        let isAuthenticated;
-        if (user) {
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/auth.user
-          const uid = user.uid;
-          console.log("-----------------uid: " + uid);
-          isAuthenticated = true;
-          // ...
-        } else {
-          // User is signed out
-          // ...
-          isAuthenticated = false;
-        }
-        let payload = {userIsAuthenticated: isAuthenticated};
+
+      // see if user already created a session. If not, return unauthenticated version of the page.
+      const sessionCookie = undefined;
+      try {
+        sessionCookie = request.cookies.session || '';
+      } catch(error){
+        let payload = {userIsAuthenticated: false};
+        response.render(indexPath, payload);
+        return;
+      }
+      
+      // Verify the session cookie. In this case an additional check is added to detect
+      // if the user's Firebase session was revoked, user deleted/disabled, etc.
+      adminAuth.verifySessionCookie(sessionCookie, true /** checkRevoked */)
+      .then((decodedClaims) => {
+        console.log("decodedClaims: " +decodedClaims);
+        // serveContentForUser('', request, response, decodedClaims);
+        let payload = {userIsAuthenticated: true};
+        response.render(indexPath, payload);
+      })
+      .catch((error) => {
+        // Session cookie is unavailable or invalid. Force user to login.
+        // response.redirect('/auth/login');
+        let payload = {userIsAuthenticated: false};
         response.render(indexPath, payload);
       });
     });

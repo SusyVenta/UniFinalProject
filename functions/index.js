@@ -1,22 +1,34 @@
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from "firebase/analytics";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getAuth as getAdminAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase/firestore";
 import { firebaseConfig } from "./config/firebaseConfig.js";
 import functions from "firebase-functions";
 import express from "express";
-import path from "path";
-import url from "url";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { homeRouter} from "./routers/home.js";
 import { authenticationRouter} from "./routers/authentication.js";
-
+import admin from "firebase-admin";
+import { initializeApp as initializeAdminApp } from 'firebase-admin/app';
+import { serviceAccountCreds } from './config/serviceAccount.js';
+import cookieParser from 'cookie-parser';
+import { attachCsrfToken } from './utils/authUtils.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const firebaseApp = initializeApp(firebaseConfig);
-const db = getFirestore(firebaseApp);
+
+const firebaseAdminApp = initializeAdminApp({
+  // this should be optional when running in Google environments (Cloud functions in our case)
+  // https://firebase.google.com/docs/admin/setup#initialize-sdk
+  // However, needed to test locally
+  // https://firebase.google.com/docs/auth/admin/create-custom-tokens#letting_the_admin_sdk_discover_a_service_account
+  credential: admin.credential.cert(serviceAccountCreds) 
+});
+
+
+const firebaseClientApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseClientApp);
 
 const app = express();  
 
@@ -32,10 +44,17 @@ app.use(express.static(__dirname + '/public'));
 // enable to use ejs
 app.set("view engine", "ejs");
 
+// Support cookie manipulation.
+app.use(cookieParser());
+
+// Attach CSRF token on each request.
+app.use(attachCsrfToken('/', 'csrfToken', (Math.random()* 100000000000000000).toString()));
+
 // initialize other services
 //const analytics = getAnalytics(firebaseApp);
 
-const auth = getAuth(firebaseApp);
+const clientAuth = getAuth(firebaseClientApp);
+const adminAuth = getAdminAuth(firebaseAdminApp);
 
 //const db = getFirestore(app);
 
@@ -51,8 +70,8 @@ const auth = getAuth(firebaseApp);
 
 
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
-app.use("/", homeRouter(auth));
-app.use("/auth", authenticationRouter(auth));
+app.use("/", homeRouter(clientAuth, adminAuth));
+app.use("/auth", authenticationRouter(clientAuth, adminAuth));
 /*
 // create firestore collection
 const newTestCollection = collection(db, "new_test_collection");

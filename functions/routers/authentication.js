@@ -11,7 +11,7 @@ const __dirname = dirname(__filename);
 const authInfoErrorTitle = "Ops! Looks like something went wrong";
 const authInfoSuccessTitle = "Success!";
 
-export function authenticationRouter(auth){
+export function authenticationRouter(clientAuth, adminAuth){
   const router = new express.Router();
 
   router.get("/login", (request, response) => {
@@ -83,7 +83,7 @@ export function authenticationRouter(auth){
       }
 
       // create user in database 
-      createUserWithEmailAndPassword(auth, request.body.email, request.body.password)
+      createUserWithEmailAndPassword(clientAuth, request.body.email, request.body.password)
       .then((userCredential) => {
         // If the new account was created, the user is signed in automatically.
         const user = userCredential.user;
@@ -95,7 +95,7 @@ export function authenticationRouter(auth){
         console.log(user);
         sendEmailVerification(user)
         .then(() => {
-          signOut(auth).then(() => {
+          signOut(clientAuth).then(() => {
             let payload = {authType: "signup", statusCode: 200, title: "Thank you!", authInfoTitle: authInfoSuccessTitle,
                           authInfoMessage: "Please verify your email, then log in"};
             response.status(200).render(authTemplate, payload);
@@ -122,6 +122,46 @@ export function authenticationRouter(auth){
         response.status(400).render(authTemplate, payload);
       });
 
+  });
+
+  router.post('/sessionLogin', (req, res) => {
+    // Get the ID token passed and the CSRF token.
+    const idToken = req.body.idToken.toString();
+    const csrfToken = req.body.csrfToken.toString();
+    // Guard against CSRF attacks.
+    if (csrfToken !== req.cookies.csrfToken) {
+      res.status(401).send('UNAUTHORIZED REQUEST!');
+      return;
+    }
+    // Set session expiration to 8 hours - user needs to log in every 8 hours.
+    const expiresIn = 8 * 60 * 60 * 1000 // 8 hours
+
+    // Create the session cookie. This will also verify the ID token in the process.
+    // The session cookie will have the same claims as the ID token.
+    // To only allow session cookie setting on recent sign-in, auth_time in ID token
+    // can be checked to ensure user was recently signed in before creating a session cookie.
+    adminAuth.verifyIdToken(idToken)
+      .then((decodedIdToken) => {
+        // Only process if the user just signed in in the last 5 minutes.
+        if (new Date().getTime() / 1000 - decodedIdToken.auth_time < 5 * 60) {
+          // Create session cookie and set it.
+          return adminAuth.createSessionCookie(idToken, { expiresIn });
+        }
+        // A user that was not recently signed in is trying to set a session cookie.
+        // To guard against ID token theft, require re-authentication.
+        res.status(401).send('Recent sign in required!');
+      })
+      .then(
+        (sessionCookie) => {
+          // Set cookie policy for session cookie.
+          const options = { maxAge: expiresIn, httpOnly: true, secure: true };
+          res.cookie('session', sessionCookie, options);
+          res.end(JSON.stringify({ status: 'success' }));
+        },
+        (error) => {
+          res.status(401).send('UNAUTHORIZED REQUEST!');
+        }
+      );
   });
 
   return router;
