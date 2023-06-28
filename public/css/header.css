@@ -75,6 +75,19 @@
   width: fit-content;
 }
 
+/* burger menu */
+#navbar-burger-menu {
+  font-size: 1.7rem;
+}
+
+#navbar-burger-menu:focus {
+  box-shadow: none;
+}
+
+#navbar-burger-menu:hover {
+  border-bottom: 2px solid #FF5555;
+}
+
 @media only screen and (max-width: 600px) {
   .navbar{
     background: white;/* #20c997; */

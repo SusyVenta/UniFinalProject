@@ -5,7 +5,7 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export function homeRouter(clientAuth, adminAuth) {
+export function homeRouter(adminAuth) {
   const router = new express.Router();
 
   router.get("/", (request, response) => {

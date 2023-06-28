@@ -70,7 +70,7 @@ const adminAuth = getAdminAuth(firebaseAdminApp);
 
 
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
-app.use("/", homeRouter(clientAuth, adminAuth));
+app.use("/", homeRouter(adminAuth));
 app.use("/auth", authenticationRouter(clientAuth, adminAuth));
 /*
 // create firestore collection
