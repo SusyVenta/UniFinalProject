@@ -57,7 +57,6 @@ export function logIn() {
             return auth.currentUser.getIdToken().then(function(idToken) {
                 // Session login endpoint is queried and the session cookie is set.
                 // CSRF protection should be taken into account.
-                // ...
                 const csrfToken = getCookie('csrfToken');
                 
                 return postIdTokenToSessionLogin('/auth/sessionLogin', idToken, csrfToken);

@@ -15,10 +15,17 @@
            data-bs-toggle="dropdown" aria-expanded="false">
            <i class="fas fa-bars"></i>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end">
+          <ul id="navbar-dropdown" class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="/profile" rel="nofollow"><span class="fa-solid fa-user"></span> Profile</a></li>
             <li><a class="dropdown-item" href="/settings" rel="nofollow"><span class="fa-solid fa-gear"></span> Settings</a></li>
-            <li><a class="dropdown-item" href="/logout" rel="nofollow"><span class="fa-solid fa-arrow-right-from-bracket"></span> Log out</a></li>
+            <li>
+              <form method="post" action="/auth/sessionLogout" class="inline">
+                <input type="hidden" name="extra_submit_param" value="extra_submit_value">
+                <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                  <span class="fa-solid fa-arrow-right-from-bracket"></span> Log out
+                </button>
+              </form>
+            </li>
             <li><a class="dropdown-item" href="/contacts" rel="nofollow"><span class="fa-solid fa-message"></span> Contact us</a></li>
           </ul>
         </div>
@@ -32,7 +39,7 @@
            data-bs-toggle="dropdown" aria-expanded="false">
            <i class="fas fa-bars"></i>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end">
+          <ul id="navbar-dropdown" class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="/contacts" rel="nofollow"><span class="fa-solid fa-message"></span> Contact us</a></li>
           </ul>
         </div>

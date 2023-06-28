@@ -5,6 +5,7 @@ import { check, validationResult } from 'express-validator';
 import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { getUserSessionDetails } from "../utils/authUtils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -124,13 +125,13 @@ export function authenticationRouter(clientAuth, adminAuth){
 
   });
 
-  router.post('/sessionLogin', (req, res) => {
+  router.post('/sessionLogin', (request, response) => {
     // Get the ID token passed and the CSRF token.
-    const idToken = req.body.idToken.toString();
-    const csrfToken = req.body.csrfToken.toString();
+    const idToken = request.body.idToken.toString();
+    const csrfToken = request.body.csrfToken.toString();
     // Guard against CSRF attacks.
-    if (csrfToken !== req.cookies.csrfToken) {
-      res.status(401).send('UNAUTHORIZED REQUEST!');
+    if (csrfToken !== request.cookies.csrfToken) {
+      response.status(401).send('UNAUTHORIZED REQUEST!');
       return;
     }
     // Set session expiration to 8 hours - user needs to log in every 8 hours.
@@ -149,19 +150,35 @@ export function authenticationRouter(clientAuth, adminAuth){
         }
         // A user that was not recently signed in is trying to set a session cookie.
         // To guard against ID token theft, require re-authentication.
-        res.status(401).send('Recent sign in required!');
+        response.status(401).send('Recent sign in required!');
       })
       .then(
         (sessionCookie) => {
           // Set cookie policy for session cookie.
           const options = { maxAge: expiresIn, httpOnly: true, secure: true };
-          res.cookie('session', sessionCookie, options);
-          res.end(JSON.stringify({ status: 'success' }));
+          response.cookie('session', sessionCookie, options);
+          response.end(JSON.stringify({ status: 'success' }));
         },
         (error) => {
-          res.status(401).send('UNAUTHORIZED REQUEST!');
+          response.status(401).send('UNAUTHORIZED REQUEST!');
         }
       );
+  });
+
+  router.post('/sessionLogout', async (request, response) => {
+    // adapted from: https://firebase.google.com/docs/auth/admin/manage-cookies#sign_out
+    const userSessionDetails = await getUserSessionDetails(adminAuth, request);
+    console.log("-----1111111111111111userSessionDetails: ");
+    console.log(userSessionDetails);
+    await adminAuth.revokeRefreshTokens(userSessionDetails.sub);
+
+    console.log("-----2222222222222222userSessionDetails: ");
+    console.log(userSessionDetails);
+    response.clearCookie('session');
+
+  
+    response.redirect('/');
+
   });
 
   return router;
