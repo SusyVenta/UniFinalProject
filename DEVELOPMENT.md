@@ -62,6 +62,7 @@
    - firebase login 
    - firebase deploy -m "Deploying the best new feature ever."
    - view site at https://grouptripper-3c7f1.web.app
+   - clean up old releases (occupy space and are charged): https://console.firebase.google.com/project/grouptripper-3c7f1/hosting/sites
 
 7) create budget alerts:
    - https://firebase.google.com/docs/projects/billing/avoid-surprise-bills#set-up-budget-alert-emails 

@@ -21,10 +21,13 @@ export function homeRouter(adminAuth) {
           userAuthenticated = true;
         }
 
-        let payload = {userIsAuthenticated: userAuthenticated, logs: JSON.stringify(userSessionDetails) + "\n\nuserAuthenticated: " + userAuthenticated};
+        let payload = {userIsAuthenticated: userAuthenticated, 
+                       logs: JSON.stringify(userSessionDetails) + "\n\nuserAuthenticated: " + userAuthenticated + "\n\n request cookies: \n\n " + JSON.stringify(request.cookies)
+                      };
         
         response.render(indexPath, payload);
       } catch(error){
+        throw error;
         response.send({errors: error});
       }
 
