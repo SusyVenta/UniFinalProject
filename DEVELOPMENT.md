@@ -58,6 +58,7 @@
    ```
 
 6) Deploying site
+   - firebase login 
    - firebase deploy -m "Deploying the best new feature ever."
    - view site at https://grouptripper-3c7f1.web.app
 

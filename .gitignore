@@ -3,3 +3,4 @@
 /functions/utils/auth/tmp/*
 ui-debug.log
 firebase-debug.log
+.firebase/
