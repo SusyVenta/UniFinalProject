@@ -21,7 +21,7 @@
             <li>
               <form method="post" action="/auth/sessionLogout" class="inline">
                 <input type="hidden" name="extra_submit_param" value="extra_submit_value">
-                <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                <button type="submit" name="submit_param" value="submit_value" class="dropdown-item">
                   <span class="fa-solid fa-arrow-right-from-bracket"></span> Log out
                 </button>
               </form>
@@ -31,15 +31,14 @@
         </div>
       <% } else { %>
         <!-- Sign in/ log out links -->
-        <a class="navbarlink" href="/auth/login" rel="nofollow">Log in</a>
-        <a class="navbarlink" href="/auth/signup" rel="nofollow">Sign up</a>
-
         <div class="container-fluid">
           <button id="navbar-burger-menu" type="button" class="navbar-toggler ms-auto" 
            data-bs-toggle="dropdown" aria-expanded="false">
            <i class="fas fa-bars"></i>
           </button>
           <ul id="navbar-dropdown" class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="/auth/login" rel="nofollow"><span class="fa-solid fa-right-to-bracket"></span> Log in</a></li>
+            <li><a class="dropdown-item" href="/auth/signup" rel="nofollow"><span class="fa-solid fa-door-open"></span> Sign up</a></li>
             <li><a class="dropdown-item" href="/contacts" rel="nofollow"><span class="fa-solid fa-message"></span> Contact us</a></li>
           </ul>
         </div>

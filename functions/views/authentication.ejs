@@ -43,7 +43,7 @@
                     
                     <% if (authType === "login") { %>
                     <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
-                    <% } else { %>
+                    <% } else if (authType === "signup") { %>
                       <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Create a new account to start planning</h5>
                       <div class="form-outline mb-4">
                         <input id="name" type="name" autocomplete="one-time-code" name="name" 
@@ -51,15 +51,7 @@
                           pattern="^[a-zA-Z]{1,}$"
                           oninvalid="setCustomValidity('Must contain only letters')"
                           oninput="setCustomValidity('')"/>
-                        <label class="form-label" for="name">Name</label>
-                      </div>
-                      <div class="form-outline mb-4">
-                        <input type="surname" id="surname" name="surname" autocomplete="one-time-code" 
-                        class="form-control form-control-lg" required=true
-                        pattern="^[a-zA-Z]{1,}$"
-                          oninvalid="setCustomValidity('Must contain only letters')"
-                          oninput="setCustomValidity('')"/>
-                        <label class="form-label" for="surname">Surname</label>
+                        <label class="form-label" for="name">Username</label>
                       </div>
                      <% } %>
 
@@ -71,6 +63,7 @@
                     </div>
                     
                     <!-- Password validation -->
+                    <% if (authType === "signup" || authType === "login") { %>
                     <div class="form-outline mb-4">
                       <input type="password" id="password" name="password" 
                         class="form-control form-control-lg" required=true autocomplete="one-time-code"
@@ -86,11 +79,12 @@
                         </ul>
                       <% } %>
                     </div>
+                    <% } %>
 
                     <div class="pt-1 mb-4">
                       <% if (authType === "login") { %>
-                      <button id="login-button" type="button" class="btn btn-dark btn-lg btn-block">Log In</button>
-                      <% } else { %>
+                        <button id="login-button" type="button" class="btn btn-dark btn-lg btn-block">Log In</button>
+                      <% } else if (authType === "signup") { %>
                         <div class="form-outline mb-4">
                           <input type="checkbox" id="termsandconditions" name="termsandconditions" required=true>
                           <label for="termsandconditions">
@@ -99,14 +93,16 @@
                           </label>
                         </div>
                         <input class="btn btn-dark btn-lg btn-block" type="submit" value="Register">
+                      <% } else if (authType === "resetPassword") { %>
+                        <input class="btn btn-dark btn-lg btn-block" type="submit" value="Email me the reset password link">
                       <% } %>
                     </div>
 
                     <% if (authType === "login") { %>
-                      <a class="small text-muted" href="#!">Forgot password?</a>
+                      <a class="small text-muted" href="/auth/resetPassword">Forgot password?</a>
                       <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="/auth/signup"
                           style="color: #393f81;">Register here</a></p>
-                    <% } else { %>
+                    <% } else if (authType === "signup") { %>
                       <p class="mb-5 pb-lg-2" style="color: #393f81;">Already have an account? <a href="/auth/login"
                         style="color: #393f81;">Log in here</a></p>
                     <% } %>

@@ -20,6 +20,8 @@
         }
       ```
       set to false to allow no access
+      - https://firebase.google.com/docs/rules/basics#content-owner_only_access
+      - https://firebase.google.com/docs/rules/insecure-rules#closed_access
   - set Default GCP resource location to eur3 from https://console.firebase.google.com/project/grouptripper-3c7f1/settings/general
   - click on <> from project console overview to set up hosting. App nickname: 'grouptripper'. Keep firebaseConfig on the side (A)
   - https://grouptripper-3c7f1.web.app/

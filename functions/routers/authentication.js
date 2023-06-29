@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signOut,  
+import { createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, 
          signInWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import express from "express";
 import { check, validationResult } from 'express-validator';
@@ -30,8 +30,7 @@ export function authenticationRouter(clientAuth, adminAuth){
 
   router.post(
     "/signup", [ 
-      check("name").trim().escape().isLength({ min: 1 }).withMessage('Name must contain at least one letter'),
-      check("surname").trim().escape().isLength({ min: 1 }).withMessage('Surname must contain at least one letter'),
+      check("name").trim().escape().isLength({ min: 1 }).withMessage('Username must contain at least one letter'),
       check('email').isEmail().withMessage('Email address is invalid'),
       // https://express-validator.github.io/docs/api/validation-chain/#isstrongpassword
       check('password').isStrongPassword({
@@ -90,7 +89,7 @@ export function authenticationRouter(clientAuth, adminAuth){
         const user = userCredential.user;
 
         updateProfile(user, {
-          displayName: request.body.name + " " + request.body.surname
+          displayName: request.body.name
         });
 
         console.log(user);
@@ -168,17 +167,47 @@ export function authenticationRouter(clientAuth, adminAuth){
   router.post('/sessionLogout', async (request, response) => {
     // adapted from: https://firebase.google.com/docs/auth/admin/manage-cookies#sign_out
     const userSessionDetails = await getUserSessionDetails(adminAuth, request);
-    console.log("-----1111111111111111userSessionDetails: ");
-    console.log(userSessionDetails);
     await adminAuth.revokeRefreshTokens(userSessionDetails.sub);
-
-    console.log("-----2222222222222222userSessionDetails: ");
-    console.log(userSessionDetails);
     response.clearCookie('session');
-
-  
     response.redirect('/');
+  });
 
+  router.get("/resetPassword", (request, response) => {
+    let authTemplate = path.join(__dirname, '..',"views/authentication.ejs");
+    let payload = {authType: "resetPassword", statusCode: null, authInfoMessage: null, authInfoTitle: null};
+    response.render(authTemplate, payload);
+  });
+
+  router.post("/resetPassword", async(request, response) => {
+    let authTemplate = path.join(__dirname, '..',"views/authentication.ejs");
+    const successMessage = `We sent instructions to reset your password to ${request.body.email}`;
+
+    try {
+      await sendPasswordResetEmail(clientAuth, request.body.email);
+
+      // Password reset email sent!
+      let payload = {authType: "login", statusCode: 200,
+                      authInfoTitle: authInfoSuccessTitle,
+                      authInfoMessage: successMessage};
+
+      response.status(200).render(authTemplate, payload);
+    } catch(error) {
+      // don't let users know what addresses exist or not for security reasons
+      let message = error.code + "\n" + error.message;
+      let code = 500;
+      let title = authInfoErrorTitle;
+
+      if(error.code === "auth/user-not-found"){
+        code = 200;
+        title = authInfoSuccessTitle;
+        message = successMessage;
+      }
+      // reload the page, which will display a modal with error message
+      let payload = {authType: "resetPassword", statusCode: code, authInfoTitle: title,
+                     authInfoMessage: message};
+      response.status(code).render(authTemplate, payload);
+    }
+    
   });
 
   return router;
