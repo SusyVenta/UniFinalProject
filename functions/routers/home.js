@@ -11,18 +11,24 @@ export function homeRouter(adminAuth) {
 
   router.get("/", async(request, response) => {
       let indexPath = path.join(__dirname, '..',"views/home.ejs");
+      try{
+        // see if user already created a session. If not, return unauthenticated version of the page.
+        let userSessionDetails = await getUserSessionDetails(adminAuth, request); // object or undefined
+        
+        let userAuthenticated = false;
 
-      // see if user already created a session. If not, return unauthenticated version of the page.
-      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // object or undefined
-      
-      let userAuthenticated = false;
+        if(typeof userSessionDetails !== "undefined"){
+          userAuthenticated = true;
+        }
 
-      if(typeof userSessionDetails !== "undefined"){
-        userAuthenticated = true;
+        let payload = {userIsAuthenticated: userAuthenticated, logs: JSON.stringify(userSessionDetails) + "\n\nuserAuthenticated: " + userAuthenticated};
+        
+        response.send(payload);
+        //response.render(indexPath, payload);
+      } catch(error){
+        response.send({errors: error});
       }
-
-      let payload = {userIsAuthenticated: userAuthenticated, logs: JSON.stringify(userSessionDetails) + "\n\nuserAuthenticated: " + userAuthenticated};
-      response.render(indexPath, payload);
+      
 
     });
 
