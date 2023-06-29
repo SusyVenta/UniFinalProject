@@ -40,7 +40,7 @@ export async function getUserSessionDetails(adminAuth, request) {
     sessionCookie = request.cookies.session;
   } catch(error){
     console.log("error: " + error);
-    return undefined;
+    return error; //return undefined;
   }
   console.log("sessionCookie: " + sessionCookie);
   // Verify the session cookie. In this case an additional check is added to detect
@@ -51,6 +51,6 @@ export async function getUserSessionDetails(adminAuth, request) {
     return decodedClaims;
   } catch {
     // Session cookie is unavailable or invalid. 
-    return undefined;
+    return error; //return undefined;
   }
 }; 
