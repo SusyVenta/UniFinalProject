@@ -12,7 +12,7 @@ export function attachCsrfToken(url, cookie, value) {
 export async function getUserSessionDetails(adminAuth, request) {
   /* 
   Returns:
-  - If user is authenticated: 
+  - If user is authenticated: {errors: null, userSessionDetails: <the below>}
 
     {
     >    iss: 'https://session.firebase.google.com/grouptripper-3c7f1',
@@ -29,28 +29,26 @@ export async function getUserSessionDetails(adminAuth, request) {
     >    uid: 'MAZfmDajphgt4EEhe9vNWL8y0Su2'
     >  }
 
-  - if user is not authenticated:
-      undefined
+  - if user is not authenticated: {errors: null, userSessionDetails: null}
+  - if there was an error: {errors: <some error>, userSessionDetails: null}
   ____________________________________________________
   Source: https://firebase.google.com/docs/auth/admin/manage-cookies
   */
-  let sessionCookie = '';
-      
-  try {
-    sessionCookie = request.cookies.session;
-  } catch(error){
-    console.log("error: " + error);
-    return error; //return undefined;
-  }
-  console.log("sessionCookie: " + sessionCookie);
+  
   // Verify the session cookie. In this case an additional check is added to detect
   // if the user's Firebase session was revoked, user deleted/disabled, etc.
+  let returnObject = {errors: null, userSessionDetails: null};
+
   try {
-    let decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true /** checkRevoked */);
-    console.log("decodedClaims: " + decodedClaims);
-    return decodedClaims;
+    let sessionCookie = request.cookies.session;
+    
+    if (typeof sessionCookie !== "undefined"){
+      let decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true /** checkRevoked */);
+      returnObject.userSessionDetails = decodedClaims;
+    }
   } catch(error) {
     // Session cookie is unavailable or invalid. 
-    return error; //return undefined;
+    returnObject.errors = error; 
   }
+  return returnObject;
 }; 

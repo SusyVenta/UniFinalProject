@@ -166,8 +166,8 @@ export function authenticationRouter(clientAuth, adminAuth){
 
   router.post('/sessionLogout', async (request, response) => {
     // adapted from: https://firebase.google.com/docs/auth/admin/manage-cookies#sign_out
-    const userSessionDetails = await getUserSessionDetails(adminAuth, request);
-    await adminAuth.revokeRefreshTokens(userSessionDetails.sub);
+    const userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+    await adminAuth.revokeRefreshTokens(userSessionDetails.userSessionDetails.sub);
     response.clearCookie('session');
     response.redirect('/');
   });
