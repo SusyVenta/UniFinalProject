@@ -49,7 +49,7 @@ export async function getUserSessionDetails(adminAuth, request) {
     let decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true /** checkRevoked */);
     console.log("decodedClaims: " + decodedClaims);
     return decodedClaims;
-  } catch {
+  } catch(error) {
     // Session cookie is unavailable or invalid. 
     return error; //return undefined;
   }
