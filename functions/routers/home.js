@@ -15,21 +15,18 @@ export function homeRouter(adminAuth) {
         // see if user already created a session. If not, return unauthenticated version of the page.
         let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
         
-        let userAuthenticated = false;
+        let payload = {userIsAuthenticated: false, name: ""};
 
         if(userSessionDetails.userSessionDetails !== null){
-          userAuthenticated = true;
+          payload.userIsAuthenticated = true;
+          payload.name = userSessionDetails.userSessionDetails.name;
         }
 
-        let payload = {userIsAuthenticated: userAuthenticated, 
-                       logs: JSON.stringify(userSessionDetails) + "\n\nuserAuthenticated: " + userAuthenticated + "\n\n request cookies: \n\n " + JSON.stringify(request.cookies)
-                      };
-        
         response.render(indexPath, payload);
+
       } catch(error){
         response.send({errors: error});
       }
-
     });
 
    return router;

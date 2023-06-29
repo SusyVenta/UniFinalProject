@@ -59,6 +59,7 @@
 
 6) Deploying site
    - enable blaze plan: https://console.firebase.google.com/project/grouptripper-3c7f1/usage/details
+   - cd "C:\Users\ventafri\Desktop\Uni\year 3\UniFinalProject"
    - firebase login 
    - firebase deploy -m "Deploying the best new feature ever."
    - view site at https://grouptripper-3c7f1.web.app
