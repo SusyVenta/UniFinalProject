@@ -14,14 +14,14 @@ export function homeRouter(adminAuth) {
 
       // see if user already created a session. If not, return unauthenticated version of the page.
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // object or undefined
-      console.log(userSessionDetails);
       
-      let payload = {userIsAuthenticated: false};
+      let userAuthenticated = false;
 
       if(typeof userSessionDetails !== "undefined"){
-        payload = {userIsAuthenticated: true};
+        userAuthenticated = true;
       }
 
+      let payload = {userIsAuthenticated: userAuthenticated, logs: JSON.stringify(userSessionDetails) + "\n\nuserAuthenticated: " + userAuthenticated};
       response.render(indexPath, payload);
 
     });
