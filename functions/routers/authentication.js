@@ -155,7 +155,8 @@ export function authenticationRouter(clientAuth, adminAuth){
         (sessionCookie) => {
           // Set cookie policy for session cookie.
           const options = { maxAge: expiresIn, httpOnly: true, secure: true };
-          response.cookie('session', sessionCookie, options);
+          // https://firebase.google.com/docs/hosting/manage-cache#using_cookies
+          response.cookie('__session', sessionCookie, options);
           response.end(JSON.stringify({ status: 'success' }));
         },
         (error) => {
@@ -168,7 +169,7 @@ export function authenticationRouter(clientAuth, adminAuth){
     // adapted from: https://firebase.google.com/docs/auth/admin/manage-cookies#sign_out
     const userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
     await adminAuth.revokeRefreshTokens(userSessionDetails.userSessionDetails.sub);
-    response.clearCookie('session');
+    response.clearCookie('__session');
     response.redirect('/');
   });
 

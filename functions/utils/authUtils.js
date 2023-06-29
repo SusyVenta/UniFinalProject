@@ -40,8 +40,9 @@ export async function getUserSessionDetails(adminAuth, request) {
   let returnObject = {errors: null, userSessionDetails: null};
 
   try {
-    let sessionCookie = request.cookies.session;
-    
+    // https://firebase.google.com/docs/hosting/manage-cache#using_cookies
+    let sessionCookie = request.cookies.__session;
+
     if (typeof sessionCookie !== "undefined"){
       let decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true /** checkRevoked */);
       returnObject.userSessionDetails = decodedClaims;

@@ -27,7 +27,6 @@ export function homeRouter(adminAuth) {
         
         response.render(indexPath, payload);
       } catch(error){
-        throw error;
         response.send({errors: error});
       }
 
