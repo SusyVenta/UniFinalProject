@@ -81,7 +81,9 @@
    - enabled email and password from console
 9) Use Firebase Admin SDK for backend
     - https://console.firebase.google.com/project/grouptripper-3c7f1/settings/serviceaccounts/adminsdk
-    - 
+10) running unit tests:
+   - `cd "C:\Users\ventafri\Desktop\Uni\year 3\UniFinalProject"`
+   - `npm test`
 
 # useful links: 
 
