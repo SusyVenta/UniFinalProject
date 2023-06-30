@@ -10,7 +10,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "node --test ./test",
+    "test": "node --loader=esmock --test ./test",
     "build": "webpack --mode=development",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
@@ -37,15 +37,16 @@
     "firebase-admin": "^11.9.0",
     "firebase-functions": "^4.4.1",
     "express-validator": "7.0.0",
-    "cookie-parser": "1.4.6",
-    "node-mocks-http": "1.12.2",
-    "jest": "29.5.0",
-    "sinon": "15.2.0"
+    "cookie-parser": "1.4.6"
   },
   "devDependencies": {
     "webpack": "^5.88.0",
     "webpack-cli": "^5.1.4",
-    "firebase-functions-test": "^0.2.0"
+    "firebase-functions-test": "^0.2.0",
+    "node-mocks-http": "1.12.2",
+    "jest": "29.5.0",
+    "sinon": "15.2.0",
+    "esmock": "2.3.1"
   },
   "private": true,
   "type": "module"
