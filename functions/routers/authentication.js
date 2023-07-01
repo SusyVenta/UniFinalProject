@@ -127,7 +127,7 @@ export function authenticationRouter(
         });
   });
 
-  router.post('/sessionLogin', (request, response) => {
+  router.post('/sessionLogin', async (request, response) => {
     // Get the ID token passed and the CSRF token.
     const idToken = request.body.idToken.toString();
     const csrfToken = request.body.csrfToken.toString();
@@ -139,34 +139,32 @@ export function authenticationRouter(
     // Set session expiration to 8 hours - user needs to log in every 8 hours.
     const expiresIn = 8 * 60 * 60 * 1000 // 8 hours
 
-    // Create the session cookie. This will also verify the ID token in the process.
-    // The session cookie will have the same claims as the ID token.
-    // To only allow session cookie setting on recent sign-in, auth_time in ID token
-    // can be checked to ensure user was recently signed in before creating a session cookie.
-    adminAuth.verifyIdToken(idToken)
-      .then((decodedIdToken) => {
-        // Only process if the user just signed in in the last 5 minutes.
-        if (new Date().getTime() / 1000 - decodedIdToken.auth_time < 5 * 60) {
-          // Create session cookie and set it.
-          return adminAuth.createSessionCookie(idToken, { expiresIn });
-        }
+    try {
+      // Create the session cookie. This will also verify the ID token in the process.
+      // The session cookie will have the same claims as the ID token.
+      // To only allow session cookie setting on recent sign-in, auth_time in ID token
+      // can be checked to ensure user was recently signed in before creating a session cookie.
+      let decodedIdToken = await adminAuth.verifyIdToken(idToken);
+      // Only process if the user just signed in in the last 5 minutes.
+      if ((new Date().getTime() / 1000 - Number(decodedIdToken.auth_time)) < (5 * 60)) {
+        // Create session cookie and set it.
+        let sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn });
+        // Set cookie policy for session cookie.
+        const options = { maxAge: expiresIn, httpOnly: true, secure: true };
+        // https://firebase.google.com/docs/hosting/manage-cache#using_cookies
+        // https://stackoverflow.com/questions/44929653/firebase-cloud-function-wont-store-cookie-named-other-than-session
+        response.cookie('__session', sessionCookie, options);
+        response.status(200).send('success');
+        return;
+      } else {
         // A user that was not recently signed in is trying to set a session cookie.
         // To guard against ID token theft, require re-authentication.
         response.status(401).send('Recent sign in required!');
-      })
-      .then(
-        (sessionCookie) => {
-          // Set cookie policy for session cookie.
-          const options = { maxAge: expiresIn, httpOnly: true, secure: true };
-          // https://firebase.google.com/docs/hosting/manage-cache#using_cookies
-          // https://stackoverflow.com/questions/44929653/firebase-cloud-function-wont-store-cookie-named-other-than-session
-          response.cookie('__session', sessionCookie, options);
-          response.end(JSON.stringify({ status: 'success' }));
-        },
-        (error) => {
-          response.status(401).send('UNAUTHORIZED REQUEST!');
-        }
-      );
+        return;
+      }
+    } catch(error){
+      response.status(500).send(error);
+    }
   });
 
   router.post('/sessionLogout', async (request, response) => {
