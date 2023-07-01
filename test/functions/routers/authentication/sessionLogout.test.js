@@ -1,4 +1,4 @@
-import { describe, it, mock } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import httpMocks from 'node-mocks-http';
 import { EventEmitter } from 'events';

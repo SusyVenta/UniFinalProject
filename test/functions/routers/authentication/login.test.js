@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, afterEach } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { authenticationRouter } from '../../../../functions/routers/authentication.js';
 import httpMocks from 'node-mocks-http';

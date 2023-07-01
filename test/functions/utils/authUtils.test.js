@@ -1,4 +1,4 @@
-import { describe, it, mock, test } from 'node:test';
+import { describe, it, mock } from 'node:test';
 import assert from 'node:assert';
 import { attachCsrfToken, getUserSessionDetails } from '../../../functions/utils/authUtils.js'; 
 
