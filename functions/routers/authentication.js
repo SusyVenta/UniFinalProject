@@ -74,7 +74,6 @@ export function authenticationRouter(
           result.throw();
           // accessing request.body.<attribute> now returns sanitized input as specified above
         } catch (e) {
-          console.log("Error: " + JSON.stringify(e));
           // reload the sigup page, which will display a modal with error message
           let payload = {authType: "signup", statusCode: 400, 
                         authInfoMessage: e.array({ onlyFirstError: true })[0].msg,
@@ -83,14 +82,12 @@ export function authenticationRouter(
           return response.status(400).render(authTemplate, payload);
         }
 
-        console.log("continues execution");
         if (request.body.termsandconditions != "on") {
           // reload the sigup page, which will display a modal with error message
           let payload = {authType: "signup", statusCode: 400, authInfoTitle: authInfoErrorTitle,
                         authInfoMessage: "Terms and conditions must be accepted in order to register"};
           response.status(400).render(authTemplate, payload);
         }
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         // create user in database 
         createUserWithEmailAndPassword(clientAuth, request.body.email, request.body.password)
         .then((userCredential) => {
@@ -100,8 +97,6 @@ export function authenticationRouter(
           updateProfile(user, {
             displayName: request.body.name
           });
-
-          console.log(user);
           sendEmailVerification(user)
           .then(() => {
             signOut(clientAuth).then(() => {
@@ -130,7 +125,6 @@ export function authenticationRouter(
                         authInfoMessage: statusCode + "\n" + authInfoMessage};
           response.status(400).render(authTemplate, payload);
         });
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!keeps executing 2");
   });
 
   router.post('/sessionLogin', (request, response) => {

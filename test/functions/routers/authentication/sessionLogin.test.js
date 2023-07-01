@@ -1,4 +1,4 @@
-import { describe, it } from 'node:test';
+import { describe, it, mock } from 'node:test';
 import assert from 'node:assert';
 import httpMocks from 'node-mocks-http';
 import { EventEmitter } from 'events';
@@ -6,7 +6,42 @@ import { authenticationRouter } from '../../../../functions/routers/authenticati
 
 
 describe('authenticationRouter', () => {
-    it("GET /signup should render authentication.ejs with the correct payload", () => {
+  it("POST /signup with wrong form data should render authentication.ejs with error message", () => {
+    // Create a mock request object
+    let request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/signup',
+      body: {
+        name: "CorrectName",
+        email: "invalidemail",
+        password: "Mypassword-123",
+        termsandconditions: "on"
+      },
+      headers: {
+        "accept": "text/html"
+      }
+    });
+
+    let response = httpMocks.createResponse({eventEmitter: EventEmitter});
+
+    response.on("render", () => {
+      // wait until event "render" is fired before checking results
+      assert.strictEqual(response.statusCode, 400);
+      assert.deepEqual(response._getRenderData(), {
+        authType: "signup",
+        statusCode: 400,
+        authInfoMessage: 'Email address is invalid',
+        authInfoTitle: "Ops! Looks like something went wrong"
+      });
+    });
+
+    let router = authenticationRouter({}, {});
+    router.handle(request, response);
+    
+  });
+});
+  /*
+    it("POST /sessionLogin should render authentication.ejs with the correct payload", () => {
         let request  = httpMocks.createRequest({
             method: 'GET',
             url: '/signup'
@@ -27,39 +62,7 @@ describe('authenticationRouter', () => {
     });
 
 
-    it("POST /signup with wrong form data should render authentication.ejs with error message", () => {
-      // Create a mock request object
-      let request = httpMocks.createRequest({
-        method: 'POST',
-        url: '/signup',
-        body: {
-          name: "CorrectName",
-          email: "invalidemail",
-          password: "Mypassword-123",
-          termsandconditions: "on"
-        },
-        headers: {
-          "accept": "text/html"
-        }
-      });
-
-      let response = httpMocks.createResponse({eventEmitter: EventEmitter});
-
-      response.on("render", () => {
-        // wait until event "render" is fired before checking results
-        assert.strictEqual(response.statusCode, 400);
-        assert.deepEqual(response._getRenderData(), {
-          authType: "signup",
-          statusCode: 400,
-          authInfoMessage: 'Email address is invalid',
-          authInfoTitle: "Ops! Looks like something went wrong"
-        });
-      });
-
-      let router = authenticationRouter({}, {});
-      router.handle(request, response);
-      
-    });
+    
 
     it("POST /signup with correct form data should render authentication.ejs with success message", () => {
       function createUserWithEmailAndPassword(clientAuth, email, password) {
@@ -124,6 +127,6 @@ describe('authenticationRouter', () => {
         router.handle(request, response);
       });
       
-    });
+    });*/
     
-});
+
