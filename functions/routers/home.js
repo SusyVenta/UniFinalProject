@@ -2,11 +2,11 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { getUserSessionDetails } from "../utils/authUtils.js";
+import { getUserSessionDetails as importedGetUserSessionDetails} from "../utils/authUtils.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export function homeRouter(adminAuth) {
+export function homeRouter(adminAuth, getUserSessionDetails = importedGetUserSessionDetails) {
   const router = new express.Router();
 
   router.get("/", async(request, response) => {
@@ -25,7 +25,7 @@ export function homeRouter(adminAuth) {
         response.render(indexPath, payload);
 
       } catch(error){
-        response.send({errors: error});
+        response.status(500).send(error);
       }
     });
 
