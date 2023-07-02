@@ -132,7 +132,7 @@ const chat = functions.firestore
     socketio.emit('message', message);
 });
 
-server.listen(5000, function(){
+server.listen(5001, function(){
   console.log('listening on *: '+ process.env.PORT + "\n");
 });
 
