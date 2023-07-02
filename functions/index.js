@@ -96,7 +96,18 @@ async function getCities(db) {
     return cityList;
   }
   */
+//const PORT = process.env.PORT || 3000;
+//const usedPort = 9150;
+
+//console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!PORT being used for server: " + process.env.PORT);
+
 socketio.on('connection', (client) => {
+  client.emit("hello", "first message");
+  client.on("message", (arg) =>{
+    console.log("SERVER RECEIVED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: ");
+    console.log(arg);
+  });
+
   const db = admin.firestore();
   console.log('a user connected');
 
@@ -105,12 +116,21 @@ socketio.on('connection', (client) => {
   });
 });
 
-export const exportedapp = functions.https.onRequest(app);
+socketio.emit('message1', "message1");
+socketio.on("message", (arg) =>{
+  console.log("SERVER RECEIVED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: " + message);
+  console.log(arg);
+});
 
-export const chat = functions.firestore
+const exportedapp = functions.https.onRequest(app);
+
+const chat = functions.firestore
   .document('chat_messages/{messageId}')
   .onCreate((snapshot, context) => {
     const message = snapshot.data();
 
-    io.emit('message', message);
+    socketio.emit('message', message);
 });
+
+
+export { chat, exportedapp };

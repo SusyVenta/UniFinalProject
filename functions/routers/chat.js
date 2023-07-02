@@ -21,7 +21,7 @@ export function chatRouter(adminAuth, getUserSessionDetails = importedGetUserSes
         response.render(indexPath, payload);
 
       } catch(error){
-        response.status(500).send(error);
+        response.status(500).send(JSON.stringify(error));
       }
     });
 

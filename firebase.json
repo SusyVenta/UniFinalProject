@@ -27,6 +27,10 @@
     },
     "ui": {
       "enabled": true
+    },
+    "firestore": {
+      "port": "9150",
+      "websocketPort": "9150"
     }
   }
 }
