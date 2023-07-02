@@ -10,11 +10,14 @@ import { dirname } from 'path';
 import { homeRouter} from "./routers/home.js";
 import { authenticationRouter} from "./routers/authentication.js";
 import { legalRouter} from "./routers/legal.js";
+import { chatRouter} from "./routers/chat.js";
 import admin from "firebase-admin";
 import { initializeApp as initializeAdminApp } from 'firebase-admin/app';
 import { serviceAccountCreds } from './config/serviceAccount.js';
 import cookieParser from 'cookie-parser';
 import { attachCsrfToken } from './utils/authUtils.js'
+import { Server } from "socket.io";
+import { createServer } from 'http';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -29,7 +32,7 @@ const firebaseAdminApp = initializeAdminApp({
 
 
 const firebaseClientApp = initializeApp(firebaseConfig);
-const db = getFirestore(firebaseClientApp);
+//const db = getFirestore(firebaseAdminApp);
 
 const app = express();  
 
@@ -50,6 +53,9 @@ app.use(cookieParser());
 
 // Attach CSRF token on each request.
 app.use(attachCsrfToken('/', 'csrfToken', (Math.random()* 100000000000000000).toString()));
+
+const server = createServer(app); 
+const socketio = new Server(server);
 
 // initialize other services
 //const analytics = getAnalytics(firebaseApp);
@@ -74,6 +80,7 @@ const adminAuth = getAdminAuth(firebaseAdminApp);
 app.use("/", homeRouter(adminAuth));
 app.use("/auth", authenticationRouter(clientAuth, adminAuth));
 app.use("/legal", legalRouter());
+app.use("/chat", chatRouter(adminAuth));
 /*
 // create firestore collection
 const newTestCollection = collection(db, "new_test_collection");
@@ -89,5 +96,21 @@ async function getCities(db) {
     return cityList;
   }
   */
+socketio.on('connection', (client) => {
+  const db = admin.firestore();
+  console.log('a user connected');
+
+  client.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 
 export const exportedapp = functions.https.onRequest(app);
+
+export const chat = functions.firestore
+  .document('chat_messages/{messageId}')
+  .onCreate((snapshot, context) => {
+    const message = snapshot.data();
+
+    io.emit('message', message);
+});

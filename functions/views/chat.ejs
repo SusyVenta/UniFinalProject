@@ -18,37 +18,29 @@
   <link rel="stylesheet" href="/css/hero-image.css">
   <link rel="stylesheet" href="/css/generic.css">
   <link rel="stylesheet" href="/css/footer.css">
-  <link rel="stylesheet" href="/css/home.css">
-
+  
   <!-- JS -->
-  <script src="/js/home.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  <script type="module">
+    import { enableChatMessaging } from "/js/chat.js"; 
+
+    let sendButton = document.getElementById("login-button");
+    sendButton.addEventListener('click', function() { enableChatMessaging(io); });
+    
+  </script>
 </head>
 
 <body>
   <div>
     <%- include('partials/header'); %>
-    <%- include('partials/heroImage'); %>
   </div>
   <div>
     Hi <%= name %>!
-    <% if (userIsAuthenticated === true) { %>
-      <div>
-        <div class="dropdown">
-          <!-- By default, displays only upcoming trips. When selection changes, text on the menu button changes -->
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="tripTypeDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-            Upcoming Trips
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="tripTypeDropdownButton">
-            <li><button class="dropdown-item" onclick="filterTrips(this)">Upcoming Trips</button></li>
-            <li><button class="dropdown-item" onclick="filterTrips(this)">All</button></li>
-            <li><button class="dropdown-item" onclick="filterTrips(this)">Past trips</button></li>
-          </ul>
-        </div>
-        <div>
-          <a class="dropdown-item" href="/trip" rel="nofollow noopener noreferrer">Past trips</a>
-        </div>
-      </div>
-    <% } %>
+    <ul id="messages"></ul>
+    <form id="chat-form">
+      <input id="chat-message" autocomplete="off" />
+      <button id="login-button" type="button">Send</button>
+    </form>
   </div>
   
   <%- include('partials/footer'); %>
