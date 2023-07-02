@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { homeRouter} from "./routers/home.js";
 import { authenticationRouter} from "./routers/authentication.js";
+import { legalRouter} from "./routers/legal.js";
 import admin from "firebase-admin";
 import { initializeApp as initializeAdminApp } from 'firebase-admin/app';
 import { serviceAccountCreds } from './config/serviceAccount.js';
@@ -72,6 +73,7 @@ const adminAuth = getAdminAuth(firebaseAdminApp);
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
 app.use("/", homeRouter(adminAuth));
 app.use("/auth", authenticationRouter(clientAuth, adminAuth));
+app.use("/legal", legalRouter());
 /*
 // create firestore collection
 const newTestCollection = collection(db, "new_test_collection");

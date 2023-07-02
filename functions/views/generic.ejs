@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- SHARED HEAD -->
+  <%- include('partials/sharedHead') %>
+
+  <!-- Title tag in the browser and Google results -->
+  <title>GroupTripper | <%= title %></title>
+  <meta property="og:title" content="GroupTripper: <%= title %>" data-rh="true">
+  <meta property="twitter:title" content="GroupTripper: <%= title %>" data-rh="true">
+  <meta name="description" content="<%= title %> of GroupTripper. Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:description" content="<%= title %> of GroupTripper. Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta name="twitter:description" content="<%= title %> of GroupTripper. Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+
+  <!-- css -->
+  <link rel="stylesheet" href="/css/hero-image.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/generic.css">
+</head>
+
+<body>
+  <div>
+    <%- include('partials/header'); %>
+  </div>
+  <div id="main-container-below-header">
+    <section>
+      <%- include('partials/' + partialTitle); %>
+    </section>
+  </div>
+  
+  <%- include('partials/footer'); %>
+</body>
+
+</html>

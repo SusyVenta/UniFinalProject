@@ -13,3 +13,18 @@
     flex-wrap: wrap;
     padding: 10px;
   }
+
+#footer-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-item{
+  color: white;
+  cursor: pointer;
+}
+
+.footer-item:hover{
+  color: white;
+  cursor: pointer;
+}
