@@ -10,14 +10,11 @@ import { dirname } from 'path';
 import { homeRouter} from "./routers/home.js";
 import { authenticationRouter} from "./routers/authentication.js";
 import { legalRouter} from "./routers/legal.js";
-import { chatRouter} from "./routers/chat.js";
 import admin from "firebase-admin";
 import { initializeApp as initializeAdminApp } from 'firebase-admin/app';
 import { serviceAccountCreds } from './config/serviceAccount.js';
 import cookieParser from 'cookie-parser';
 import { attachCsrfToken } from './utils/authUtils.js'
-import { Server } from "socket.io";
-import { createServer } from 'http';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -32,7 +29,7 @@ const firebaseAdminApp = initializeAdminApp({
 
 
 const firebaseClientApp = initializeApp(firebaseConfig);
-//const db = getFirestore(firebaseAdminApp);
+const db = getFirestore(firebaseClientApp);
 
 const app = express();  
 
@@ -53,9 +50,6 @@ app.use(cookieParser());
 
 // Attach CSRF token on each request.
 app.use(attachCsrfToken('/', 'csrfToken', (Math.random()* 100000000000000000).toString()));
-
-const server = createServer(app); 
-const socketio = new Server(server);
 
 // initialize other services
 //const analytics = getAnalytics(firebaseApp);
@@ -80,7 +74,6 @@ const adminAuth = getAdminAuth(firebaseAdminApp);
 app.use("/", homeRouter(adminAuth));
 app.use("/auth", authenticationRouter(clientAuth, adminAuth));
 app.use("/legal", legalRouter());
-app.use("/chat", chatRouter(adminAuth));
 /*
 // create firestore collection
 const newTestCollection = collection(db, "new_test_collection");
@@ -96,44 +89,5 @@ async function getCities(db) {
     return cityList;
   }
   */
-//const PORT = process.env.PORT || 3000;
-//const usedPort = 9150;
 
-//console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!PORT being used for server: " + process.env.PORT);
-
-socketio.on('connection', (client) => {
-  client.emit("hello", "first message");
-  client.on("message", (arg) =>{
-    console.log("SERVER RECEIVED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: ");
-    console.log(arg);
-  });
-
-  const db = admin.firestore();
-  console.log('a user connected');
-
-  client.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-});
-
-socketio.emit('message1', "message1");
-socketio.on("message", (arg) =>{
-  console.log("SERVER RECEIVED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: " + message);
-  console.log(arg);
-});
-
-const exportedapp = functions.https.onRequest(app);
-
-const chat = functions.firestore
-  .document('chat_messages/{messageId}')
-  .onCreate((snapshot, context) => {
-    const message = snapshot.data();
-
-    socketio.emit('message', message);
-});
-
-server.listen(5001, function(){
-  console.log('listening on *: '+ process.env.PORT + "\n");
-});
-
-export { chat, exportedapp };
+export const exportedapp = functions.https.onRequest(app);

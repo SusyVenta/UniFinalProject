@@ -32,7 +32,7 @@ function postIdTokenToSessionLogin(url, idToken, csrfToken) {
     });
 };
 
-function logIn() {
+export function logIn() {
     const email = $("#email").val();
     const password = $("#password").val();
 
@@ -77,6 +77,4 @@ function logIn() {
         showLoginPageModal("Ops! Looks like something went wrong", 
                             statusCode + "\n" + authInfoMessage);
     });
-};
-
-export { firebaseApp, logIn };
+}
