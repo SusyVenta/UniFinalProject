@@ -7,7 +7,7 @@ export function enableChatMessaging(io){
     var db = getFirestore(firebaseApp);
 
     // Initialize Socket.io
-    var socket = io("https://grouptripper-3c7f1.web.app/");
+    var socket = io("https://" + window.location.hostname + ":" + 5000);
     console.log(socket);
     // Send message
     /*document.getElementById('chat-form').addEventListener('submit', (e) => {
