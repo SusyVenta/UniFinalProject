@@ -47,7 +47,7 @@
     ```
     cd "C:\Users\ventafri\Desktop\Uni\year 3\UniFinalProject"
     firebase emulators:start --only firestore,functions,hosting   <-- otherwise there are auth problems in verifying tokens
-    http://localhost:5004/home
+    http://localhost:5004/
     ```
 5) if you need to clone repo and reinstall dependencies:
    ```

@@ -8,6 +8,7 @@ import express from "express";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { homeRouter} from "./routers/home.js";
+import { tripsRouter} from "./routers/trips.js";
 import { authenticationRouter} from "./routers/authentication.js";
 import { legalRouter} from "./routers/legal.js";
 import admin from "firebase-admin";
@@ -74,6 +75,7 @@ const adminAuth = getAdminAuth(firebaseAdminApp);
 app.use("/", homeRouter(adminAuth));
 app.use("/auth", authenticationRouter(clientAuth, adminAuth));
 app.use("/legal", legalRouter());
+app.use("/trips", tripsRouter(adminAuth));
 /*
 // create firestore collection
 const newTestCollection = collection(db, "new_test_collection");

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- SHARED HEAD -->
+  <%- include('partials/sharedHead') %>
+
+  <!-- Title tag in the browser and Google results -->
+  <title>GroupTripper | Your trips</title>
+  <meta property="og:title" content="GroupTripper: best free group trip planner app - your trips" data-rh="true">
+  <meta property="twitter:title" content="GroupTripper: best free group trip planner app - your trips" data-rh="true">
+  <meta name="description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta name="twitter:description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:image:alt" content="Screenshot of GroupTripper: one view for your map and itinerary" data-rh="true">
+
+  <!-- css -->
+  <link rel="stylesheet" href="/css/hero-image.css">
+  <link rel="stylesheet" href="/css/generic.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/trips.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- JS -->
+  <script src="/js/trips.js"></script>
+</head>
+
+<body>
+  <div>
+    <%- include('partials/header'); %>
+    <%- include('partials/heroImage'); %>
+  </div>
+  <div class="outer-container">
+    <% if (userIsAuthenticated === true) { %>
+      <div class="title">
+        <h2><%= name %>'s trips</h2>
+      </div>
+      <div class="top-buttons">
+        <div class="dropdown">
+          <!-- By default, displays only upcoming trips. When selection changes, text on the menu button changes -->
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="tripTypeDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Upcoming Trips
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="tripTypeDropdownButton">
+            <li><button class="dropdown-item" onclick="filterTrips(this)">Upcoming Trips</button></li>
+            <li><button class="dropdown-item" onclick="filterTrips(this)">All</button></li>
+            <li><button class="dropdown-item" onclick="filterTrips(this)">Past trips</button></li>
+          </ul>
+        </div>
+        <div>
+          <a href="/trips/new/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer nofollow">New trip</a>
+        </div>
+      </div>
+      <div id="trips-container">
+        <% for(let trip of trips){  %>
+          <div class="trip">
+            <div class="trip-title-block">
+              <h3><%= trip.title %></h3>
+              <p><%= trip.date %></p>
+            </div>
+            <div class="trip-actions">
+              <!-- https://fonts.google.com/icons?selected=Material+Symbols+Outlined:share:FILL@0;wght@400;GRAD@0;opsz@48&icon.query=share -->
+              <button class="btn btn-secondary"><span class="material-symbols-outlined modified">delete</span></button>
+              <button class="btn btn-secondary"><span class="material-symbols-outlined modified">share</span></span></button>
+            </div>
+          </div>
+        <%} %>
+      </div>
+    <% } %>
+  </div>
+  
+  <%- include('partials/footer'); %>
+</body>
+
+</html>

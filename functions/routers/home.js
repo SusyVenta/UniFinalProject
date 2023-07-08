@@ -18,14 +18,15 @@ export function homeRouter(adminAuth, getUserSessionDetails = importedGetUserSes
         let payload = {userIsAuthenticated: false, name: ""};
 
         if(userSessionDetails.userSessionDetails !== null){
-          payload.userIsAuthenticated = true;
-          payload.name = userSessionDetails.userSessionDetails.name;
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.redirect('/trips');
         }
 
-        response.render(indexPath, payload);
+        return response.render(indexPath, payload);
 
       } catch(error){
-        response.status(500).send(error);
+        return response.status(500).send(error);
       }
     });
 
