@@ -11,8 +11,7 @@ export function tripsRouter(adminAuth, getUserSessionDetails = importedGetUserSe
 
   router.get("/", async(request, response) => {
       let indexPath = path.join(__dirname, '..',"views/trips.ejs");
-      try{
-        // see if user already created a session. If not, return unauthenticated version of the page.
+      try {
         let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
         
         let payload = {
@@ -55,5 +54,22 @@ export function tripsRouter(adminAuth, getUserSessionDetails = importedGetUserSe
       }
     });
 
-   return router;
+  router.delete("/:id", async(request, response) => {
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        // delete from DB - to implement 
+        console.log('Request Id:', request.params.id);
+
+        return response.status(200).send("Success");
+      } else {
+        return response.status(401).send("Unauthorized");
+      }
+    } catch(error){
+      response.status(500).send(error);
+    }
+  });
+
+  return router;
 };
