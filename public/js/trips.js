@@ -1,6 +1,34 @@
 function filterTrips(item) {
     // function updates the button of dropdown menu with chosen option
     document.getElementById("tripTypeDropdownButton").innerHTML = item.innerHTML;
+
+    if(item.innerHTML === "Upcoming trips"){
+      let elementsToDisplay = document.getElementsByName("upcoming");
+      for (let element of elementsToDisplay){
+        $(element).show();
+      }
+
+      let elementsToHide = document.getElementsByName("archived");
+      for (let element of elementsToHide){
+        $(element).hide();
+      }
+    } else if (item.innerHTML === "Past trips"){
+      let elementsToDisplay = document.getElementsByName("archived");
+      for (let element of elementsToDisplay){
+        $(element).show();
+      }
+
+      let elementsToHide = document.getElementsByName("upcoming");
+      for (let element of elementsToHide){
+        $(element).hide();
+      }
+    } else if(item.innerHTML === "All"){
+      let elementsToDisplay = document.getElementsByClassName("trip");
+      for (let element of elementsToDisplay){
+        $(element).show();
+      }
+    }
+ 
 };
 
 function showModal(item){

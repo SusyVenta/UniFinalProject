@@ -21,22 +21,26 @@ export function tripsRouter(adminAuth, getUserSessionDetails = importedGetUserSe
             {
               title: "Title 1",
               date: "11/11/2023",
-              id: "1"
+              id: "1",
+              status: "upcoming"
             },
             {
               title: "Title 2",
               date: "11/11/2023",
-              id: "2"
+              id: "2",
+              status: "upcoming"
             },
             {
               title: "Title 3",
               date: "11/11/2023",
-              id: "3"
+              id: "3",
+              status: "upcoming"
             },
             {
               title: "Title 4",
               date: "11/11/2023",
-              id: "4"
+              id: "4",
+              status: "archived"
             }
           ]
         };
