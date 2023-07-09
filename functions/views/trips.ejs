@@ -54,14 +54,14 @@
       </div>
       <div id="trips-container">
         <% for(let trip of trips){  %>
-          <div class="trip" id="trip-<%= trip.id %>">
+          <div class="trip" id="trip-<%= trip.id %>" onclick="redirectTripView(this, '<%= trip.id %>');">
             <div class="trip-title-block">
               <h3 id="trip-title-<%= trip.id %>"><%= trip.title %></h3>
               <p id="trip-date-<%= trip.id %>"><%= trip.date %></p>
             </div>
             <div class="trip-actions">
               <!-- https://fonts.google.com/icons?selected=Material+Symbols+Outlined:share:FILL@0;wght@400;GRAD@0;opsz@48&icon.query=share -->
-              <button class="btn btn-secondary" onclick="showModal(this);" name="delete_<%= trip.id %>">
+              <button id="delete_trip_button_<%= trip.id %>" class="btn btn-secondary" onclick="showModal(this);" name="delete_<%= trip.id %>">
                 <span class="material-symbols-outlined modified">delete</span>
               </button>
               <!--button class="btn btn-secondary" onclick="showModal(this)" name="share_<%= trip.id %>">

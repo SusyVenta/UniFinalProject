@@ -71,5 +71,22 @@ export function tripsRouter(adminAuth, getUserSessionDetails = importedGetUserSe
     }
   });
 
+  router.get("/:id", async(request, response) => {
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        // delete from DB - to implement 
+        console.log('Request Id:', request.params.id);
+
+        return response.status(200).send("will display template showing trip details");
+      } else {
+        return response.status(401).send("Unauthorized");
+      }
+    } catch(error){
+      response.status(500).send(error);
+    }
+  });
+
   return router;
 };

@@ -58,3 +58,10 @@ function deleteTrip(item){
     }
   });
 };
+
+function redirectTripView(element, tripId){
+  console.log("called redirectTripView");
+  console.log(element);
+  console.log(tripId);
+  //window.location.href = `/trips/${tripId}`;
+}
