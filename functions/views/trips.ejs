@@ -61,7 +61,8 @@
             </div>
             <div class="trip-actions">
               <!-- https://fonts.google.com/icons?selected=Material+Symbols+Outlined:share:FILL@0;wght@400;GRAD@0;opsz@48&icon.query=share -->
-              <button id="delete_trip_button_<%= trip.id %>" class="btn btn-secondary" onclick="showModal(this);" name="delete_<%= trip.id %>">
+              <!-- when clicked, stops propagation of click event so it doesn't trigger click on parent div -->
+              <button id="delete_trip_button_<%= trip.id %>" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);" name="delete_<%= trip.id %>">
                 <span class="material-symbols-outlined modified">delete</span>
               </button>
               <!--button class="btn btn-secondary" onclick="showModal(this)" name="share_<%= trip.id %>">
