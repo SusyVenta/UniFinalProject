@@ -92,5 +92,24 @@ export function tripsRouter(adminAuth, getUserSessionDetails = importedGetUserSe
     }
   });
 
+  router.post("/", async(request, response) => {
+    // Creates new trip
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        // add to DB - to implement 
+        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Creatign new trip');
+        console.log("body: " + JSON.stringify(request.body));
+
+        return response.status(200).send("Created trip");
+      } else {
+        return response.status(401).send("Unauthorized");
+      }
+    } catch(error){
+      response.status(500).send(error);
+    }
+  });
+
   return router;
 };

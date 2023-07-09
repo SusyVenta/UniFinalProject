@@ -20,10 +20,13 @@
   <link rel="stylesheet" href="/css/footer.css">
   <link rel="stylesheet" href="/css/trips.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+  
   <!-- JS -->
-  <script src="/js/trips.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <script src="/js/trips.js"></script>
 </head>
 
 <body>
@@ -49,7 +52,7 @@
           </ul>
         </div>
         <div>
-          <a href="/trips/new/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer nofollow">New trip</a>
+          <button class="btn btn-secondary" onclick="$('#new-trip-modal').show();">New trip</a>
         </div>
       </div>
       <div id="trips-container">
@@ -94,7 +97,91 @@
       </div>
     </div>
   </section>
+  <section>
+    <!-- modal displaying form to create new trip -->
+    <div id="new-trip-modal" class="modal" tabindex="-1" data-bs-backdrop="static">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title" id="new-trip-modal-title">New Trip</h1>
+            <button type="button" class="btn-close" onclick="$('#new-trip-modal').hide();" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <label for="new-trip-title" class="form-label">Title</label>
+            <input autocomplete="one-time-code" class="form-control" id="new-trip-title">
+
+            <hr class="dotted">
+            <h4>Dates</h4>
+            
+            <div class="dropdown date-collection-type">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="date-collection-type" data-bs-toggle="dropdown" aria-expanded="false">
+                Propose dates and ask participants to accept or decline
+              </button>
+              <ul class="dropdown-menu date-collection-type" aria-labelledby="date-collection-type">
+                <li><button class="dropdown-item date-collection-type" onclick="updateDateCollectionTypeDropdown(this);">Ask all participants when they're available before finalizing dates</button></li>
+                <li><button class="dropdown-item date-collection-type" onclick="updateDateCollectionTypeDropdown(this);">Propose dates and ask participants to accept or decline</button></li>
+              </ul>
+            </div>
+            
+            <!-- availability date-range picker -->
+            <div id="date-availabilities-container">
+              <div id="date-availability-1" class="date-availability-container">
+                <div class="horizontal-flex">
+                  <div class="label-and-input-container">
+                    <label for="new-trip-availability-1" class="form-label">When are you available?</label>
+                    <div class="form-control" >
+                      <i class="fa fa-calendar"></i>
+                      <input class="form-control" id="new-trip-availability-1" type="text" name="daterange" value="start date - end date" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- button to add more date ranges -->
+            <div id="add-dates-div">
+              <p>Add more date availabilities</p>
+              <button class="btn btn-secondary" onclick="addDateAvailabilityInput();">
+                <span class="fa-solid fa-add"></span>
+              </button>
+            </div>
+
+            <!-- days willing to travel -->
+            <div id="days-availability-container">
+              <label for="working-days-availability" class="form-label">
+                How many working days are you willing to travel?
+              </label>
+              <input autocomplete="one-time-code" type="number" class="form-control" id="working-days-availability">
+              <label for="total-days-availability" class="form-label">
+                How many days are you willing to travel in total?
+              </label>
+              <input autocomplete="one-time-code" type="number" class="form-control" id="total-days-availability">
+            </div>
+
+          </div>
+          <div class="modal-footer" id="new-trip-modal-footer">
+            <button id="new-trip-cancel-button" type="button" class="btn btn-secondary" onclick="$('#new-trip-modal').hide();">Cancel</button>
+            <button id="new-trip-create-button" type="submit" class="btn btn-secondary" onclick="saveTrip();">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <%- include('partials/footer'); %>
+  <script>
+    $(function() {
+      $('#new-trip-availability-1').daterangepicker({
+        opens: 'left',
+        minYear: moment().year(),
+        startDate: moment().date(),
+        endDate: moment().date()
+      });
+    });
+    $(`#new-trip-availability-1`).on('apply.daterangepicker', function(event, picker) {
+      let newValue = picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY');
+      document.getElementById("new-trip-availability-1").value = newValue;
+    });
+    </script>
 </body>
 
 </html>
