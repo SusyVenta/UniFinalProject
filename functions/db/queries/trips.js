@@ -5,7 +5,6 @@ export class TripQueries{
     };
 
     async listCollections(){
-        // when testing: http://localhost:4000/firestore
         let collectionsSnapshot = await this.db.listCollections();
 
         let collectionNames = [];
