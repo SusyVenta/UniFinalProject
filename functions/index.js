@@ -16,6 +16,7 @@ import { initializeApp as initializeAdminApp } from 'firebase-admin/app';
 import { serviceAccountCreds } from './config/serviceAccount.js';
 import cookieParser from 'cookie-parser';
 import { attachCsrfToken } from './utils/authUtils.js'
+import { Database } from './db/db.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -30,7 +31,6 @@ const firebaseAdminApp = initializeAdminApp({
 
 
 const firebaseClientApp = initializeApp(firebaseConfig);
-const db = getFirestore(firebaseClientApp);
 
 const app = express();  
 
@@ -52,44 +52,18 @@ app.use(cookieParser());
 // Attach CSRF token on each request.
 app.use(attachCsrfToken('/', 'csrfToken', (Math.random()* 100000000000000000).toString()));
 
-// initialize other services
-//const analytics = getAnalytics(firebaseApp);
 
 const clientAuth = getAuth(firebaseClientApp);
 const adminAuth = getAdminAuth(firebaseAdminApp);
 
-//const db = getFirestore(app);
 
-// Detect auth state
-
-/*onAuthStateChanged(auth, user => {
-    if (user != null){
-        console.log("logged in!");
-    } else {
-        console.log("not logged in");
-    }
-}); */
-
+const db = new Database(firebaseAdminApp);
 
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
 app.use("/", homeRouter(adminAuth));
 app.use("/auth", authenticationRouter(clientAuth, adminAuth));
 app.use("/legal", legalRouter());
-app.use("/trips", tripsRouter(adminAuth));
-/*
-// create firestore collection
-const newTestCollection = collection(db, "new_test_collection");
+app.use("/trips", tripsRouter(adminAuth, db));
 
-// get document from collection
-const snapshot = await getDocs(newTestCollection);
-
-// Get a list of cities from your database
-async function getCities(db) {
-    const citiesCol = collection(db, 'cities');
-    const citySnapshot = await getDocs(citiesCol);
-    const cityList = citySnapshot.docs.map(doc => doc.data());
-    return cityList;
-  }
-  */
 
 export const exportedapp = functions.https.onRequest(app);

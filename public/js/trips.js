@@ -72,6 +72,7 @@ function showModal(item){
 };
 
 function deleteTrip(item){
+  // deletes selected trip by calling API endpoint
   let tripId = item.name;
   $.ajax({
     url: `/trips/${tripId}`,
@@ -80,7 +81,7 @@ function deleteTrip(item){
       withCredentials: true
    },
     success : function () {
-      // reload trips page
+      // reload trips page on status 200
       window.location.href = "/trips";
     }
   });
@@ -99,6 +100,7 @@ function updateDateCollectionTypeDropdown(item){
 };
 
 function deleteDateAvailability(element){
+  // deletes div with date availability
   let elementToDelete = document.getElementById(`date-availability-${element.name}`);
   elementToDelete.remove();
 }
@@ -188,6 +190,7 @@ function addDateAvailabilityInput(){
 
   dateAvailabilitiesContainer.appendChild(dateAvailabilityDiv);
 
+  // associate date picker to input created above
   $(function() {
     $(`#new-trip-availability-${newId}`).daterangepicker({
       opens: 'left',
@@ -205,6 +208,7 @@ function addDateAvailabilityInput(){
 };
 
 function getSelectedDates(){
+  // returns availability dates selected by user as an array
   let dateAvailabilities = document.querySelectorAll('[id^="new-trip-availability-"]');
   
   let selectedDates = [];
@@ -215,6 +219,7 @@ function getSelectedDates(){
 };
 
 function saveTrip(){
+  // collects data from modal and submits it to the API endpoint
   let payload = { 
     tripTitle: document.getElementById("new-trip-title").value, 
     dateCollectionType: document.getElementById("date-collection-type").innerHTML,
@@ -222,7 +227,6 @@ function saveTrip(){
     workingDaysAvailability: document.getElementById("working-days-availability").value,
     totalDaysAvailability: document.getElementById("total-days-availability").value
   };
-  console.log(payload);
   
   $.ajax({
     url: `/trips`,
@@ -232,7 +236,7 @@ function saveTrip(){
     },
     data: jQuery.param(payload),
     success : function () {
-      // reload trips page
+      // reload trips page on status 200
       window.location.href = "/trips";
     }
   });

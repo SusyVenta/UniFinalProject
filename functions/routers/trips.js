@@ -6,7 +6,7 @@ import { getUserSessionDetails as importedGetUserSessionDetails} from "../utils/
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export function tripsRouter(adminAuth, getUserSessionDetails = importedGetUserSessionDetails) {
+export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUserSessionDetails) {
   const router = new express.Router();
 
   router.get("/", async(request, response) => {
@@ -99,8 +99,7 @@ export function tripsRouter(adminAuth, getUserSessionDetails = importedGetUserSe
 
       if(userSessionDetails.userSessionDetails !== null){
         // add to DB - to implement 
-        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Creatign new trip');
-        console.log("body: " + JSON.stringify(request.body));
+        db.tripQueries.createTrip(request.body);
 
         return response.status(200).send("Created trip");
       } else {
