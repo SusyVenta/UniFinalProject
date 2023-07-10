@@ -61,7 +61,7 @@ const db = new Database(firebaseAdminApp);
 
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
 app.use("/", homeRouter(adminAuth));
-app.use("/auth", authenticationRouter(clientAuth, adminAuth));
+app.use("/auth", authenticationRouter(clientAuth, adminAuth, db));
 app.use("/legal", legalRouter());
 app.use("/trips", tripsRouter(adminAuth, db));
 

@@ -115,12 +115,27 @@
             <h4>Dates</h4>
             
             <div class="dropdown date-collection-type">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="date-collection-type" data-bs-toggle="dropdown" aria-expanded="false">
+              <button name="2" 
+                      class="btn btn-secondary dropdown-toggle" 
+                      type="button" id="date-collection-type" 
+                      data-bs-toggle="dropdown" aria-expanded="false">
                 Propose dates and ask participants to accept or decline
               </button>
               <ul class="dropdown-menu date-collection-type" aria-labelledby="date-collection-type">
-                <li><button class="dropdown-item date-collection-type" onclick="updateDateCollectionTypeDropdown(this);">Ask all participants when they're available before finalizing dates</button></li>
-                <li><button class="dropdown-item date-collection-type" onclick="updateDateCollectionTypeDropdown(this);">Propose dates and ask participants to accept or decline</button></li>
+                <li>
+                  <button class="dropdown-item date-collection-type" 
+                          onclick="updateDateCollectionTypeDropdown(this);"
+                          name="1"
+                          >
+                    Ask all participants when they're available before finalizing dates
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item date-collection-type" 
+                          onclick="updateDateCollectionTypeDropdown(this);"
+                          name="2"
+                          >
+                  Propose dates and ask participants to accept or decline</button></li>
               </ul>
             </div>
             

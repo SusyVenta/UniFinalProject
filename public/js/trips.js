@@ -97,6 +97,7 @@ function redirectTripView(element, tripId){
 function updateDateCollectionTypeDropdown(item){
   // function updates the button of dropdown menu with chosen option
   document.getElementById("date-collection-type").innerHTML = item.innerHTML;
+  document.getElementById("date-collection-type").name = item.name;
 };
 
 function deleteDateAvailability(element){
@@ -222,8 +223,8 @@ function saveTrip(){
   // collects data from modal and submits it to the API endpoint
   let payload = { 
     tripTitle: document.getElementById("new-trip-title").value, 
-    dateCollectionType: document.getElementById("date-collection-type").innerHTML,
-    selectedDates: getSelectedDates(),
+    askAllParticipantsDates: document.getElementById("date-collection-type").name,
+    datesPreferences: getSelectedDates(),
     workingDaysAvailability: document.getElementById("working-days-availability").value,
     totalDaysAvailability: document.getElementById("total-days-availability").value
   };

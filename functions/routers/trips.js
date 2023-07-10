@@ -54,7 +54,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         }
 
       } catch(error){
-        response.status(500).send(error);
+        response.status(500).send(error.message);
       }
     });
 
@@ -71,7 +71,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         return response.status(401).send("Unauthorized");
       }
     } catch(error){
-      response.status(500).send(error);
+      response.status(500).send(error.message);
     }
   });
 
@@ -88,7 +88,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         return response.status(401).send("Unauthorized");
       }
     } catch(error){
-      response.status(500).send(error);
+      response.status(500).send(error.message);
     }
   });
 
@@ -98,15 +98,24 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
-        // add to DB - to implement 
-        db.tripQueries.createTrip(request.body);
+        try {
+          let tripDocId = await db.tripQueries.createTrip(
+            request.body, 
+            userSessionDetails.userSessionDetails.uid);
 
-        return response.status(200).send("Created trip");
+            // add trip ID to owner's document
+            await db.updateDocument("users", userSessionDetails.userSessionDetails.uid, {trips: [tripDocId]}); 
+
+          return response.status(200).send("Created trip");
+        } catch (e){
+          return response.status(500).send(e.message);
+        }
+        
       } else {
         return response.status(401).send("Unauthorized");
       }
     } catch(error){
-      response.status(500).send(error);
+      response.status(500).send(error.message);
     }
   });
 

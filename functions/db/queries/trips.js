@@ -1,28 +1,38 @@
+import moment from 'moment';
+
 
 export class TripQueries{
-    constructor(db){
-        this.db = db;
+    constructor(parentClass){
+        this.parent = parentClass;
     };
 
-    async listCollections(){
-        let collectionsSnapshot = await this.db.listCollections();
-
-        let collectionNames = [];
-        collectionsSnapshot.forEach(snaps => {
-            collectionNames.push(snaps["_queryOptions"].collectionId);
-        });
-        return collectionNames;
-    }
-
-    async createTrip(dataToAdd){
+    async createTrip(dataToAdd, uid){
         // creates document to collection 'trips'. 
         // If the collection doesn't exist, it creates it.
-        let tripsCollection = await this.db.collection("trips");
-        let addedDoc = await tripsCollection.add({
-            dataToAdd
-        });
+        if (dataToAdd.askAllParticipantsDates === "2"){
+            dataToAdd.askAllParticipantsDates = false;
+        } else {
+            dataToAdd.askAllParticipantsDates = true;
+        }
+
+        dataToAdd.tripOwner = uid;
+        dataToAdd.finalizedStartDate = null;
+        dataToAdd.status = "upcoming";
+        dataToAdd.creationDatetimeUTC = moment.utc();
+        dataToAdd.lastUpdatedDatetimeUTC = moment.utc();
+        dataToAdd.participantsStatus = {[uid]: "owner"};
+        dataToAdd.workingDaysAvailability = {[uid]: parseInt(dataToAdd.workingDaysAvailability)};
+        dataToAdd.totalDaysAvailability = {[uid]: parseInt(dataToAdd.totalDaysAvailability)};
         
-        let addedDocID = addedDoc["_path"]["segments"][1];
-        return addedDocID;
+        let processedDatespreferences = {};
+        for (let i = 0; i < dataToAdd.datesPreferences.length; i++){
+            let dateSubmitted = dataToAdd.datesPreferences[i];
+            let startDate = moment(dateSubmitted.slice(0, 10), 'MM/DD/YYYY').toDate();
+            let endDate = moment(dateSubmitted.slice(13), 'MM/DD/YYYY').toDate();
+            processedDatespreferences[i] = [startDate, endDate];
+        }
+        dataToAdd.datesPreferences = {[uid]: processedDatespreferences};
+
+        return await this.parent.createDocumentWithData("trips", dataToAdd);
     }
 };

@@ -20,6 +20,7 @@ const authInfoSuccessTitle = "Success!";
 export function authenticationRouter(
   clientAuth, 
   adminAuth, 
+  db,
   // default parameters to be able to mock from unit tests:
   createUserWithEmailAndPassword = importedCreateUserWithEmailAndPassword,
   signOut = importedSignOut,
@@ -97,6 +98,10 @@ export function authenticationRouter(
           updateProfile(user, {
             displayName: request.body.name
           });
+
+          // save user data to 'users' collection
+          db.userQueries.createUser(user, request.body.name);
+
           sendEmailVerification(user)
           .then(() => {
             signOut(clientAuth).then(() => {
