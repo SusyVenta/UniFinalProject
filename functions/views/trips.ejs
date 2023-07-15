@@ -197,9 +197,8 @@
     });
     $(`#new-trip-availability-1`).on('apply.daterangepicker', function(event, picker) {
       let newValue = picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY');
-      console.log(newValue);
+
       document.getElementById("new-trip-availability-1").value = newValue;
-      console.log(document.getElementById("new-trip-availability-1").value);
     });
     </script>
 </body>

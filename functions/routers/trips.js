@@ -62,7 +62,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
-        // delete from DB - to implement 
+        // get info from DB - to implement 
         console.log('Request Id:', request.params.id);
 
         return response.status(200).send("will display template showing trip details");
@@ -80,7 +80,6 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
-        console.log(JSON.stringify(request.body));
         try {
           let tripDocId = await db.tripQueries.createTrip(
             request.body, 

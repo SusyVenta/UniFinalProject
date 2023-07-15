@@ -97,7 +97,8 @@ describe('authenticationRouter', () => {
           name: "CorrectName",
           email: "correct@gmail.com",
           password: "Mypassword-123",
-          termsandconditions: "on"
+          termsandconditions: "on",
+          betaCode: "girotondo"
         },
         headers: {
           "accept": "text/html"

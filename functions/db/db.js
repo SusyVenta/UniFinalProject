@@ -84,7 +84,7 @@ export class Database{
         let docRef = await this.db.collection(collectionName).doc(docID);
         let payload = {};
         payload[dataObj.fieldName] = dataObj.fieldValue;
-        console.log(payload);
+
         await docRef.update(payload);
     }
 
