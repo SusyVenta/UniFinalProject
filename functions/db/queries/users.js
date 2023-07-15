@@ -16,7 +16,6 @@ export class UserQueries{
             trips: [],
             notifications: defaultNotifications
         };
-
-        return await this.parent.createDocumentWithData("users", dataToAdd);
+        return await this.parent.createDocumentWithDataSpecifyDocID("users", userObject.uid, dataToAdd);
     }
 };

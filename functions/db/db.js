@@ -41,6 +41,14 @@ export class Database{
         return addedDocID;
     }
 
+    async createDocumentWithDataSpecifyDocID(collectionName, docID, dataToAdd){
+        // creates document to collection 'trips'. 
+        // If the collection doesn't exist, it creates it.
+        let tripsCollection = await this.db.collection(collectionName);
+        await tripsCollection.doc(docID).set(dataToAdd);
+    }
+
+
     async updateDocumentAppendToArray(collectionName, docID, dataObj){
         /* 
         dataObj: {arrayName: <name>, valueToUpdate: <value>}
