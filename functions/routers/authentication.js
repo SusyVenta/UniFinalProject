@@ -81,6 +81,7 @@ export function authenticationRouter(
                         authInfoTitle: authInfoErrorTitle};
 
           return response.status(400).render(authTemplate, payload);
+          throw new Error('breaking');
         }
 
         if (request.body.termsandconditions != "on") {
@@ -88,7 +89,17 @@ export function authenticationRouter(
           let payload = {authType: "signup", statusCode: 400, authInfoTitle: authInfoErrorTitle,
                         authInfoMessage: "Terms and conditions must be accepted in order to register"};
           response.status(400).render(authTemplate, payload);
+          throw new Error('breaking');
         }
+
+        if (request.body.betaCode !== "girotondo") {
+          // reload the sigup page, which will display a modal with error message
+          let payload = {authType: "signup", statusCode: 400, authInfoTitle: authInfoErrorTitle,
+                        authInfoMessage: "Please be patient.. For the time being, registration is restricted to beta test users only."};
+          response.status(400).render(authTemplate, payload);
+          throw new Error('breaking');
+        }
+
         // create user in database 
         createUserWithEmailAndPassword(clientAuth, request.body.email, request.body.password)
         .then((userCredential) => {

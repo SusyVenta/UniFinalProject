@@ -45,6 +45,15 @@
                     <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
                     <% } else if (authType === "signup") { %>
                       <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Create a new account to start planning</h5>
+                      
+                      <!-- beta test code -->
+                      <div class="form-outline mb-4">
+                        <input id="betaCode" type="name" autocomplete="one-time-code" name="betaCode" 
+                          required=true/>
+                        <label class="form-label" for="betaCode">Beta test code</label>
+                      </div>
+
+                      <!-- username-->
                       <div class="form-outline mb-4">
                         <input id="name" type="name" autocomplete="one-time-code" name="name" 
                           class="form-control form-control-lg" required=true 
