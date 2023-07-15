@@ -29,6 +29,14 @@ describe('authenticationRouter', () => {
 
   function adminAuth(){
   }
+  const db = {
+    userQueries: {
+      createUser: function(user, name){
+        console.log("MOCK CREATE USER CALLED");
+        return true
+      }
+    }
+  }
 
   it("POST /sessionLogin with incorrect csrfToken should return 401 unauthorized", () => {
       // Create a mock request object
@@ -63,6 +71,7 @@ describe('authenticationRouter', () => {
         let router = authenticationRouter(
           {},
           adminAuth,
+          db,
           createUserWithEmailAndPassword,
           signOut,
           sendPasswordResetEmail,
@@ -113,6 +122,7 @@ describe('authenticationRouter', () => {
         let router = authenticationRouter(
           {},
           adminAuth,
+          db,
           createUserWithEmailAndPassword,
           signOut,
           sendPasswordResetEmail,
@@ -171,6 +181,7 @@ describe('authenticationRouter', () => {
         let router = authenticationRouter(
           {},
           adminAuth,
+          db,
           createUserWithEmailAndPassword,
           signOut,
           sendPasswordResetEmail,
@@ -224,6 +235,7 @@ describe('authenticationRouter', () => {
         let router = authenticationRouter(
           {},
           adminAuth,
+          db,
           createUserWithEmailAndPassword,
           signOut,
           sendPasswordResetEmail,

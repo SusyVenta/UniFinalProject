@@ -29,6 +29,15 @@ describe('authenticationRouter', () => {
   function adminAuth(){
   }
 
+  const db = {
+    userQueries: {
+      createUser: function(user, name){
+        console.log("MOCK CREATE USER CALLED");
+        return true
+      }
+    }
+  }
+
   it("POST /sessionLogout should clear session cookies", () => {
       adminAuth.revokeRefreshTokens = function(sub){
         return Promise.resolve();
@@ -83,6 +92,7 @@ describe('authenticationRouter', () => {
         let router = authenticationRouter(
           {},
           adminAuth,
+          db,
           createUserWithEmailAndPassword,
           signOut,
           sendPasswordResetEmail,

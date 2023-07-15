@@ -10,7 +10,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "node --loader=esmock --test ./test",
+    "test": "node --test ./test",
     "build": "webpack --mode=development",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",

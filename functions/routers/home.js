@@ -20,13 +20,13 @@ export function homeRouter(adminAuth, getUserSessionDetails = importedGetUserSes
         if(userSessionDetails.userSessionDetails !== null){
           let sessionCookie = request.cookies.__session;
           response.cookie("__session", sessionCookie);
-          return response.redirect('/trips');
+          return response.status(302).redirect('/trips');
         }
 
         return response.render(indexPath, payload);
 
       } catch(error){
-        return response.status(500).send(error);
+        return response.status(500).send(error.message);
       }
     });
 

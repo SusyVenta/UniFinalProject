@@ -6,60 +6,67 @@ import { authenticationRouter } from '../../../../functions/routers/authenticati
 
 
 describe('authenticationRouter', () => {
-    it("GET /signup should render authentication.ejs with the correct payload", () => {
-        let request  = httpMocks.createRequest({
-            method: 'GET',
-            url: '/signup'
-        });
+  const db = {
+    userQueries: {
+      createUser: function(user, name){
+        return true
+      }
+    }
+  };
 
-        let response = httpMocks.createResponse({eventEmitter: EventEmitter});
-        let payload = {authType: "signup", statusCode: null, authInfoMessage: null, authInfoTitle: null};
-
-
-        response.on("render", () => {
-          // wait until event "render" is fired before checking results
-          assert.strictEqual(response.statusCode, 200);
-          assert.deepEqual(response._getRenderData(), payload);
-        });
-
-        let router = authenticationRouter({}, {});
-        router.handle(request, response);
+  it("GET /signup should render authentication.ejs with the correct payload", () => {
+    let request  = httpMocks.createRequest({
+        method: 'GET',
+        url: '/signup'
     });
 
+    let response = httpMocks.createResponse({eventEmitter: EventEmitter});
+    let payload = {authType: "signup", statusCode: null, authInfoMessage: null, authInfoTitle: null};
 
-    it("POST /signup with wrong form data should render authentication.ejs with error message", () => {
-      // Create a mock request object
-      let request = httpMocks.createRequest({
-        method: 'POST',
-        url: '/signup',
-        body: {
-          name: "CorrectName",
-          email: "invalidemail",
-          password: "Mypassword-123",
-          termsandconditions: "on"
-        },
-        headers: {
-          "accept": "text/html"
-        }
+
+    response.on("render", () => {
+      // wait until event "render" is fired before checking results
+      assert.strictEqual(response.statusCode, 200);
+      assert.deepEqual(response._getRenderData(), payload);
+    });
+
+    let router = authenticationRouter({}, {}, db);
+    router.handle(request, response);
+  });
+
+  it("POST /signup with wrong form data should render authentication.ejs with error message", () => {
+    // Create a mock request object
+    let request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/signup',
+      body: {
+        name: "CorrectName",
+        email: "invalidemail",
+        password: "Mypassword-123",
+        termsandconditions: "on"
+      },
+      headers: {
+        "accept": "text/html"
+      }
+    });
+
+    let response = httpMocks.createResponse({eventEmitter: EventEmitter});
+
+    response.on("render", () => {
+      // wait until event "render" is fired before checking results
+      assert.strictEqual(response.statusCode, 400);
+      assert.deepEqual(response._getRenderData(), {
+        authType: "signup",
+        statusCode: 400,
+        authInfoMessage: 'Email address is invalid',
+        authInfoTitle: "Ops! Looks like something went wrong"
       });
+    });
 
-      let response = httpMocks.createResponse({eventEmitter: EventEmitter});
-
-      response.on("render", () => {
-        // wait until event "render" is fired before checking results
-        assert.strictEqual(response.statusCode, 400);
-        assert.deepEqual(response._getRenderData(), {
-          authType: "signup",
-          statusCode: 400,
-          authInfoMessage: 'Email address is invalid',
-          authInfoTitle: "Ops! Looks like something went wrong"
-        });
-      });
-
-      let router = authenticationRouter({}, {});
-      router.handle(request, response);
+    let router = authenticationRouter({}, {}, db);
+    router.handle(request, response);
       
-    });
+  });
 
     it("POST /signup with correct form data should render authentication.ejs with success message", () => {
       function createUserWithEmailAndPassword(clientAuth, email, password) {
@@ -115,6 +122,7 @@ describe('authenticationRouter', () => {
         let router = authenticationRouter(
           {},
           {},
+          db,
           createUserWithEmailAndPassword,
           signOut,
           sendPasswordResetEmail,

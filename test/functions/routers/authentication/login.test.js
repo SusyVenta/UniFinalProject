@@ -6,6 +6,15 @@ import { EventEmitter } from 'events';
 
 
 describe('authenticationRouter', () => {
+    const db = {
+        userQueries: {
+          createUser: function(user, name){
+            console.log("MOCK CREATE USER CALLED");
+            return true
+          }
+        }
+    }
+
     it("GET /login should render authentication.ejs with the correct payload", () => {
         let request  = httpMocks.createRequest({
             method: 'GET',
@@ -22,7 +31,7 @@ describe('authenticationRouter', () => {
             assert.deepEqual(response._getRenderData(), payload);
         });
 
-        let router = authenticationRouter({}, {});
+        let router = authenticationRouter({}, {}, db);
         router.handle(request, response);
       });
 });

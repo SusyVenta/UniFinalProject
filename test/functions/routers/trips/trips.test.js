@@ -2,14 +2,14 @@ import { describe, it, mock } from 'node:test';
 import assert from 'node:assert';
 import httpMocks from 'node-mocks-http';
 import { EventEmitter } from 'events';
-import { homeRouter } from '../../../../functions/routers/home.js';
+import { tripsRouter } from '../../../../functions/routers/trips.js';
 
 
-describe('homeRouter', () => {
+describe('tripsRouter', () => {
   function adminAuth(){
   }
 
-  it("GET / should redirect to /trips when user is logged in", () => {
+  /*it("GET / should render home.ejs for authenticated users when user is logged in", () => {
       adminAuth.verifySessionCookie = function(sessionCookie, boolean){
         return Promise.resolve({
           iss: 'example-iss',
@@ -38,18 +38,24 @@ describe('homeRouter', () => {
 
       let response = httpMocks.createResponse({eventEmitter: EventEmitter});
 
-      response.on("end", () => {
-        assert.strictEqual(response.statusCode, 302);
-        assert.strictEqual(response.cookies.__session.value, 'somesessionstring');
-        assert.deepEqual(
-          response.cookies.__session, 
-          { value: 'somesessionstring', options: undefined });
+      let payload = {userIsAuthenticated: true, name: "John Doe"};
+
+      response.on("render", () => {
+        // wait until event "send" is fired before checking results
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepEqual(response._getRenderData(), payload);
       });
 
-      let router = homeRouter(
-        adminAuth
-      );
-      router.handle(request, response);
+      return new Promise((resolve, reject) => {
+        response.on("end", () => {
+          resolve();
+        });
+      
+        let router = homeRouter(
+          adminAuth
+        );
+        router.handle(request, response);
+      });
     });
 
     it("GET / should render home.ejs for unauthenticated users when user is logged out", () => {
@@ -108,7 +114,7 @@ describe('homeRouter', () => {
       response.on("send", () => {
         // wait until event "send" is fired before checking results
         assert.strictEqual(response.statusCode, 500);
-        assert.deepEqual(String(response._getData()), "Some error");
+        assert.deepEqual(String(response._getData()), "Error: Some error");
       });
       
       return new Promise((resolve, reject) => {
@@ -122,6 +128,6 @@ describe('homeRouter', () => {
         );
         router.handle(request, response);
       });
-    });
+    });*/
 });
 

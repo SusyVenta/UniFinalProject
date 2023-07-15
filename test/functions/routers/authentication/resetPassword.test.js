@@ -29,6 +29,15 @@ describe('authenticationRouter', () => {
     function adminAuth(){
     }
 
+    const db = {
+        userQueries: {
+          createUser: function(user, name){
+            console.log("MOCK CREATE USER CALLED");
+            return true
+          }
+        }
+    }
+
     it("GET /resetPassword should render authentication.ejs with the correct payload", () => {
         let request  = httpMocks.createRequest({
             method: 'GET',
@@ -48,6 +57,7 @@ describe('authenticationRouter', () => {
         let router = authenticationRouter(
             {},
             adminAuth,
+            db,
             createUserWithEmailAndPassword,
             signOut,
             sendPasswordResetEmail,
@@ -82,6 +92,7 @@ describe('authenticationRouter', () => {
         let router = authenticationRouter(
             {},
             adminAuth,
+            db,
             createUserWithEmailAndPassword,
             signOut,
             sendPasswordResetEmail,
@@ -120,6 +131,7 @@ describe('authenticationRouter', () => {
         let router = authenticationRouter(
             {},
             adminAuth,
+            db,
             createUserWithEmailAndPassword,
             signOut,
             sendPasswordResetEmail,
@@ -158,6 +170,7 @@ describe('authenticationRouter', () => {
         let router = authenticationRouter(
             {},
             adminAuth,
+            db,
             createUserWithEmailAndPassword,
             signOut,
             sendPasswordResetEmail,
