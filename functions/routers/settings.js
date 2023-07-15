@@ -43,20 +43,15 @@ export function settingsRouter(adminAuth, db, getUserSessionDetails = importedGe
 
       if(userSessionDetails.userSessionDetails !== null){
         console.log(JSON.stringify(request.body));
+
         try {
-          let tripDocId = await db.tripQueries.createTrip(
-            request.body, 
-            userSessionDetails.userSessionDetails.uid
-          );
+          await db.settingsQueries.updateUserSettings(
+            userSessionDetails.userSessionDetails.uid,
+            request.body.settingName,
+            request.body.settingValue
+          )
 
-          // add trip ID to owner's document
-          await db.updateDocumentAppendToArray(
-            "users", 
-            userSessionDetails.userSessionDetails.uid, 
-            {arrayName: "trips", valueToUpdate: tripDocId}
-          ); 
-
-          return response.status(200).send("Created trip");
+          return response.status(200).send("updated " + request.body.settingName);
         } catch (e){
           return response.status(500).send(e.message);
         }

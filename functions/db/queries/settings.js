@@ -34,4 +34,14 @@ export class SettingsQueries{
         let finalOutput = await this.getUserSettings(uid);
         return finalOutput;
     }
+
+    async updateUserSettings(uid, settingName, settingValue){
+        let dataObj = {
+            mapName: "notifications",
+            key: settingName,
+            newValue: settingValue === 'true' // str to boolean
+        };
+
+        await this.parent.updateSingleKeyValueInMap("users", uid, dataObj);
+    }
 };
