@@ -45,4 +45,23 @@ export class TripQueries{
 
         return await this.parent.createDocumentWithData("trips", dataToAdd);
     }
+
+    async getTripsForUser(userID){
+        let userDoc = await this.parent.getDocument("users", userID);
+        let tripIDs = userDoc.trips;
+
+        let tripDetails = [];
+        for (let tripID of tripIDs){
+        let tripDetail = await this.parent.getDocument("trips", tripID);
+        tripDetail.tripID = tripID;
+
+        if(tripDetail.finalizedStartDate !== null){
+            tripDetail.finalizedStartDate = moment(tripDetail.finalizedStartDate.toDate()).format("DD MMM YYYY");
+            tripDetail.finalizedEndDate = moment(tripDetail.finalizedEndDate.toDate()).format("DD MMM YYYY");
+        }
+        tripDetails.push(tripDetail);
+        }
+
+        return await tripDetails;
+    }
 };

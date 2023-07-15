@@ -2,7 +2,6 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import moment from 'moment';
 import { getUserSessionDetails as importedGetUserSessionDetails} from "../utils/authUtils.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,29 +16,16 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
         
         if(userSessionDetails.userSessionDetails !== null){
-          let userDoc = await db.getDocument("users", userSessionDetails.userSessionDetails.uid);
-          let tripIDs = userDoc.trips;
-
-          let tripDetails = [];
-          for (let tripID of tripIDs){
-            let tripDetail = await db.getDocument("trips", tripID);
-            tripDetail.tripID = tripID;
-
-            if(tripDetail.finalizedStartDate !== null){
-              tripDetail.finalizedStartDate = moment(tripDetail.finalizedStartDate.toDate()).format("DD MMM YYYY");
-              tripDetail.finalizedEndDate = moment(tripDetail.finalizedEndDate.toDate()).format("DD MMM YYYY");
-            }
-            tripDetails.push(tripDetail);
-          }
+          let tripDetails = await db.tripQueries.getTripsForUser(userSessionDetails.userSessionDetails.uid);
 
           let payload = {
             name: userSessionDetails.userSessionDetails.name, 
             trips: tripDetails
           };
 
-          return response.render(indexPath, payload);
+          return response.status(200).render(indexPath, payload);
         } else {
-          return response.redirect('/auth/login');
+          return response.status(302).redirect('/auth/login');
         }
 
       } catch(error){
@@ -61,7 +47,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           {arrayName: "trips", valueToRemove: request.params.id}
           );
 
-        return response.status(200).send("Success");
+        return response.status(200).send("Deleted " + request.params.id);
       } else {
         return response.status(401).send("Unauthorized");
       }
@@ -97,14 +83,15 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         try {
           let tripDocId = await db.tripQueries.createTrip(
             request.body, 
-            userSessionDetails.userSessionDetails.uid);
+            userSessionDetails.userSessionDetails.uid
+          );
 
-            // add trip ID to owner's document
-            await db.updateDocumentAppendToArray(
-              "users", 
-              userSessionDetails.userSessionDetails.uid, 
-              {arrayName: "trips", valueToUpdate: tripDocId}
-            ); 
+          // add trip ID to owner's document
+          await db.updateDocumentAppendToArray(
+            "users", 
+            userSessionDetails.userSessionDetails.uid, 
+            {arrayName: "trips", valueToUpdate: tripDocId}
+          ); 
 
           return response.status(200).send("Created trip");
         } catch (e){
