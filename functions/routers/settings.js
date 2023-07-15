@@ -42,8 +42,6 @@ export function settingsRouter(adminAuth, db, getUserSessionDetails = importedGe
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
-        console.log(JSON.stringify(request.body));
-
         try {
           await db.settingsQueries.updateUserSettings(
             userSessionDetails.userSessionDetails.uid,
