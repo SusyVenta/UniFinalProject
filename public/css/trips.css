@@ -49,6 +49,28 @@
     align-self: flex-end;
 }
 
+/* phone view */
+@media only screen and (max-width: 600px) {
+    #trips-container{
+        margin-top: 2%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .trip{
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+        padding: 1%;
+        width: 90%;
+        height: 200px;
+        justify-content: space-between;
+        margin-top: 4%;
+    }
+  }
+
 /* ------------------------------------------ new trip modal -----------------------------------------*/
 .dotted{
     /* draws dotted line */ 
