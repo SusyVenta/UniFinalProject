@@ -1,6 +1,7 @@
 import { getFirestore, FieldValue, FieldPath } from 'firebase-admin/firestore';
 import { TripQueries } from './queries/trips.js';
 import { UserQueries } from './queries/users.js';
+import { SettingsQueries } from './queries/settings.js';
 
 
 export class Database{
@@ -17,6 +18,7 @@ export class Database{
         this.db = getFirestore(adminAuth);
         this.tripQueries = new TripQueries(this);
         this.userQueries = new UserQueries(this);
+        this.settingsQueries = new SettingsQueries(this);
     }
 
     async listCollections(){
@@ -58,6 +60,31 @@ export class Database{
 
         let payload = {};
         payload[dataObj.arrayName] = FieldValue.arrayRemove(dataObj.valueToRemove);
+        await docRef.update(payload);
+    }
+
+    async updateSingleKeyValueInMap(collectionName, docID, dataObj){
+        /* 
+        Given an existing map containing N <key, value> pairs, updates only the 
+        specified <key, value> pair.
+        dataObj: {mapName: <name>, key: <key>, newValue: <new value>}
+        */
+        let docRef = await this.db.collection(collectionName).doc(docID);
+        
+        let payload = {};
+        payload[`${dataObj.mapName}.${dataObj.key}`] = dataObj.newValue;
+        await docRef.update(payload);
+    }
+
+    async addFieldToDocument(collectionName, docID, dataObj){
+        /* 
+        Given an existing document, adds a field to it.
+        dataObj: {fieldName: <name>, fieldValue: <any object>}
+        */
+        let docRef = await this.db.collection(collectionName).doc(docID);
+        let payload = {};
+        payload[dataObj.fieldName] = dataObj.fieldValue;
+        console.log(payload);
         await docRef.update(payload);
     }
 

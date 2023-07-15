@@ -1,3 +1,4 @@
+import { defaultNotifications } from "../../config/userNotifications.js"
 
 export class UserQueries{
     constructor(parentClass){
@@ -13,7 +14,7 @@ export class UserQueries{
             picturePath: null,
             friends: {},
             trips: [],
-            notifications: {}
+            notifications: defaultNotifications
         };
 
         return await this.parent.createDocumentWithData("users", dataToAdd);

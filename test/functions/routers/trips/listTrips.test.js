@@ -70,7 +70,7 @@ describe('tripsRouterListTrips', () => {
 
     let response = httpMocks.createResponse({eventEmitter: EventEmitter});
 
-    let payload = {name: "John Doe", trips};
+    let payload = {name: "John Doe", trips, userIsAuthenticated: true};
 
     response.on("render", () => {
       // wait until event "send" is fired before checking results

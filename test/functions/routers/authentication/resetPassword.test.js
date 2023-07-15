@@ -32,7 +32,6 @@ describe('authenticationRouter', () => {
     const db = {
         userQueries: {
           createUser: function(user, name){
-            console.log("MOCK CREATE USER CALLED");
             return true
           }
         }

@@ -11,6 +11,7 @@ import { homeRouter} from "./routers/home.js";
 import { tripsRouter} from "./routers/trips.js";
 import { authenticationRouter} from "./routers/authentication.js";
 import { legalRouter} from "./routers/legal.js";
+import { settingsRouter} from "./routers/settings.js";
 import admin from "firebase-admin";
 import { initializeApp as initializeAdminApp } from 'firebase-admin/app';
 import { serviceAccountCreds } from './config/serviceAccount.js';
@@ -64,6 +65,6 @@ app.use("/", homeRouter(adminAuth));
 app.use("/auth", authenticationRouter(clientAuth, adminAuth, db));
 app.use("/legal", legalRouter());
 app.use("/trips", tripsRouter(adminAuth, db));
-
+app.use("/settings", settingsRouter(adminAuth, db));
 
 export const exportedapp = functions.https.onRequest(app);
