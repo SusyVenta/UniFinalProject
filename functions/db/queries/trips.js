@@ -16,7 +16,17 @@ export class TripQueries{
         }
 
         dataToAdd.tripOwner = uid;
-        dataToAdd.finalizedStartDate = null;
+
+        if(dataToAdd.askAllParticipantsDates === false){
+            dataToAdd.finalizedStartDate = moment(
+                dataToAdd.datesPreferences[0].slice(0, 10), 'MM/DD/YYYY').toDate();
+            dataToAdd.finalizedEndDate = moment(
+                dataToAdd.datesPreferences[0].slice(13), 'MM/DD/YYYY').toDate();
+        } else{
+            dataToAdd.finalizedStartDate = null;
+            dataToAdd.finalizedEndDate = null;
+        }
+        
         dataToAdd.status = "upcoming";
         dataToAdd.creationDatetimeUTC = moment.utc();
         dataToAdd.lastUpdatedDatetimeUTC = moment.utc();

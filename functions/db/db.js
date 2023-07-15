@@ -1,8 +1,6 @@
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue, FieldPath } from 'firebase-admin/firestore';
 import { TripQueries } from './queries/trips.js';
 import { UserQueries } from './queries/users.js';
-
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 
 export class Database{
@@ -41,12 +39,38 @@ export class Database{
         return addedDocID;
     }
 
-    async updateDocument(collectionName, docID, dataObj){
-        // to do finish logic to append to existing fields
-        let docRef = await this.db.collection(collectionName).doc("Aa6x5je3EsA2q9yPaA4R");
-        console.log(docRef);
-        console.log(JSON.stringify(docRef));
-        dataObj.trips = arrayUnion(dataObj.trips[0]);
-        docRef.update(dataObj);
+    async updateDocumentAppendToArray(collectionName, docID, dataObj){
+        /* 
+        dataObj: {arrayName: <name>, valueToUpdate: <value>}
+        */
+        let docRef = await this.db.collection(collectionName).doc(docID);
+
+        let payload = {};
+        payload[dataObj.arrayName] = FieldValue.arrayUnion(dataObj.valueToUpdate);
+        await docRef.update(payload);
+    }
+
+    async updateDocumentRemoveFromArray(collectionName, docID, dataObj){
+        /* 
+        dataObj: {arrayName: <name>, valueToRemove: <value>}
+        */
+        let docRef = await this.db.collection(collectionName).doc(docID);
+
+        let payload = {};
+        payload[dataObj.arrayName] = FieldValue.arrayRemove(dataObj.valueToRemove);
+        await docRef.update(payload);
+    }
+
+    async getDocument(collectionName, docID){
+        let querySnapshot = await this.db.collection(collectionName).where(
+            FieldPath.documentId(), "==", docID).get();
+        let documentSnapshot = await querySnapshot.docs[0];
+        let document = await documentSnapshot.data();
+        return document;
+    }
+
+    async deleteDocument(collectionName, docID){
+        let docRef = await this.db.collection(collectionName).doc(docID);
+        await docRef.delete();
     }
 };

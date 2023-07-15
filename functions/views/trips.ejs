@@ -36,47 +36,49 @@
     <%- include('partials/heroImage'); %>
   </div>
   <div class="outer-container">
-    <% if (userIsAuthenticated === true) { %>
-      <div class="title">
-        <h2><%= name %>'s trips</h2>
+    <div class="title">
+      <h2><%= name %>'s trips</h2>
+    </div>
+    <div class="top-buttons">
+      <div class="dropdown">
+        <!-- By default, displays only upcoming trips. When selection changes, text on the menu button changes -->
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="tripTypeDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+          Upcoming Trips
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="tripTypeDropdownButton">
+          <li><button class="dropdown-item" onclick="filterTrips(this)">Upcoming trips</button></li>
+          <li><button class="dropdown-item" onclick="filterTrips(this)">All</button></li>
+          <li><button class="dropdown-item" onclick="filterTrips(this)">Past trips</button></li>
+        </ul>
       </div>
-      <div class="top-buttons">
-        <div class="dropdown">
-          <!-- By default, displays only upcoming trips. When selection changes, text on the menu button changes -->
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="tripTypeDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-            Upcoming Trips
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="tripTypeDropdownButton">
-            <li><button class="dropdown-item" onclick="filterTrips(this)">Upcoming trips</button></li>
-            <li><button class="dropdown-item" onclick="filterTrips(this)">All</button></li>
-            <li><button class="dropdown-item" onclick="filterTrips(this)">Past trips</button></li>
-          </ul>
-        </div>
-        <div>
-          <button class="btn btn-secondary" onclick="$('#new-trip-modal').show();">New trip</a>
-        </div>
+      <div>
+        <button class="btn btn-secondary" onclick="$('#new-trip-modal').show();">New trip</a>
       </div>
-      <div id="trips-container">
-        <% for(let trip of trips){  %>
-          <div class="trip" id="trip-<%= trip.id %>" onclick="redirectTripView(this, '<%= trip.id %>');" name="<%= trip.status %>">
-            <div class="trip-title-block">
-              <h3 id="trip-title-<%= trip.id %>"><%= trip.title %></h3>
-              <p id="trip-date-<%= trip.id %>"><%= trip.date %></p>
-            </div>
-            <div class="trip-actions">
-              <!-- https://fonts.google.com/icons?selected=Material+Symbols+Outlined:share:FILL@0;wght@400;GRAD@0;opsz@48&icon.query=share -->
-              <!-- when clicked, stops propagation of click event so it doesn't trigger click on parent div -->
-              <button id="delete_trip_button_<%= trip.id %>" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);" name="delete_<%= trip.id %>">
-                <span class="material-symbols-outlined modified">delete</span>
-              </button>
-              <!--button class="btn btn-secondary" onclick="showModal(this)" name="share_<%= trip.id %>">
-                <span class="material-symbols-outlined modified">share</span>
-              </button-->
-            </div>
+    </div>
+    <div id="trips-container">
+      <% for(let trip of trips){  %>
+        <div class="trip" id="trip-<%= trip.tripID %>" onclick="redirectTripView(this, '<%= trip.tripID %>');" name="<%= trip.status %>">
+          <div class="trip-title-block">
+            <h3 id="trip-title-<%= trip.tripID %>"><%= trip.tripTitle %></h3>
+            <% if (trip.finalizedStartDate === null) { %>
+              <p id="trip-date-<%= trip.tripID %>">Dates still to be finalized</p>
+            <%} else { %>
+              <p id="trip-date-<%= trip.tripID %>"><%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
+            <%} %>
           </div>
-        <%} %>
-      </div>
-    <% } %>
+          <div class="trip-actions">
+            <!-- https://fonts.google.com/icons?selected=Material+Symbols+Outlined:share:FILL@0;wght@400;GRAD@0;opsz@48&icon.query=share -->
+            <!-- when clicked, stops propagation of click event so it doesn't trigger click on parent div -->
+            <button id="delete_trip_button_<%= trip.tripID %>" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);" name="delete_<%= trip.tripID %>">
+              <span class="material-symbols-outlined modified">delete</span>
+            </button>
+            <!--button class="btn btn-secondary" onclick="showModal(this)" name="share_<%= trip.tripID %>">
+              <span class="material-symbols-outlined modified">share</span>
+            </button-->
+          </div>
+        </div>
+      <%} %>
+    </div>
   </div>
   <section>
     <!-- modal displaying authentication-related errors / info messages -->
@@ -109,17 +111,17 @@
           </div>
           <div class="modal-body">
             <label for="new-trip-title" class="form-label">Title</label>
-            <input autocomplete="one-time-code" class="form-control" id="new-trip-title">
+            <input autocomplete="one-time-code" class="form-control" id="new-trip-title" required=true >
 
             <hr class="dotted">
             <h4>Dates</h4>
             
             <div class="dropdown date-collection-type">
-              <button name="2" 
+              <button name="1" 
                       class="btn btn-secondary dropdown-toggle" 
                       type="button" id="date-collection-type" 
                       data-bs-toggle="dropdown" aria-expanded="false">
-                Propose dates and ask participants to accept or decline
+                      Ask all participants when they're available before finalizing dates
               </button>
               <ul class="dropdown-menu date-collection-type" aria-labelledby="date-collection-type">
                 <li>
@@ -147,7 +149,7 @@
                     <label for="new-trip-availability-1" class="form-label">When are you available?</label>
                     <div class="form-control" >
                       <i class="fa fa-calendar"></i>
-                      <input class="form-control" id="new-trip-availability-1" type="text" name="daterange" value="start date - end date" />
+                      <input class="form-control" id="new-trip-availability-1" type="text" name="daterange"/>
                     </div>
                   </div>
                 </div>
@@ -167,11 +169,11 @@
               <label for="working-days-availability" class="form-label">
                 How many working days are you willing to travel?
               </label>
-              <input autocomplete="one-time-code" type="number" class="form-control" id="working-days-availability">
+              <input autocomplete="one-time-code" type="number" class="form-control" id="working-days-availability" required=true >
               <label for="total-days-availability" class="form-label">
                 How many days are you willing to travel in total?
               </label>
-              <input autocomplete="one-time-code" type="number" class="form-control" id="total-days-availability">
+              <input autocomplete="one-time-code" type="number" class="form-control" id="total-days-availability" required=true >
             </div>
 
           </div>
@@ -195,7 +197,9 @@
     });
     $(`#new-trip-availability-1`).on('apply.daterangepicker', function(event, picker) {
       let newValue = picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY');
+      console.log(newValue);
       document.getElementById("new-trip-availability-1").value = newValue;
+      console.log(document.getElementById("new-trip-availability-1").value);
     });
     </script>
 </body>

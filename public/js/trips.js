@@ -98,6 +98,14 @@ function updateDateCollectionTypeDropdown(item){
   // function updates the button of dropdown menu with chosen option
   document.getElementById("date-collection-type").innerHTML = item.innerHTML;
   document.getElementById("date-collection-type").name = item.name;
+
+  let addNewDatesDiv = document.getElementById("add-dates-div");
+
+  if(item.name == 2){
+    $(addNewDatesDiv).hide();
+  } else {
+    $(addNewDatesDiv).show();
+  }
 };
 
 function deleteDateAvailability(element){
