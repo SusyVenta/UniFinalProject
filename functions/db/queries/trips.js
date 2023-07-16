@@ -7,7 +7,7 @@ export class TripQueries{
     };
 
     async createTrip(dataToAdd, uid){
-        // creates document to collection 'trips'. 
+        // adds document to collection 'trips'. 
         // If the collection doesn't exist, it creates it.
         if (dataToAdd.askAllParticipantsDates === "2"){
             dataToAdd.askAllParticipantsDates = false;
@@ -47,6 +47,7 @@ export class TripQueries{
     }
 
     async getTripsForUser(userID){
+        // retrieves all trip documents that the user has access to
         let userDoc = await this.parent.getDocument("users", userID);
         let tripIDs = userDoc.trips;
 

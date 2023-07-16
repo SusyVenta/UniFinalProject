@@ -22,6 +22,7 @@ export class Database{
     }
 
     async listCollections(){
+        // lists all collections i.e. tables equivalent in the DB
         let collectionsSnapshot = await this.db.listCollections();
 
         let collectionNames = [];
@@ -32,8 +33,9 @@ export class Database{
     }
 
     async createDocumentWithData(collectionName, dataToAdd){
-        // creates document to collection 'trips'. 
+        // creates document with content in the specified collection.
         // If the collection doesn't exist, it creates it.
+        // document ID is assigned automatically and returned
         let tripsCollection = await this.db.collection(collectionName);
         let addedDoc = await tripsCollection.add(dataToAdd);
         
@@ -42,8 +44,9 @@ export class Database{
     }
 
     async createDocumentWithDataSpecifyDocID(collectionName, docID, dataToAdd){
-        // creates document to collection 'trips'. 
+        // adds document to the specified collection
         // If the collection doesn't exist, it creates it.
+        // document ID is specified
         let tripsCollection = await this.db.collection(collectionName);
         await tripsCollection.doc(docID).set(dataToAdd);
     }
@@ -97,6 +100,7 @@ export class Database{
     }
 
     async getDocument(collectionName, docID){
+        // return content of a document identified with its collection name and docID
         let querySnapshot = await this.db.collection(collectionName).where(
             FieldPath.documentId(), "==", docID).get();
         let documentSnapshot = await querySnapshot.docs[0];
@@ -105,6 +109,7 @@ export class Database{
     }
 
     async deleteDocument(collectionName, docID){
+        // deletes the specified document
         let docRef = await this.db.collection(collectionName).doc(docID);
         await docRef.delete();
     }
