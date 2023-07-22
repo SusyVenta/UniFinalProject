@@ -67,7 +67,7 @@
             <% if (trip.finalizedStartDate === null) { %>
               <p id="trip-date-<%= trip.tripID %>">Dates still to be finalized</p>
             <%} else { %>
-              <p id="trip-date-<%= trip.picture.photographer %>"><%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
+              <p id="trip-date-<%= trip.tripID %>"><%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
             <%} %>
           </div>
           <div class="trip-actions">

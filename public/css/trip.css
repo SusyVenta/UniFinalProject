@@ -1,0 +1,42 @@
+.outer-container{
+    display: flex;
+    flex-direction:column;
+    flex-wrap: wrap;
+}
+
+.title-container{
+    display: flex;
+    flex-direction:row;
+    justify-content: center;
+    height: 14vh;
+    /* Position and center the image to scale nicely on all screens */
+    background-position: 0% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title{
+    background-color: rgba(255, 255, 255, 0.76);
+}
+
+.trip-tab{
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+    padding: 1%;
+    justify-content: space-between;
+    margin-top: 2%;
+    overflow: hidden;
+    flex-wrap: wrap;   
+    width: 100%;
+    height: calc(100vh - 90px - 200px - 16vh); /* 90px is height of navbar. 200 is footer*/
+    margin-bottom: 2%;
+}
+
+.nav-link, .nav-link:focus, .nav-link:hover, .nav-link.active {
+    color: black;
+}
+
+

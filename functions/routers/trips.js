@@ -63,12 +63,20 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
   router.get("/:id", async(request, response) => {
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+      let templatePath = path.join(__dirname, '..',"views/trip.ejs");
 
       if(userSessionDetails.userSessionDetails !== null){
         // get info from DB - to implement 
         console.log('Request Id:', request.params.id);
+        let tripDetails = await db.tripQueries.getTripByID(request.params.id);
 
-        return response.status(200).send("will display template showing trip details");
+        let payload = {
+          name: userSessionDetails.userSessionDetails.name, 
+          trip: tripDetails,
+          userIsAuthenticated: true
+        };
+
+        return response.status(200).render(templatePath, payload);
       } else {
         return response.status(401).send("Unauthorized");
       }
