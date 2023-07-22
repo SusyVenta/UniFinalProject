@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
   <link rel="stylesheet" href="/css/trip.css">
-  
+
   <!-- JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -43,7 +43,7 @@
       <!-- tab names -->
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#participants" data-bs-toggle="tab">Active</a>
+          <a class="nav-link active" aria-current="page" href="#participants" data-bs-toggle="tab">Participants</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#itinerary" data-bs-toggle="tab" data-bs-toggle="tab">Itinerary</a>
@@ -58,7 +58,48 @@
       <!-- tab content -->
       <div class="tab-content">
         <div id="participants" class="tab-pane active">
-          <p>Participants: </p>
+          <div class="tab-container">
+            <div class="tab-content-top-buttons">
+              <button id="add-friend-button" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);">
+                Add friend
+              </button>
+              <button id="abandon-trip-button" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);">
+                Abandon trip
+              </button>
+            </div>
+          </div>
+          <div id="participants-overview-container">
+            <% var numberParticipants = Object.keys(trip.participantsStatus).length; %>
+            <h5>Overview:</h5>
+            <p>Participants: <%= numberParticipants %></p>
+            <% if (trip.askAllParticipantsDates === false) { %>
+              <p>Chosen dates: <%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
+            <%} else { %>
+              <!-- TODO: display common availabilities so far or chosen dates if all confirmed -->
+              <% if (trip.finalizedEndDate === null) { %>
+                <p>Final dates not chosen yet. Common availabilities so far: <%= commonAvailabilities %></p>
+              <%} %>
+            <%} %>
+          </div>
+          <div id="participants-table-div">
+            <table id="participants-table">
+              <tr>
+                <th>User</th>
+                <th>Status</th>
+                <th>Dates Available</th>
+                <th>Action</th>
+              </tr>
+              
+              <% Object.keys(trip.participantsStatus).forEach(function(key) { %>
+                <tr>
+                  <td><%- key %></td>
+                  <td><%- trip.participantsStatus[key] %></td>
+                  <td>Dates placeholder</td>
+                  <td>Some action</td>
+                </tr>
+              <% }); %>
+            </table>
+          </div>
         </div>
         <div id="itinerary" class="tab-pane fade">
           <p>Itinerary: </p>

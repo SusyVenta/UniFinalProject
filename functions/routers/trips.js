@@ -73,7 +73,8 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         let payload = {
           name: userSessionDetails.userSessionDetails.name, 
           trip: tripDetails,
-          userIsAuthenticated: true
+          userIsAuthenticated: true,
+          commonAvailabilities: "WIP"
         };
 
         return response.status(200).render(templatePath, payload);

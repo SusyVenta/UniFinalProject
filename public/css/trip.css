@@ -29,7 +29,6 @@
     justify-content: space-between;
     margin-top: 2%;
     overflow: hidden;
-    flex-wrap: wrap;   
     width: 100%;
     height: calc(100vh - 90px - 200px - 16vh); /* 90px is height of navbar. 200 is footer*/
     margin-bottom: 2%;
@@ -40,3 +39,44 @@
 }
 
 
+.tab-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.tab-pane, .tab-content{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tab-content-top-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#participants {
+    padding: 3%;
+}
+
+#participants-overview-container, #participants-table-div{
+    margin-top: 2%;
+}
+
+#participants-table{
+    border-collapse: collapse;
+    width: 100%;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+  
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
