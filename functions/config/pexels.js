@@ -1,0 +1,1 @@
+export const pexelsAPIKey = "R4UDW6yoRiepavvC6YKRvF2iL82O9BuGxHFyfZpWOeAQoD2Xm9CLRfeU";

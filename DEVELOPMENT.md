@@ -97,6 +97,14 @@
 - implementing content in multiple languages: https://developers.google.com/search/blog/2010/09/unifying-content-under-multilingual
 - svg to ico: https://redketchup.io/icon-editor
 
+# APIs
+
+## Image search: Pexels
+https://www.pexels.com/@susanna-ventafridda-657655375/ 
+https://help.pexels.com/hc/en-us/articles/900004904026-How-do-I-get-an-API-key- 
+API KEY: R4UDW6yoRiepavvC6YKRvF2iL82O9BuGxHFyfZpWOeAQoD2Xm9CLRfeU
+
+
 
 
 

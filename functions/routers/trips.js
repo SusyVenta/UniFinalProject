@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { getUserSessionDetails as importedGetUserSessionDetails} from "../utils/authUtils.js";
+import { searchImage } from "../utils/imageSearch.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -83,6 +84,11 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
       if(userSessionDetails.userSessionDetails !== null){
         try {
+          // get image matching the title of the trip
+          let pictures = await searchImage(request.body.tripTitle);
+          let picture = pictures.photos[0];
+          request.body.picture = picture;
+
           let tripDocId = await db.tripQueries.createTrip(
             request.body, 
             userSessionDetails.userSessionDetails.uid
