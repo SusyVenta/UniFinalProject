@@ -169,6 +169,14 @@ export function authenticationRouter(
         const options = { maxAge: expiresIn, httpOnly: true, secure: true };
         // https://firebase.google.com/docs/hosting/manage-cache#using_cookies
         // https://stackoverflow.com/questions/44929653/firebase-cloud-function-wont-store-cookie-named-other-than-session
+
+        // save user data to 'users' collection -- needed when testing with emulators
+        let userObject = {reloadUserInfo: {
+          email: decodedIdToken.email},
+          uid: decodedIdToken.uid
+        };
+        db.userQueries.createUser(userObject, decodedIdToken.name);
+
         response.cookie('__session', sessionCookie, options);
         response.status(200).send('success');
         return;

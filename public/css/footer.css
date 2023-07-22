@@ -1,9 +1,9 @@
 
 #footer {
-    background: #36454F;
-    color: white;
+    background: rgba(206, 203, 203, 0.591);
+    color: black;
     box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
-    height: fit-content;
+    height: 200px;
     margin-top: 0%;
     align-content: center;
     margin-top: auto;
@@ -20,11 +20,11 @@
 }
 
 .footer-item{
-  color: white;
+  color: black;
   cursor: pointer;
 }
 
 .footer-item:hover{
-  color: white;
+  color: black;
   cursor: pointer;
 }

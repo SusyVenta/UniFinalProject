@@ -1,6 +1,6 @@
 #auth-background {
   background-image: linear-gradient(coral,#FF5555);
-  height: calc(100vh - 90px); /* 90px is height of navbar*/
+  height: calc(100vh - 90px - 200px); /* 90px is height of navbar. 200 is footer*/
 }
 
 #auth-container-2 {

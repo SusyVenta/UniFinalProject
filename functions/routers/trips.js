@@ -14,9 +14,11 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
       let indexPath = path.join(__dirname, '..',"views/trips.ejs");
       try {
         let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
-        
+
         if(userSessionDetails.userSessionDetails !== null){
-          let tripDetails = await db.tripQueries.getTripsForUser(userSessionDetails.userSessionDetails.uid);
+          let tripDetails = await db.tripQueries.getTripsForUser(
+            userSessionDetails.userSessionDetails.uid
+            );
 
           let payload = {
             name: userSessionDetails.userSessionDetails.name, 
