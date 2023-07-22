@@ -40,6 +40,14 @@
     justify-content: space-between;
     margin-top: 2%;
     overflow: hidden;
+
+    /* Position and center the image to scale nicely on all screens */
+    background-position: 0% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    flex-direction: column;
+    position: sticky;
 }
 
 .material-symbols-outlined.modified{
@@ -66,7 +74,7 @@
 }
 
 .trip-title-block{
-    background-color: rgba(255, 255, 255, 0.61);
+    background-color: rgba(255, 255, 255, 0.76);
 }
 
 /* phone view */
