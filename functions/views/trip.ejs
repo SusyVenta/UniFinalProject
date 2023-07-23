@@ -78,7 +78,12 @@
             <%} else { %>
               <!-- TODO: display common availabilities so far or chosen dates if all confirmed -->
               <% if (trip.finalizedEndDate === null) { %>
-                <p>Final dates not chosen yet. Common availabilities so far: <%= commonAvailabilities %></p>
+                <p>Final dates not chosen yet. Common availabilities so far:</p>
+                <ul>
+                <% for(let dateset of commonAvailabilities) { %>
+                  <li><%= moment(dateset.start).format('DD MMM YYYY') %> - <%= moment(dateset.end).format('DD MMM YYYY') %></li>
+                <% } %>
+                </ul>
               <%} %>
             <%} %>
           </div>

@@ -69,17 +69,15 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
       if(userSessionDetails.userSessionDetails !== null){
         let tripDetails = await db.tripQueries.getTripByID(request.params.id);
-        console.log(JSON.stringify(tripDetails.datesPreferences));
         let commonDateRanges = new TimeUtils().commonDateRanges(tripDetails.datesPreferences);
-        console.log(commonDateRanges);
 
         let payload = {
           name: userSessionDetails.userSessionDetails.name, 
           trip: tripDetails,
           userIsAuthenticated: true,
-          commonAvailabilities: "WIP",
           moment: moment,
-          userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(request.params.id)
+          userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(request.params.id),
+          commonAvailabilities: commonDateRanges
         };
 
         return response.status(200).render(templatePath, payload);
