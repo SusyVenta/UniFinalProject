@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { getUserSessionDetails as importedGetUserSessionDetails} from "../utils/authUtils.js";
 import { searchImage } from "../utils/imageSearch.js";
+import moment from 'moment';
+import { TimeUtils } from "../utils/timeUtils.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -66,15 +68,18 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
       let templatePath = path.join(__dirname, '..',"views/trip.ejs");
 
       if(userSessionDetails.userSessionDetails !== null){
-        // get info from DB - to implement 
-        console.log('Request Id:', request.params.id);
         let tripDetails = await db.tripQueries.getTripByID(request.params.id);
+        console.log(JSON.stringify(tripDetails.datesPreferences));
+        let commonDateRanges = new TimeUtils().commonDateRanges(tripDetails.datesPreferences);
+        console.log(commonDateRanges);
 
         let payload = {
           name: userSessionDetails.userSessionDetails.name, 
           trip: tripDetails,
           userIsAuthenticated: true,
-          commonAvailabilities: "WIP"
+          commonAvailabilities: "WIP",
+          moment: moment,
+          userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(request.params.id)
         };
 
         return response.status(200).render(templatePath, payload);

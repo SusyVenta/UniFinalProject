@@ -71,4 +71,23 @@ export class TripQueries{
 
         return await tripDetails;
     }  
+
+    async getUsernamesForUIDsInTrip(tripID){
+        // each trip has 1+ participants. Participants' UIDs are listed 
+        // in field 'participantsStatus'. This function returns a map
+        // {uid: username} for all users in the trip
+        let tripDetail = await this.parent.getDocument("trips", tripID);
+        let userIDs = Object.keys(tripDetail.participantsStatus); // array
+
+        let idUsernameMap = {};
+
+        for (let uid of userIDs){
+            let userData = await this.parent.getDocument("users", uid);
+            let username = userData.username;
+
+            idUsernameMap[uid] = username;
+        }
+        return await idUsernameMap;
+    }  
+
 };

@@ -16,8 +16,8 @@ export class Database{
     constructor(adminAuth){
         // As an admin, the app has access to read and write all data, regardless of Security Rules
         this.db = getFirestore(adminAuth);
-        this.tripQueries = new TripQueries(this);
         this.userQueries = new UserQueries(this);
+        this.tripQueries = new TripQueries(this);
         this.settingsQueries = new SettingsQueries(this);
     }
 

@@ -57,6 +57,7 @@
       </ul>
       <!-- tab content -->
       <div class="tab-content">
+        <!-- ---------------------------- participants ------------------------->
         <div id="participants" class="tab-pane active">
           <div class="tab-container">
             <div class="tab-content-top-buttons">
@@ -90,11 +91,23 @@
                 <th>Action</th>
               </tr>
               
-              <% Object.keys(trip.participantsStatus).forEach(function(key) { %>
+              <% Object.keys(trip.participantsStatus).forEach(function(uid) { %>
                 <tr>
-                  <td><%- key %></td>
-                  <td><%- trip.participantsStatus[key] %></td>
-                  <td>Dates placeholder</td>
+                  <td><%- userIDUsernameMap[uid] %></td>
+                  <td><%- trip.participantsStatus[uid] %></td>
+                  <td>
+                    <% var datePreferences = trip.datesPreferences[uid]; %>
+                    <% var index = 0; %>
+                    <% Object.keys(datePreferences).forEach(function(index) { %>
+                      <input class="form-control" 
+                          id="trip-availability_uid_<%- uid %>_<%- index %>" 
+                          type="text" 
+                          name="daterange"
+                          value="<%- moment(datePreferences[index][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferences[index][1].toDate()).format('DD MMM YYYY') %>"
+                          disabled/>
+                      <% index ++; %>
+                    <% }); %>
+                  </td>
                   <td>Some action</td>
                 </tr>
               <% }); %>
