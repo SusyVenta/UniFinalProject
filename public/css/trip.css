@@ -26,11 +26,11 @@
     flex-direction: column;
     box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
     padding: 1%;
-    justify-content: space-between;
     margin-top: 2%;
     overflow: hidden;
     width: 100%;
-    height: calc(100vh - 90px - 200px - 16vh); /* 90px is height of navbar. 200 is footer*/
+    min-height: calc(100vh - 90px - 200px - 16vh); /* 90px is height of navbar. 200 is footer*/
+    height: fit-content;
     margin-bottom: 2%;
 }
 
@@ -58,26 +58,39 @@
 }
 
 /* ------------------- participants tab ------------------- */
-#participants {
+#participants-tab {
     padding: 3%;
 }
 
-#participants-overview-container, #participants-table-div{
+#participants-overview-container, #participants-details-div-container{
     margin-top: 2%;
 }
 
-#participants-table{
-    border-collapse: collapse;
-    width: 100%;
+.participant-div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: fit-content;
     box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+    justify-content: space-between;
+    padding: 2%;
 }
 
-td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
+.participant-div > div{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: fit-content;
 }
-  
-tr:nth-child(even) {
-    background-color: #dddddd;
+
+#abandon-trip-button{
+    margin-bottom: 20px;
+}
+
+.participant-div-dates-action > button{
+    height: 40px;
+}
+
+.dates-available-container > input{
+    margin-top: 2%;
 }

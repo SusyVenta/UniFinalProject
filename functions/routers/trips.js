@@ -77,7 +77,8 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           userIsAuthenticated: true,
           moment: moment,
           userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(request.params.id),
-          commonAvailabilities: commonDateRanges
+          commonAvailabilities: commonDateRanges,
+          userID: userSessionDetails.userSessionDetails.uid
         };
 
         return response.status(200).render(templatePath, payload);

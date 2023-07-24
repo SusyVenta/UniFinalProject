@@ -58,14 +58,11 @@
       <!-- tab content -->
       <div class="tab-content">
         <!-- ---------------------------- participants ------------------------->
-        <div id="participants" class="tab-pane active">
+        <div id="participants-tab" class="tab-pane active">
           <div class="tab-container">
             <div class="tab-content-top-buttons">
               <button id="add-friend-button" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);">
                 Add friend
-              </button>
-              <button id="abandon-trip-button" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);">
-                Abandon trip
               </button>
             </div>
           </div>
@@ -76,7 +73,6 @@
             <% if (trip.askAllParticipantsDates === false) { %>
               <p>Chosen dates: <%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
             <%} else { %>
-              <!-- TODO: display common availabilities so far or chosen dates if all confirmed -->
               <% if (trip.finalizedEndDate === null) { %>
                 <p>Final dates not chosen yet. Common availabilities so far:</p>
                 <ul>
@@ -84,39 +80,78 @@
                   <li><%= moment(dateset.start).format('DD MMM YYYY') %> - <%= moment(dateset.end).format('DD MMM YYYY') %></li>
                 <% } %>
                 </ul>
+              <%} else { %>
+                <p>Final dates chosen: <%= moment(trip.finalizedEndDate).format('DD MMM YYYY') %></p>
               <%} %>
             <%} %>
           </div>
-          <div id="participants-table-div">
-            <table id="participants-table">
-              <tr>
-                <th>User</th>
-                <th>Status</th>
-                <th>Dates Available</th>
-                <th>Action</th>
-              </tr>
-              
-              <% Object.keys(trip.participantsStatus).forEach(function(uid) { %>
-                <tr>
-                  <td><%- userIDUsernameMap[uid] %></td>
-                  <td><%- trip.participantsStatus[uid] %></td>
-                  <td>
-                    <% var datePreferences = trip.datesPreferences[uid]; %>
-                    <% var index = 0; %>
-                    <% Object.keys(datePreferences).forEach(function(index) { %>
-                      <input class="form-control" 
-                          id="trip-availability_uid_<%- uid %>_<%- index %>" 
-                          type="text" 
-                          name="daterange"
-                          value="<%- moment(datePreferences[index][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferences[index][1].toDate()).format('DD MMM YYYY') %>"
-                          disabled/>
-                      <% index ++; %>
-                    <% }); %>
-                  </td>
-                  <td>Some action</td>
-                </tr>
-              <% }); %>
-            </table>
+          <div id="participants-details-div-container">
+            <!-- put current user first -->
+            <div class="participant-div">
+              <div class="participant-div-username">
+                <h4>User</h4>
+                <p><%= userIDUsernameMap[userID] %></p>
+              </div>
+              <div class="participant-div-status">
+                <h4>Status</h4>
+                <p><%- trip.participantsStatus[userID] %></p>
+              </div>
+              <div class="participant-div-dates-available">
+                <h4>Dates Available</h4>
+                <div class="dates-available-container">
+                  <% var datePreferencesCurrentUser = trip.datesPreferences[userID]; %>
+                  <% var indexCurrentUser = 0; %>
+                  <% Object.keys(datePreferencesCurrentUser).forEach(function(indexCurrentUser) { %>
+                    <input class="form-control" 
+                        id="trip-availability_uid_<%- userID %>_<%- indexCurrentUser %>" 
+                        type="text" 
+                        name="daterange"
+                        value="<%- moment(datePreferencesCurrentUser[indexCurrentUser][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferencesCurrentUser[indexCurrentUser][1].toDate()).format('DD MMM YYYY') %>"
+                        disabled/>
+                    <% indexCurrentUser ++; %>
+                  <% }); %>
+                </div>
+              </div>
+              <div class="participant-div-dates-action">
+                <button id="abandon-trip-button" class="btn btn-secondary" onclick="alert('to implement')">
+                  Abandon trip
+                </button>
+                <button id="edit-preferences-button" class="btn btn-secondary" onclick="alert('to implement')">
+                  <span class="material-symbols-outlined modified">edit</span>
+                </button>
+              </div>
+            </div>
+            <!-- all other users -->
+            <% Object.keys(trip.participantsStatus).forEach(function(uid) { %>
+              <% if (uid !== userID) { %>
+                <div class="participant-div">
+                  <div class="participant-div-username">
+                    <h4>User</h4>
+                    <p><%= userIDUsernameMap[uid] %></p>
+                  </div>
+                  <div class="participant-div-status">
+                    <h4>Status</h4>
+                    <p><%- trip.participantsStatus[uid] %></p>
+                  </div>
+                  <div class="participant-div-dates-available">
+                    <h4>Dates Available</h4>
+                    <div class="dates-available-container">
+                      <% var datePreferences = trip.datesPreferences[uid]; %>
+                      <% var index = 0; %>
+                      <% Object.keys(datePreferences).forEach(function(index) { %>
+                        <input class="form-control" 
+                            id="trip-availability_uid_<%- uid %>_<%- index %>" 
+                            type="text" 
+                            name="daterange"
+                            value="<%- moment(datePreferences[index][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferences[index][1].toDate()).format('DD MMM YYYY') %>"
+                            disabled/>
+                        <% index ++; %>
+                      <% }); %>
+                    </div>
+                  </div>
+                </div>
+              <%} %>
+            <% }); %>
           </div>
         </div>
         <div id="itinerary" class="tab-pane fade">
