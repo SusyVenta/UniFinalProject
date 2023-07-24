@@ -229,12 +229,34 @@ function getSelectedDates(){
 
 function saveTrip(){
   // collects data from modal and submits it to the API endpoint
+  let nullChecks = {
+    workingDays: {
+      value: document.getElementById("working-days-availability").value,
+      message: "Please enter a number of working days you are available"
+    },
+    totalDays: {
+      value: document.getElementById("total-days-availability").value,
+      message: "Please enter a number of total days you are available"
+    },
+    title: {
+      value: document.getElementById("new-trip-title").value,
+      message: "Please enter a title for your trip"
+    }
+  }
+
+  for (const [fieldName, value_message] of Object.entries(nullChecks)) {
+    if (value_message.value == ""){
+      alert(value_message.message);
+      return;
+    }
+  }  
+
   let payload = { 
-    tripTitle: document.getElementById("new-trip-title").value, 
+    tripTitle: nullChecks.title.value, 
     askAllParticipantsDates: document.getElementById("date-collection-type").name,
     datesPreferences: getSelectedDates(),
-    workingDaysAvailability: document.getElementById("working-days-availability").value,
-    totalDaysAvailability: document.getElementById("total-days-availability").value
+    workingDaysAvailability: nullChecks.workingDays.value,
+    totalDaysAvailability: nullChecks.totalDays.value
   };
   
   $.ajax({
