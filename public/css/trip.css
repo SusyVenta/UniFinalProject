@@ -94,3 +94,19 @@
 .dates-available-container > input{
     margin-top: 2%;
 }
+
+/* phone view */
+@media only screen and (max-width: 600px) {
+    .participant-div > div{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        height: fit-content;
+        width: 100%;
+        margin-bottom: 2%;
+    }
+
+    .participant-div-dates-action{
+        margin-top: 4%;
+    }
+  }
