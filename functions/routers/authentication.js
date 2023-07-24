@@ -166,7 +166,12 @@ export function authenticationRouter(
         // Create session cookie and set it.
         let sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn });
         // Set cookie policy for session cookie.
-        const options = { maxAge: expiresIn, httpOnly: true, secure: true };
+        const options = { 
+          maxAge: expiresIn, 
+          httpOnly: true, 
+          secure: true,
+          SameSite: 'strict' // browsers will not send it in any cross-site requests.
+         };
         // https://firebase.google.com/docs/hosting/manage-cache#using_cookies
         // https://stackoverflow.com/questions/44929653/firebase-cloud-function-wont-store-cookie-named-other-than-session
 
