@@ -18,4 +18,14 @@ export class UserQueries{
         };
         return await this.parent.createDocumentWithDataSpecifyDocID("users", userObject.uid, dataToAdd);
     }
+
+    async getUserDetails(userID){
+        // retrieves all trip documents that the user has access to
+        let userDoc = await this.parent.getDocument("users", userID);
+        return await userDoc;
+    }
+
+    async updateProfile(atributesToUpdate, uid){
+        await this.parent.updateFieldsDocument("users", uid, atributesToUpdate);
+    }
 };

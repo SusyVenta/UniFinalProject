@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- SHARED HEAD -->
+  <%- include('partials/sharedHead') %>
+
+  <!-- Title tag in the browser and Google results -->
+  <title>GroupTripper | Your trips</title>
+  <meta property="og:title" content="GroupTripper: best free group trip planner app - your trips" data-rh="true">
+  <meta property="twitter:title" content="GroupTripper: best free group trip planner app - your trips" data-rh="true">
+  <meta name="description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta name="twitter:description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:image:alt" content="Screenshot of GroupTripper: one view for your map and itinerary" data-rh="true">
+
+  <!-- css -->
+  <link rel="stylesheet" href="/css/generic.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+  <link rel="stylesheet" href="/css/profile.css">
+
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="/js/profile.js" ></script>
+</head>
+
+<body>
+  <div>
+    <%- include('partials/header'); %>
+  </div>
+  <div class="outer-container">
+    <div class="profile-tab-container">
+      <!-- tab names -->
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#personal-info-tab" data-bs-toggle="tab">Personal Info</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#friends-tab" data-bs-toggle="tab" data-bs-toggle="tab">Friends</a>
+        </li>
+      </ul>
+      <!-- tab content -->
+      <div class="tab-content">
+        <!-- ---------------------------- participants ------------------------->
+        <div id="personal-info-tab" class="tab-pane active">
+          <div id="profile-picture-container">
+            <p>some picture</p>
+          </div>
+          <div id="username-container">
+            <label id="username-input-label" for="username-input" class="form-label">Username</label>
+            <input 
+              autocomplete="one-time-code" 
+              class="form-control" id="username-input" 
+              required=true 
+              value="<%= profileDetails.username %>"
+              disabled>
+            <button id="edit-username-button" class="btn btn-secondary" onclick="alterEditUsername();">
+              <span id="edit-username-button-icon" class="material-symbols-outlined modified">edit</span>
+            </button>
+          </div>
+        </div>
+        <div id="friends-tab" class="tab-pane fade">
+          <p>Friends: </p>
+        </div>
+    </div>
+  </div>
+
+  <%- include('partials/footer'); %>
+</body>
+
+</html>

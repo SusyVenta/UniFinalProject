@@ -99,6 +99,16 @@ export class Database{
         await docRef.update(payload);
     }
 
+    async updateFieldsDocument(collectionName, docID, dataObj){
+        /* 
+        Given an existing document, updates specified fields.
+        dataObj: {<attribute>: <any object>, ...}
+        */
+        let docRef = await this.db.collection(collectionName).doc(docID);
+
+        await docRef.update(dataObj);
+    }
+
     async getDocument(collectionName, docID){
         // return content of a document identified with its collection name and docID
         let querySnapshot = await this.db.collection(collectionName).where(

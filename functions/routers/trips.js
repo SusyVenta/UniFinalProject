@@ -26,7 +26,8 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           let payload = {
             name: userSessionDetails.userSessionDetails.name, 
             trips: tripDetails,
-            userIsAuthenticated: true
+            userIsAuthenticated: true,
+            userID: userSessionDetails.userSessionDetails.uid
           };
 
           return response.status(200).render(indexPath, payload);
