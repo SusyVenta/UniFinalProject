@@ -46,6 +46,7 @@
 #profile-picture-container{
     flex-direction: row;
     justify-content: center;
+    margin-bottom: 2%;
 }
 
 #username-input{
@@ -60,4 +61,32 @@
 
 #username-input-label{
     align-self: center;
+}
+
+#profile-pic{
+    height: 180px;
+    border-radius: 50%;
+    border: 1px solid grey;
+}
+
+
+#edit-profile-picture-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#change-picture-button{
+    height: 40px;
+}
+
+.modal-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#profile-pic-input{
+    align-self: center;
+    margin-bottom: 2%;
 }

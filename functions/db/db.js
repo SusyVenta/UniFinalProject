@@ -114,6 +114,12 @@ export class Database{
         let querySnapshot = await this.db.collection(collectionName).where(
             FieldPath.documentId(), "==", docID).get();
         let documentSnapshot = await querySnapshot.docs[0];
+
+        if (documentSnapshot === undefined) {
+            // doc not found
+            return undefined;
+        }
+
         let document = await documentSnapshot.data();
         return document;
     }

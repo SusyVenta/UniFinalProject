@@ -16,7 +16,12 @@ export class UserQueries{
             trips: [],
             notifications: defaultNotifications
         };
-        return await this.parent.createDocumentWithDataSpecifyDocID("users", userObject.uid, dataToAdd);
+        let existingUser = await this.getUserDetails(userObject.uid);
+
+        if (existingUser === undefined) {
+            // if no user document present in DB, create it
+            return await this.parent.createDocumentWithDataSpecifyDocID("users", userObject.uid, dataToAdd);
+        }
     }
 
     async getUserDetails(userID){
@@ -25,7 +30,12 @@ export class UserQueries{
         return await userDoc;
     }
 
-    async updateProfile(atributesToUpdate, uid){
-        await this.parent.updateFieldsDocument("users", uid, atributesToUpdate);
+    async updateProfile(attributesToUpdate, uid){
+        try{
+            await this.parent.updateFieldsDocument("users", uid, attributesToUpdate);
+        } catch( error ){
+            console.log(error);
+        }
+        
     }
 };

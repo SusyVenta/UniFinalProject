@@ -46,7 +46,7 @@
 5) start emulator and test locally
     ```
     cd "C:\Users\ventafri\Desktop\Uni\year 3\UniFinalProject"
-    firebase emulators:start --only firestore,functions,hosting   <-- otherwise there are auth problems in verifying tokens
+    firebase emulators:start --only firestore,functions,hosting,storage   <-- otherwise there are auth problems in verifying tokens
     http://localhost:5004/
     ```
 5) if you need to clone repo and reinstall dependencies:
@@ -84,6 +84,7 @@
 10) running unit tests:
    - `cd "C:\Users\ventafri\Desktop\Uni\year 3\UniFinalProject"`
    - `npm test`
+
 
 # useful links: 
 

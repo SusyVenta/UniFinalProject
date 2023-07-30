@@ -24,6 +24,13 @@
   <!-- JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="/js/profile.js" ></script>
+
+  <!-- 
+    https://www.npmjs.com/package/croppie 
+    https://foliotek.github.io/Croppie/
+  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.js"></script>
 </head>
 
 <body>
@@ -46,7 +53,17 @@
         <!-- ---------------------------- participants ------------------------->
         <div id="personal-info-tab" class="tab-pane active">
           <div id="profile-picture-container">
-            <p>some picture</p>
+            <% if (profileDetails.picturePath === null) { %>
+              <img id="profile-pic" src="/assets/defaultUserImage.jpg" alt="User profile picture">
+            <% } else { %>  
+              <img id="profile-pic" src="<%= profileDetails.picturePath %>" alt="User profile picture">
+            <% } %> 
+          </div>
+          <div id="edit-profile-picture-container">
+            <!-- Profile picture edit button -->
+            <button type="button" id="change-picture-button" class="btn btn-secondary" onclick="openEditPictureModal()">
+              Edit picture
+            </button>
           </div>
           <div id="username-container">
             <label id="username-input-label" for="username-input" class="form-label">Username</label>
@@ -66,6 +83,34 @@
         </div>
     </div>
   </div>
+  <section>
+    <!-- edit picture modal 
+    https://codepen.io/rsales/pen/XyWORN
+    -->
+    <div id="edit-picture-modal" class="modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit picture</h5>
+          </div>
+          <div class="modal-body">
+            <input type="file" id="profile-pic-input"accept="image/*" onchange="initializeCroppie(this);">
+            <% if (profileDetails.picturePath === null) { %>
+              <img id="uploaded-image" src="/assets/defaultUserImage.jpg" alt="User profile picture">
+            <% } else { %>  
+              <img id="uploaded-image" src="<%= profileDetails.picturePath %>" alt="User profile picture">
+            <% } %> 
+          </div>
+          <div class="modal-footer" id="trips-modal-footer">
+            <button id="cancel-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="save-picture-button" type="button" class="btn btn-secondary">Save</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
 
   <%- include('partials/footer'); %>
 </body>

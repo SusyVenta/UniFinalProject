@@ -3,9 +3,7 @@ import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { getUserSessionDetails as importedGetUserSessionDetails} from "../utils/authUtils.js";
-import { searchImage } from "../utils/imageSearch.js";
 import moment from 'moment';
-import { TimeUtils } from "../utils/timeUtils.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 

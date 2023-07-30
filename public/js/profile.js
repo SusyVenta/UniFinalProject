@@ -31,3 +31,70 @@ function alterEditUsername(){
         });
     }
 }
+
+function openEditPictureModal(){
+    // open modal that allows to upload new profile picture
+    let modal = new bootstrap.Modal(document.getElementById("edit-picture-modal"), {});
+    modal.show();
+
+}
+
+function initializeCroppie(input) {
+    // shows uploaded image and allows to resize it
+    // https://codepen.io/rsales/pen/XyWORN
+    if (input.files && input.files[0]) {
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        $('#uploaded-image').attr('src', e.target.result);
+        let resize = new Croppie($('#uploaded-image')[0], {
+          viewport: { 
+            width: 200, 
+            height: 200,
+            type: 'circle'
+          },
+          boundary: { 
+            width: 300, 
+            height: 300 
+          },
+          // showZoomer: false,
+          // enableResize: true,
+          enableOrientation: true
+        });
+
+        // save image when user clicks on Save button
+        $('#save-picture-button').fadeIn();
+        $('#save-picture-button').on('click', function() {
+            // close modal
+            let modal = new bootstrap.Modal(document.getElementById("edit-picture-modal"), {});
+            modal.hide();
+
+            resize.result('base64').then(function(dataImg) {
+                console.log(dataImg);
+                // send data to backend via ajax
+                let uid = (window.location.href).split("/").at(-1);
+
+                let payload = {picturePath: dataImg};
+                // save modifications
+                $.ajax({
+                    url: `/profile/${uid}`,
+                    method: "POST",
+                    xhrFields: {
+                    withCredentials: true
+                    },
+                    data: jQuery.param(payload)
+                });
+            })
+            
+            // remove croppie container 
+            let croppieContainers = document.getElementsByClassName("croppie-container");
+            for(let croppieContainer of croppieContainers){
+                croppieContainer.remove();
+            }
+            
+            // reload page to reflect changes
+            window.location.assign(window.location.href);
+        })
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }

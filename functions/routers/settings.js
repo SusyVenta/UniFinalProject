@@ -20,10 +20,12 @@ export function settingsRouter(adminAuth, db, getUserSessionDetails = importedGe
           let userSettings = await db.settingsQueries.getOrCreateUserSettings(
             userSessionDetails.userSessionDetails.uid
           );
+          let uid = userSessionDetails.userSessionDetails.uid;
 
           let payload = {
             userSettings,
-            userIsAuthenticated: true
+            userIsAuthenticated: true,
+            userID: uid
           };
 
           return response.status(200).render(indexPath, payload);
