@@ -11,6 +11,80 @@ const __dirname = dirname(__filename);
 export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGetUserSessionDetails) {
   const router = new express.Router();
 
+  router.post("/", async(request, response) => {
+    // loads friends page
+    try {
+      let templatePath = path.join(__dirname, '..',"views/profile.ejs");
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        try {
+          let uid = userSessionDetails.userSessionDetails.uid;
+          let profileDetails = await db.userQueries.getUserDetails(uid);
+          
+          let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
+
+          let payload = {
+            profileDetails: profileDetails, 
+            userIsAuthenticated: true,
+            moment: moment,
+            userID: uid,
+            friendsSearchResult: null,
+            activeTab: "friends",
+            friendsProfiles: friendsProfiles
+          };
+
+          return response.status(200).render(templatePath, payload);
+
+        } catch (e){
+          return response.status(500).send(e.message);
+        }
+        
+      } else {
+        return response.status(401).send("Unauthorized");
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
+  router.get("/", async(request, response) => {
+    // loads friends page
+    try {
+      let templatePath = path.join(__dirname, '..',"views/profile.ejs");
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        try {
+          let uid = userSessionDetails.userSessionDetails.uid;
+          let profileDetails = await db.userQueries.getUserDetails(uid);
+          
+          let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
+
+          let payload = {
+            profileDetails: profileDetails, 
+            userIsAuthenticated: true,
+            moment: moment,
+            userID: uid,
+            friendsSearchResult: null,
+            activeTab: "friends",
+            friendsProfiles: friendsProfiles
+          };
+
+          return response.status(200).render(templatePath, payload);
+
+        } catch (e){
+          return response.status(500).send(e.message);
+        }
+        
+      } else {
+        return response.status(401).send("Unauthorized");
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
   router.post("/search/:string", async(request, response) => {
     // search for users whose username or email matches the searched string
     try {
@@ -56,10 +130,9 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
-        let uid = userSessionDetails.userSessionDetails.uid;
         let sessionCookie = request.cookies.__session;
-          response.cookie("__session", sessionCookie);
-          return response.status(302).redirect('/profile/' + uid);
+        response.cookie("__session", sessionCookie);
+        return response.status(302).redirect('/friends');
         
       } else {
         return response.status(401).send("Unauthorized");
@@ -72,7 +145,6 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
   router.post("/add", async(request, response) => {
     // search for users whose username or email matches the searched string
     try {
-      let templatePath = path.join(__dirname, '..',"views/profile.ejs");
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
@@ -81,20 +153,9 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
           let friendID = request.body.friendID;
           await db.userQueries.addFriend(uid, friendID);
 
-          let profileDetails = await db.userQueries.getUserDetails(uid);
-          let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
-
-          let payload = {
-            profileDetails: profileDetails, 
-            userIsAuthenticated: true,
-            moment: moment,
-            userID: uid,
-            friendsSearchResult: null,
-            activeTab: "friends",
-            friendsProfiles: friendsProfiles
-          };
-
-          return response.status(200).render(templatePath, payload);
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/friends');
 
         } catch (e){
           return response.status(500).send(e.message);
@@ -111,7 +172,6 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
   router.post("/remove", async(request, response) => {
     // search for users whose username or email matches the searched string
     try {
-      let templatePath = path.join(__dirname, '..',"views/profile.ejs");
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
@@ -120,20 +180,9 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
           let friendID = request.body.friendID;
           await db.userQueries.removeFriend(uid, friendID);
 
-          let profileDetails = await db.userQueries.getUserDetails(uid);
-          let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
-
-          let payload = {
-            profileDetails: profileDetails, 
-            userIsAuthenticated: true,
-            moment: moment,
-            userID: uid,
-            friendsSearchResult: null,
-            activeTab: "friends",
-            friendsProfiles: friendsProfiles
-          };
-
-          return response.status(200).render(templatePath, payload);
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/friends');
 
         } catch (e){
           return response.status(500).send(e.message);
@@ -150,7 +199,6 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
   router.post("/accept", async(request, response) => {
     // search for users whose username or email matches the searched string
     try {
-      let templatePath = path.join(__dirname, '..',"views/profile.ejs");
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
@@ -159,20 +207,9 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
           let friendID = request.body.friendID;
           await db.userQueries.acceptFriend(uid, friendID);
 
-          let profileDetails = await db.userQueries.getUserDetails(uid);
-          let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
-
-          let payload = {
-            profileDetails: profileDetails, 
-            userIsAuthenticated: true,
-            moment: moment,
-            userID: uid,
-            friendsSearchResult: null,
-            activeTab: "friends",
-            friendsProfiles: friendsProfiles
-          };
-
-          return response.status(200).render(templatePath, payload);
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/friends');
 
         } catch (e){
           return response.status(500).send(e.message);
