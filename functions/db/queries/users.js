@@ -38,4 +38,32 @@ export class UserQueries{
         }
         
     }
+
+    async getUsersMatchingSearch(searchString){
+        // searches database for users with username or email matching query string
+        // returns Array of results. Empty array if no results found
+        
+        let querySnapshotsName = await this.parent.db.collection("users").where(
+            "username", "==", searchString).get();
+        let querySnapshotNameDoc = await querySnapshotsName.docs;
+        if(querySnapshotNameDoc === undefined){
+            querySnapshotNameDoc = [];
+        }
+
+        let querySnapshotsEmail = await this.parent.db.collection("users").where(
+            "email", "==", searchString).get();
+        let querySnapshotsEmailDoc = await querySnapshotsEmail.docs;
+        if(querySnapshotsEmailDoc === undefined){
+            querySnapshotsEmailDoc = [];
+        }
+
+        let allResultsPromises = querySnapshotNameDoc.concat(querySnapshotsEmailDoc);
+        let allResults = [];
+
+        for(let promise of allResultsPromises){
+            allResults.push(promise.data());
+        }
+
+        return await allResults;
+    }
 };

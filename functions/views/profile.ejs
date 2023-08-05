@@ -24,7 +24,6 @@
   <!-- JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="/js/profile.js" ></script>
-
   <!-- 
     https://www.npmjs.com/package/croppie 
     https://foliotek.github.io/Croppie/
@@ -42,16 +41,31 @@
       <!-- tab names -->
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#personal-info-tab" data-bs-toggle="tab">Personal Info</a>
+          <% if (activeTab == 'profileDetails') { %>
+            <% var personalInfoClass = "nav-link active" %>
+          <% } else { %>  
+            <% var personalInfoClass = "nav-link" %>
+          <% } %> 
+          <a class="<%= personalInfoClass %>" aria-current="page" href="#personal-info-tab" data-bs-toggle="tab">Personal Info</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#friends-tab" data-bs-toggle="tab" data-bs-toggle="tab">Friends</a>
+          <% if (activeTab == 'friends') { %>
+            <% var friendsClass = "nav-link active" %>
+          <% } else { %>  
+            <% var friendsClass = "nav-link" %>
+          <% } %> 
+          <a class="<%= friendsClass %>" href="#friends-tab" data-bs-toggle="tab" data-bs-toggle="tab">Friends</a>
         </li>
       </ul>
       <!-- tab content -->
       <div class="tab-content">
-        <!-- ---------------------------- participants ------------------------->
-        <div id="personal-info-tab" class="tab-pane active">
+        <!-- ---------------------------- personal info tab ------------------------->
+        <% if (activeTab == 'profileDetails') { %>
+          <% var personalInfoPaneClass = "tab-pane active" %>
+        <% } else { %>  
+          <% var personalInfoPaneClass = "tab-pane fade" %>
+        <% } %> 
+        <div id="personal-info-tab" class="<%= personalInfoPaneClass %>">
           <div id="profile-picture-container">
             <% if (profileDetails.picturePath === null) { %>
               <img id="profile-pic" src="/assets/defaultUserImage.jpg" alt="User profile picture">
@@ -74,14 +88,72 @@
               value="<%= profileDetails.username %>"
               disabled>
             <button id="edit-username-button" class="btn btn-secondary" onclick="alterEditUsername();">
-              <span id="edit-username-button-icon" class="material-symbols-outlined modified">edit</span>
+              <span id="edit-username-button-icon" class="material-symbols-outline modified">edit</span>
             </button>
           </div>
         </div>
-        <div id="friends-tab" class="tab-pane fade">
-          <p>Friends: </p>
+        <!-- ---------------------------- friends tab ------------------------------->
+        <% if (activeTab == 'friends') { %>
+          <% var friendsPaneClass = "tab-pane active" %>
+        <% } else { %>  
+          <% var friendsPaneClass = "tab-pane fade" %>
+        <% } %> 
+        <div id="friends-tab" class="<%= friendsPaneClass %>">
+          <!-- search friends -->
+          <div id="friends-search-container">
+            <h5>Add new friends</h5>
+            <!-- form action below is dynamically changed based on user search calling searchFriend-->
+            <form id="search-bar-container" method="POST" action="/friends/search/:string">
+              <input type="search" id="search-friend-input" name="searchString" class="form-control" placeholder="Search username or email address"/>
+              <button type="button" class="btn btn-secondary" id="search-friends-button" onclick="event.stopPropagation(); searchFriend();">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
+            <div id="search-result">
+              <% if (friendsSearchResult !== null) { %>
+                <% if (friendsSearchResult.length == 0) { %>
+                  <p>We found no users matching your search criteria</p>
+                <% } else { %>  
+                  <h6>Search results: </h6>
+                  <% for (let searchResult of friendsSearchResult) { %>
+                    <div class="friend-search-result">
+                      <div class="friend-search-result-left">
+                        <% if (searchResult.picturePath === null) { %>
+                          <img class="friend-profile-pic" src="/assets/defaultUserImage.jpg" alt="friend profile picture">
+                        <% } else { %>  
+                          <img class="friend-profile-pic" src="<%= searchResult.picturePath %>" alt="friend profile picture">
+                        <% } %> 
+                        <p><%= searchResult.username %></p>
+                      </div>
+                      <div class="friend-search-result-right">
+                        <button type="button" class="btn btn-secondary" onclick="addFriend();">
+                          <i class="fas fa-add"></i>
+                        </button>
+                      </div>
+                    </div>
+                  <% } %> 
+                <% } %> 
+              <% } %> 
+            </div>
+          </div>
+          <!-- existing friends -->
+          <div id="existing-friends-container">
+            <h5>Friends</h5>
+            <% if (Object.keys(profileDetails.friends).length === 0) { %>
+              <p>No friends added yet</p>
+            <% } else { %>  
+              <% for (const [key, value] of Object.entries(profileDetails.friends)) { %>
+                <% if (value === 'friends') { %>
+                  <div class="friend-container">
+                    <p><%= key %></p>
+                  </div>
+                <% } %> 
+              <% } %> 
+            <% } %> 
+          </div>
         </div>
     </div>
+    <p id="current-user-uid"><%= userID %></p>
   </div>
   <section>
     <!-- edit picture modal 

@@ -90,3 +90,64 @@
     align-self: center;
     margin-bottom: 2%;
 }
+
+/* -------------------- friends tab ------------------------------------*/
+#friends-search-container{
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+    margin-top: 2%;
+    padding: 2%;
+}
+
+#search-friends-button{
+    width: 100px;
+}
+
+#search-bar-container{
+    display: flex;
+    flex-direction: row;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+#existing-friends-container{
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+    margin-top: 2%;
+    padding: 2%;
+}
+
+.friend-search-result{
+    display: flex;
+    flex-direction: row;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+    margin-top: 2%;
+    padding: 2%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.friend-search-result-left{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+}
+
+.friend-search-result-left > img{
+    height: 70px;
+    margin-right: 2%;
+}
+
+.friend-search-result-left > p{
+    align-self: center;
+    margin-right: 2%;
+}
+
+/* ------ hidden UID ----- */
+
+#current-user-uid{
+    font-size: 0.0000001px;
+    color: rgba(206, 203, 203, 0.591);
+}

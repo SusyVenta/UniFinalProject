@@ -84,7 +84,7 @@ function initializeCroppie(input) {
                     data: jQuery.param(payload)
                 });
             })
-            
+
             // remove croppie container 
             let croppieContainers = document.getElementsByClassName("croppie-container");
             for(let croppieContainer of croppieContainers){
@@ -92,9 +92,24 @@ function initializeCroppie(input) {
             }
             
             // reload page to reflect changes
-            window.location.assign(window.location.href);
+            let uid = document.getElementById("current-user-uid").innerHTML;
+            let domain = (window.location.href).split("/");
+            let url = domain[0] + "/profile/" + uid;
+            window.location.assign(url);
         })
       }
       reader.readAsDataURL(input.files[0]);
     }
+  }
+
+  function searchFriend(){
+    let searchString = document.getElementById("search-friend-input").value;
+    
+    // change form action
+    document.getElementById("search-bar-container").action = "/friends/search/" + searchString;
+
+    // submit form
+    document.getElementById("search-bar-container").submit();
+
+    console.log(searchString);
   }

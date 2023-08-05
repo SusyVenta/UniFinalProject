@@ -25,7 +25,9 @@ export function profileRouter(adminAuth, db, getUserSessionDetails = importedGet
           profileDetails: profileDetails, 
           userIsAuthenticated: true,
           moment: moment,
-          userID: uid
+          userID: uid,
+          friendsSearchResult: null,
+          activeTab: "profileDetails"
         };
 
         return response.status(200).render(templatePath, payload);

@@ -13,6 +13,7 @@ import { profileRouter} from "./routers/profile.js";
 import { authenticationRouter} from "./routers/authentication.js";
 import { legalRouter} from "./routers/legal.js";
 import { settingsRouter} from "./routers/settings.js";
+import { friendsRouter } from "./routers/friends.js";
 import admin from "firebase-admin";
 import { initializeApp as initializeAdminApp } from 'firebase-admin/app';
 import { serviceAccountCreds } from './config/serviceAccount.js';
@@ -68,5 +69,6 @@ app.use("/legal", legalRouter());
 app.use("/trips", tripsRouter(adminAuth, db));
 app.use("/profile", profileRouter(adminAuth, db));
 app.use("/settings", settingsRouter(adminAuth, db));
+app.use("/friends", friendsRouter(adminAuth, db))
 
 export const exportedapp = functions.https.onRequest(app);
