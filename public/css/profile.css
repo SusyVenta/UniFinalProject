@@ -92,7 +92,7 @@
 }
 
 /* -------------------- friends tab ------------------------------------*/
-#friends-search-container{
+.shaded-container{
     display: flex;
     flex-direction: column;
     box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
@@ -132,10 +132,19 @@
 .friend-search-result-left{
     display: flex;
     flex-direction: row;
-    width: 80%;
 }
 
-.friend-search-result-left > img{
+.friend-search-result-right{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.friend-search-result-right > * {
+    margin-left: 2%;
+}
+
+.friend-search-result-left > img, .friend-container.inner > img{
     height: 70px;
     margin-right: 2%;
 }
@@ -143,6 +152,24 @@
 .friend-search-result-left > p{
     align-self: center;
     margin-right: 2%;
+}
+
+/* friendships */
+.friend-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 2%;
+    align-items: center;
+}
+
+.friend-container.inner{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 2%;
+    align-items: center;
+    height: 70px;
 }
 
 /* ------ hidden UID ----- */

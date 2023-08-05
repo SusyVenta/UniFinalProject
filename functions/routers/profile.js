@@ -20,6 +20,7 @@ export function profileRouter(adminAuth, db, getUserSessionDetails = importedGet
       if(userSessionDetails.userSessionDetails !== null){
         let uid = userSessionDetails.userSessionDetails.uid;
         let profileDetails = await db.userQueries.getUserDetails(uid);
+        let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
 
         let payload = {
           profileDetails: profileDetails, 
@@ -27,7 +28,8 @@ export function profileRouter(adminAuth, db, getUserSessionDetails = importedGet
           moment: moment,
           userID: uid,
           friendsSearchResult: null,
-          activeTab: "profileDetails"
+          activeTab: "profileDetails",
+          friendsProfiles: friendsProfiles
         };
 
         return response.status(200).render(templatePath, payload);

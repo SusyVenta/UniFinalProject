@@ -61,9 +61,59 @@ export class UserQueries{
         let allResults = [];
 
         for(let promise of allResultsPromises){
-            allResults.push(promise.data());
+            let data = promise.data();
+            let docID = promise.id;
+            data.uid = docID;
+            allResults.push(data);
         }
 
         return await allResults;
+    }
+
+    async addFriend(uid, friendID){
+        /* 
+        Updates authenticated user's friends list and the target friend's friend list
+        Friendship status can be: {sent_pending, received_pending, friends}
+
+        New UID's 'friends' field: {<reference to friendID>: "sent_pending"}
+        New friend's 'friends' field: {<reference to UID>: "received_pending"}
+        */
+
+        // check if users are already friends or there is already a pending action
+        let user = await this.parent.getDocument("users", uid);
+        let userFriends = user.friends;
+        let friendActionAlreadyPresent = userFriends.hasOwnProperty(friendID);
+
+        if (friendActionAlreadyPresent !== true){
+            // add friend to UID's friend
+        
+            let dataObj = {
+                mapName: "friends",
+                key: friendID,
+                newValue: "sent_pending"
+            };
+
+            await this.parent.updateSingleKeyValueInMap("users", uid, dataObj);
+
+            // add UID to friend's friends 
+
+            let dataObj2 = {
+                mapName: "friends",
+                key: uid,
+                newValue: "received_pending"
+            };
+
+            await this.parent.updateSingleKeyValueInMap("users", friendID, dataObj2);
+        }
+    }
+
+    async getFriendsProfiles(userData){
+        /* userData: content of document for UID */
+        let friendsProfiles = {};
+
+        for (const [uid, value] of Object.entries(userData.friends)){
+            friendsProfiles[uid] = await this.getUserDetails(uid);
+        } 
+        return friendsProfiles;
     }
 };

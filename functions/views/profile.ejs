@@ -100,7 +100,7 @@
         <% } %> 
         <div id="friends-tab" class="<%= friendsPaneClass %>">
           <!-- search friends -->
-          <div id="friends-search-container">
+          <div class="shaded-container">
             <h5>Add new friends</h5>
             <!-- form action below is dynamically changed based on user search calling searchFriend-->
             <form id="search-bar-container" method="POST" action="/friends/search/:string">
@@ -126,9 +126,12 @@
                         <p><%= searchResult.username %></p>
                       </div>
                       <div class="friend-search-result-right">
-                        <button type="button" class="btn btn-secondary" onclick="addFriend();">
-                          <i class="fas fa-add"></i>
-                        </button>
+                        <form method="POST" action="/friends/add">
+                          <input type="hidden" name="friendToAdd" value="<%= searchResult.uid %>">
+                          <button class="btn btn-secondary" type=submit>
+                            <i class="fas fa-add"></i>
+                          </button>
+                        </form>
                       </div>
                     </div>
                   <% } %> 
@@ -136,18 +139,95 @@
               <% } %> 
             </div>
           </div>
+          <!-- friendship types -->
+          <% var friendshipsSentPending = [] %>
+          <% var friendshipsReceivedPending = [] %>
+          <% var friendshipsAccepted = [] %>
+          <% for (const [uid, friendshipStatus] of Object.entries(profileDetails.friends)) { %>
+            <% if (friendshipStatus === 'sent_pending') { %>
+              <% friendshipsSentPending.push(uid) %>
+            <% } else if (friendshipStatus === 'received_pending') { %>
+              <% friendshipsReceivedPending.push(uid) %>
+            <% } else if (friendshipStatus === 'friends') { %>
+              <% friendshipsAccepted.push(uid) %>
+            <% } %> 
+          <% } %>
+          <!-- pending friendship requests sent-->
+          <% if (friendshipsSentPending.length !== 0) { %>
+            <div class="shaded-container">
+              <h5>Frienship requests sent and pending</h5>
+                <% for (let friendUid of friendshipsSentPending) { %>
+                  <% var friendProfile = friendsProfiles[friendUid] %>
+                    <div class="friend-container inner">
+                      <% if (friendProfile.picturePath === null) { %>
+                        <img class="friend-profile-pic" src="/assets/defaultUserImage.jpg" alt="friend profile picture">
+                      <% } else { %>  
+                        <img class="friend-profile-pic" src="<%= friendProfile.picturePath %>" alt="friend profile picture">
+                      <% } %> 
+                      <p><%= friendProfile.username %></p>
+                    </div>
+                <% } %> 
+            </div>
+          <% } %> 
+          <!-- pending friendship requests received -->
+          <% if (friendshipsReceivedPending.length !== 0) { %>
+            <div class="shaded-container">
+              <h5>Frienship requests received</h5>
+                <% for (let friendUid of friendshipsReceivedPending) { %>
+                  <% var friendProfile = friendsProfiles[friendUid] %>
+                    <div class="friend-container">
+                      <div class="friend-search-result-left">
+                        <% if (friendProfile.picturePath === null) { %>
+                          <img class="friend-profile-pic" src="/assets/defaultUserImage.jpg" alt="friend profile picture">
+                        <% } else { %>  
+                          <img class="friend-profile-pic" src="<%= friendProfile.picturePath %>" alt="friend profile picture">
+                        <% } %> 
+                        <p><%= friendProfile.username %></p>
+                      </div>
+                      <div class="friend-search-result-right">
+                        <form method="POST" action="/friends/remove">
+                          <input type="hidden" name="friendID" value="<%= friendUid %>">
+                          <button class="btn btn-secondary" type=submit>
+                            Decline
+                          </button>
+                        </form>
+                        <form method="POST" action="/friends/accept">
+                          <input type="hidden" name="friendID" value="<%= friendUid %>">
+                          <button class="btn btn-secondary" type=submit>
+                            Accept
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                <% } %> 
+            </div>
+          <% } %> 
           <!-- existing friends -->
-          <div id="existing-friends-container">
+          <div class="shaded-container">
             <h5>Friends</h5>
-            <% if (Object.keys(profileDetails.friends).length === 0) { %>
+            <% if (friendshipsAccepted.length === 0) { %>
               <p>No friends added yet</p>
             <% } else { %>  
-              <% for (const [key, value] of Object.entries(profileDetails.friends)) { %>
-                <% if (value === 'friends') { %>
+              <% for (let friendUid of friendshipsAccepted) { %>
+                <% var friendProfile = friendsProfiles[friendUid] %>
                   <div class="friend-container">
-                    <p><%= key %></p>
+                    <div class="friend-search-result-left">
+                      <% if (friendProfile.picturePath === null) { %>
+                        <img class="friend-profile-pic" src="/assets/defaultUserImage.jpg" alt="friend profile picture">
+                      <% } else { %>  
+                        <img class="friend-profile-pic" src="<%= friendProfile.picturePath %>" alt="friend profile picture">
+                      <% } %> 
+                      <p><%= friendProfile.username %></p>
+                    </div>
+                    <div class="friend-search-result-right">
+                      <form method="POST" action="/friends/remove">
+                        <input type="hidden" name="friendToRemove" value="<%= friendUid %>">
+                        <button class="btn btn-secondary" type=submit>
+                          <i class="fas fa-delete"></i>
+                        </button>
+                      </form>
+                    </div>
                   </div>
-                <% } %> 
               <% } %> 
             <% } %> 
           </div>
