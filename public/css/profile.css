@@ -140,7 +140,7 @@
     justify-content: space-between;
 }
 
-.friend-search-result-right > * {
+.friend-search-result-right > *, .friend-search-result-left > * {
     margin-left: 2%;
 }
 
@@ -161,6 +161,7 @@
     justify-content: space-around;
     padding: 2%;
     align-items: center;
+    margin-top: 2%;
 }
 
 .friend-container.inner{
@@ -170,6 +171,7 @@
     padding: 2%;
     align-items: center;
     height: 70px;
+    margin-top: 2%;
 }
 
 /* ------ hidden UID ----- */

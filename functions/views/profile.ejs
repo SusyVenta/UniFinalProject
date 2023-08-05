@@ -99,6 +99,19 @@
           <% var friendsPaneClass = "tab-pane fade" %>
         <% } %> 
         <div id="friends-tab" class="<%= friendsPaneClass %>">
+          <!-- friendship types -->
+          <% var friendshipsSentPending = [] %>
+          <% var friendshipsReceivedPending = [] %>
+          <% var friendshipsAccepted = [] %>
+          <% for (const [uid, friendshipStatus] of Object.entries(profileDetails.friends)) { %>
+            <% if (friendshipStatus === 'sent_pending') { %>
+              <% friendshipsSentPending.push(uid) %>
+            <% } else if (friendshipStatus === 'received_pending') { %>
+              <% friendshipsReceivedPending.push(uid) %>
+            <% } else if (friendshipStatus === 'friends') { %>
+              <% friendshipsAccepted.push(uid) %>
+            <% } %> 
+          <% } %>
           <!-- search friends -->
           <div class="shaded-container">
             <h5>Add new friends</h5>
@@ -125,33 +138,28 @@
                         <% } %> 
                         <p><%= searchResult.username %></p>
                       </div>
-                      <div class="friend-search-result-right">
-                        <form method="POST" action="/friends/add">
-                          <input type="hidden" name="friendToAdd" value="<%= searchResult.uid %>">
-                          <button class="btn btn-secondary" type=submit>
-                            <i class="fas fa-add"></i>
-                          </button>
-                        </form>
-                      </div>
+                      <% if (friendshipsSentPending.includes(searchResult.uid) || friendshipsReceivedPending.includes(searchResult.uid)) { %>
+                        <button class="btn btn-secondary" type="button" disabled>Friendship pending</button>
+                      <% } else if (friendshipsAccepted.includes(searchResult.uid)) { %>
+                        <button class="btn btn-secondary" type="button" disabled>Friends</button>
+                      <% } else if (searchResult.uid === userID) { %>
+                          <button class="btn btn-secondary" type="button" disabled>This is you</button>
+                      <% } else  { %>
+                        <div class="friend-search-result-right">
+                          <form method="POST" action="/friends/add">
+                            <input type="hidden" name="friendToAdd" value="<%= searchResult.uid %>">
+                            <button class="btn btn-secondary" type=submit>
+                              <i class="fas fa-add"></i>
+                            </button>
+                          </form>
+                        </div>
+                      <% } %> 
                     </div>
                   <% } %> 
                 <% } %> 
               <% } %> 
             </div>
           </div>
-          <!-- friendship types -->
-          <% var friendshipsSentPending = [] %>
-          <% var friendshipsReceivedPending = [] %>
-          <% var friendshipsAccepted = [] %>
-          <% for (const [uid, friendshipStatus] of Object.entries(profileDetails.friends)) { %>
-            <% if (friendshipStatus === 'sent_pending') { %>
-              <% friendshipsSentPending.push(uid) %>
-            <% } else if (friendshipStatus === 'received_pending') { %>
-              <% friendshipsReceivedPending.push(uid) %>
-            <% } else if (friendshipStatus === 'friends') { %>
-              <% friendshipsAccepted.push(uid) %>
-            <% } %> 
-          <% } %>
           <!-- pending friendship requests sent-->
           <% if (friendshipsSentPending.length !== 0) { %>
             <div class="shaded-container">
