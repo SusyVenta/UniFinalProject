@@ -116,4 +116,54 @@ export class UserQueries{
         } 
         return friendsProfiles;
     }
+
+    async removeFriend(uid, friendID){
+        /* Removes frienship from user pair */
+        // users need to be friends to remove friendship
+        let user = await this.parent.getDocument("users", uid);
+        let userFriends = user.friends;
+        if(userFriends.hasOwnProperty(friendID)){
+            // delete from authenticated user 
+            let dataObj = {
+                mapName: "friends",
+                key: friendID
+            };
+
+            this.parent.deleteKeyFromMap("users", uid, dataObj);
+
+            // delete from friend
+            let dataObjFriend = {
+                mapName: "friends",
+                key: uid
+            };
+
+            this.parent.deleteKeyFromMap("users", friendID, dataObjFriend);
+        }
+    }
+
+    async acceptFriend(uid, friendID){
+        /* Accepts frienship in user pair */
+        // users need to have pending friends to accept friendship
+        let user = await this.parent.getDocument("users", uid);
+        let userFriends = user.friends;
+        if(userFriends.hasOwnProperty(friendID) && userFriends[friendID].includes("pending")){
+            // delete from authenticated user 
+            let dataObj = {
+                mapName: "friends",
+                key: friendID,
+                newValue: "friends"
+            };
+
+            this.parent.updateSingleKeyValueInMap("users", uid, dataObj);
+
+            // delete from friend
+            let dataObjFriend = {
+                mapName: "friends",
+                key: uid,
+                newValue: "friends"
+            };
+
+            this.parent.updateSingleKeyValueInMap("users", friendID, dataObjFriend);
+        }
+    }
 };

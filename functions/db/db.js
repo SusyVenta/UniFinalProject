@@ -87,6 +87,20 @@ export class Database{
         await docRef.update(payload);
     }
 
+    async deleteKeyFromMap(collectionName, docID, dataObj){
+        /* 
+        Given an existing map containing N <key, value> pairs, removes the 
+        specified <key, value> pair.
+        dataObj: {mapName: <name>, key: <key>}
+        */
+        let docRef = await this.db.collection(collectionName).doc(docID);
+        
+        let payload = {};
+        payload[`${dataObj.mapName}.${dataObj.key}`] = FieldValue.delete();
+        await docRef.update(payload);
+    }
+
+
     async addFieldToDocument(collectionName, docID, dataObj){
         /* 
         Given an existing document, adds a field to it.

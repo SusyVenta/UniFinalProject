@@ -147,7 +147,7 @@
                       <% } else  { %>
                         <div class="friend-search-result-right">
                           <form method="POST" action="/friends/add">
-                            <input type="hidden" name="friendToAdd" value="<%= searchResult.uid %>">
+                            <input type="hidden" name="friendID" value="<%= searchResult.uid %>">
                             <button class="btn btn-secondary" type=submit>
                               <i class="fas fa-add"></i>
                             </button>
@@ -229,9 +229,9 @@
                     </div>
                     <div class="friend-search-result-right">
                       <form method="POST" action="/friends/remove">
-                        <input type="hidden" name="friendToRemove" value="<%= friendUid %>">
+                        <input type="hidden" name="friendID" value="<%= friendUid %>">
                         <button class="btn btn-secondary" type=submit>
-                          <i class="fas fa-delete"></i>
+                          <i class="fas fa-trash"></i>
                         </button>
                       </form>
                     </div>

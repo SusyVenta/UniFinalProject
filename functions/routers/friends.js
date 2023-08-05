@@ -78,8 +78,8 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
       if(userSessionDetails.userSessionDetails !== null){
         try {
           let uid = userSessionDetails.userSessionDetails.uid;
-          let friendToAddUID = request.body.friendToAdd;
-          await db.userQueries.addFriend(uid, friendToAddUID);
+          let friendID = request.body.friendID;
+          await db.userQueries.addFriend(uid, friendID);
 
           let profileDetails = await db.userQueries.getUserDetails(uid);
           let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
@@ -108,6 +108,83 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
     }
   });
 
+  router.post("/remove", async(request, response) => {
+    // search for users whose username or email matches the searched string
+    try {
+      let templatePath = path.join(__dirname, '..',"views/profile.ejs");
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        try {
+          let uid = userSessionDetails.userSessionDetails.uid;
+          let friendID = request.body.friendID;
+          await db.userQueries.removeFriend(uid, friendID);
+
+          let profileDetails = await db.userQueries.getUserDetails(uid);
+          let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
+
+          let payload = {
+            profileDetails: profileDetails, 
+            userIsAuthenticated: true,
+            moment: moment,
+            userID: uid,
+            friendsSearchResult: null,
+            activeTab: "friends",
+            friendsProfiles: friendsProfiles
+          };
+
+          return response.status(200).render(templatePath, payload);
+
+        } catch (e){
+          return response.status(500).send(e.message);
+        }
+        
+      } else {
+        return response.status(401).send("Unauthorized");
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
+  router.post("/accept", async(request, response) => {
+    // search for users whose username or email matches the searched string
+    try {
+      let templatePath = path.join(__dirname, '..',"views/profile.ejs");
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        try {
+          let uid = userSessionDetails.userSessionDetails.uid;
+          let friendID = request.body.friendID;
+          await db.userQueries.acceptFriend(uid, friendID);
+
+          let profileDetails = await db.userQueries.getUserDetails(uid);
+          let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
+
+          let payload = {
+            profileDetails: profileDetails, 
+            userIsAuthenticated: true,
+            moment: moment,
+            userID: uid,
+            friendsSearchResult: null,
+            activeTab: "friends",
+            friendsProfiles: friendsProfiles
+          };
+
+          return response.status(200).render(templatePath, payload);
+
+        } catch (e){
+          return response.status(500).send(e.message);
+        }
+        
+      } else {
+        return response.status(401).send("Unauthorized");
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
 
   return router;
 };
