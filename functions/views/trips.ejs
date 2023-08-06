@@ -19,7 +19,6 @@
   <link rel="stylesheet" href="/css/generic.css">
   <link rel="stylesheet" href="/css/footer.css">
   <link rel="stylesheet" href="/css/trips.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
   
   <!-- JS -->
@@ -78,11 +77,8 @@
             <!-- https://fonts.google.com/icons?selected=Material+Symbols+Outlined:share:FILL@0;wght@400;GRAD@0;opsz@48&icon.query=share -->
             <!-- when clicked, stops propagation of click event so it doesn't trigger click on parent div -->
             <button id="delete_trip_button_<%= trip.tripID %>" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);" name="delete_<%= trip.tripID %>">
-              <span class="material-symbols-outlined modified">delete</span>
+              <span class="fas fa-trash"></span>
             </button>
-            <!--button class="btn btn-secondary" onclick="showModal(this)" name="share_<%= trip.tripID %>">
-              <span class="material-symbols-outlined modified">share</span>
-            </button-->
           </div>
         </div>
       <%} %>

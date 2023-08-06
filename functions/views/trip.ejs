@@ -17,7 +17,6 @@
   <!-- css -->
   <link rel="stylesheet" href="/css/generic.css">
   <link rel="stylesheet" href="/css/footer.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
   <link rel="stylesheet" href="/css/trip.css">
 
@@ -102,12 +101,9 @@
                   <% var datePreferencesCurrentUser = trip.datesPreferences[userID]; %>
                   <% var indexCurrentUser = 0; %>
                   <% Object.keys(datePreferencesCurrentUser).forEach(function(indexCurrentUser) { %>
-                    <input class="form-control" 
-                        id="trip-availability_uid_<%- userID %>_<%- indexCurrentUser %>" 
-                        type="text" 
-                        name="daterange"
-                        value="<%- moment(datePreferencesCurrentUser[indexCurrentUser][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferencesCurrentUser[indexCurrentUser][1].toDate()).format('DD MMM YYYY') %>"
-                        disabled/>
+                    <p id="trip-availability_uid_<%- userID %>_<%- indexCurrentUser %>" >
+                      <%- moment(datePreferencesCurrentUser[indexCurrentUser][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferencesCurrentUser[indexCurrentUser][1].toDate()).format('DD MMM YYYY') %>
+                    </p>
                     <% indexCurrentUser ++; %>
                   <% }); %>
                 </div>
@@ -117,7 +113,7 @@
                   Abandon trip
                 </button>
                 <button id="edit-preferences-button" class="btn btn-secondary" onclick="alert('to implement')">
-                  <span class="material-symbols-outlined modified">edit</span>
+                  <i class="fas fa-pencil"></i>
                 </button>
               </div>
             </div>

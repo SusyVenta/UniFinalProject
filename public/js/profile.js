@@ -6,13 +6,13 @@ function alterEditUsername(){
         $(inputElement).removeAttr('disabled');
 
         let icon = document.getElementById("edit-username-button-icon");
-        icon.innerHTML = "save";
+        icon.className = "fas fa-save";
     } else {
         // save action triggered
         inputElement.disabled = true;
 
         let icon = document.getElementById("edit-username-button-icon");
-        icon.innerHTML = "edit";
+        icon.className = "fas fa-pencil";
 
         let uid = (window.location.href).split("/").at(-1);
 

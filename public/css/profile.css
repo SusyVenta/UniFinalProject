@@ -132,6 +132,7 @@
 .friend-search-result-left{
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 
 .friend-search-result-right{
