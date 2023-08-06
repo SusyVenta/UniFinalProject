@@ -166,11 +166,14 @@
                       </div>
                     </div>
                   <%} %>
-                  <div class="participant-div-dates-action">
-                    <button class="btn btn-secondary hundred-twenty" onclick="removeFriendFromTrip('<%= tripID %>', '<%= uid %>');">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </div>
+                  <!-- allow to remove users only if user is trip owner -->
+                  <% if (trip.participantsStatus[userID] === 'owner') { %>
+                    <div class="participant-div-dates-action">
+                      <button class="btn btn-secondary hundred-twenty" onclick="removeFriendFromTrip('<%= tripID %>', '<%= uid %>');">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  <%} %>
                 </div>
               <%} %>
             <% }); %>
