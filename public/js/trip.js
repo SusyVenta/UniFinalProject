@@ -27,6 +27,7 @@ function showAddFriendsModal(){
 };
 
 function addFriendsToTrip(){
+  /* Calls API endpoint to add friends to trip */
   let select = document.getElementById('multiselect-friends');
   let control = select.tomselect;
   let selectedItems = control.items;
@@ -55,3 +56,7 @@ function addFriendsToTrip(){
   window.location.href = "/trips/" + tripID;
   
 };
+
+function removeFriendFromTrip(tripID, friendUID){
+
+}

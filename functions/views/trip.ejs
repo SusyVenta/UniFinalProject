@@ -66,7 +66,7 @@
           <div class="tab-container">
             <div class="tab-content-top-buttons">
               <button id="add-friend-button" class="btn btn-secondary" onclick="showAddFriendsModal();">
-                Add friend
+                Add friends
               </button>
             </div>
           </div>
@@ -95,8 +95,14 @@
             <!-- put current user first -->
             <div class="participant-div">
               <div class="participant-div-username">
-                <h4>User</h4>
-                <p><%= userIDUsernameMap[userID] %></p>
+                <div class="username-picture-container">
+                  <% if (profileDetails.picturePath === null) { %>
+                    <img class="profile-picture" src="/assets/defaultUserImage.jpg" alt="User profile picture">
+                  <% } else { %>  
+                    <img class="profile-picture" src="<%= profileDetails.picturePath %>" alt="User profile picture">
+                  <% } %> 
+                  <p><%= userIDUsernameMap[userID] %></p>
+                </div>
               </div>
               <div class="participant-div-status">
                 <h4>Status</h4>
@@ -129,8 +135,14 @@
               <% if (uid !== userID) { %>
                 <div class="participant-div">
                   <div class="participant-div-username">
-                    <h4>User</h4>
-                    <p><%= userIDUsernameMap[uid] %></p>
+                    <div class="username-picture-container">
+                      <% if (friendsProfiles[uid].picturePath === null) { %>
+                        <img class="profile-picture" src="/assets/defaultUserImage.jpg" alt="User profile picture">
+                      <% } else { %>  
+                        <img class="profile-picture" src="<%= friendsProfiles[uid].picturePath %>" alt="User profile picture">
+                      <% } %> 
+                      <p><%= friendsProfiles[uid].username %></p>
+                    </div>
                   </div>
                   <div class="participant-div-status">
                     <h4>Status</h4>
@@ -154,6 +166,11 @@
                       </div>
                     </div>
                   <%} %>
+                  <div class="participant-div-dates-action">
+                    <button class="btn btn-secondary hundred-twenty" onclick="removeFriendFromTrip('<%= tripID %>', '<%= uid %>')">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
                 </div>
               <%} %>
             <% }); %>
@@ -196,8 +213,10 @@
               <p>Step 2. Select friends you want to add to this trip</p>
               <select id="multiselect-friends" multiple placeholder="Add friends">
                 <% for (let friendUid of friendshipsAccepted) { %>
-                  <% var friendProfile = friendsProfiles[friendUid] %>
-                  <option value="<%= friendUid %>"><%= friendProfile.username %></option>
+                  <% if (! trip.participantsStatus.hasOwnProperty(friendUid)) { %>
+                    <% var friendProfile = friendsProfiles[friendUid] %>
+                    <option value="<%= friendUid %>"><%= friendProfile.username %></option>
+                  <% } %> 
                 <% } %> 
               </select>
             </div>

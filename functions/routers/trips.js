@@ -85,7 +85,8 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           commonAvailabilities: commonDateRanges,
           userID: uid,
           profileDetails: profileDetails,
-          friendsProfiles: friendsProfiles
+          friendsProfiles: friendsProfiles,
+          tripID: tripID
         };
 
         return response.status(200).render(templatePath, payload);

@@ -110,7 +110,7 @@ export class TripQueries{
                     newValue: "pending"
                 }
             );
-            
+
             if(data.askAllParticipantsDates === "true"){
                 // update totalDaysAvailability
                 await this.parent.updateSingleKeyValueInMap(

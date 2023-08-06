@@ -72,7 +72,7 @@
     flex-wrap: wrap;
     height: fit-content;
     box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 2%;
     margin-top: 2%;
 }
@@ -82,6 +82,7 @@
     flex-direction: column;
     flex-wrap: wrap;
     height: fit-content;
+    align-self: center;
 }
 
 #abandon-trip-button{
@@ -106,6 +107,34 @@
     margin-top: 2%;
 }
 
+.participant-div-username, .participant-div-status{
+    width: 20%;
+}
+
+.participant-div-dates-available{
+    width: 30%;
+}
+
+.participant-div-dates-action{
+    margin-left: auto; /* align right */
+    width: 120px;
+}
+
+.btn.btn-secondary.hundred-twenty{
+    width: 120px;
+}
+
+.username-picture-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.profile-picture{
+    height: 70px;
+    margin-right: 2%;
+}
+
 /* phone view */
 @media only screen and (max-width: 600px) {
     .participant-div > div{
@@ -119,5 +148,9 @@
 
     .participant-div-dates-action{
         margin-top: 4%;
+    }
+
+    .btn.btn-secondary.hundred-twenty{
+        width: 100%;
     }
   }
