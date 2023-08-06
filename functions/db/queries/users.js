@@ -14,7 +14,8 @@ export class UserQueries{
             picturePath: null,
             friends: {},
             trips: [],
-            notifications: defaultNotifications
+            notifications: defaultNotifications,
+            tripInvites: []
         };
         let existingUser = await this.getUserDetails(userObject.uid);
 

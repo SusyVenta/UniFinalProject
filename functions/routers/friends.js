@@ -10,44 +10,6 @@ const __dirname = dirname(__filename);
 
 export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGetUserSessionDetails) {
   const router = new express.Router();
-
-  router.post("/", async(request, response) => {
-    // loads friends page
-    try {
-      let templatePath = path.join(__dirname, '..',"views/profile.ejs");
-      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
-
-      if(userSessionDetails.userSessionDetails !== null){
-        try {
-          let uid = userSessionDetails.userSessionDetails.uid;
-          let profileDetails = await db.userQueries.getUserDetails(uid);
-          
-          let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
-
-          let payload = {
-            profileDetails: profileDetails, 
-            userIsAuthenticated: true,
-            moment: moment,
-            userID: uid,
-            friendsSearchResult: null,
-            activeTab: "friends",
-            friendsProfiles: friendsProfiles
-          };
-
-          return response.status(200).render(templatePath, payload);
-
-        } catch (e){
-          return response.status(500).send(e.message);
-        }
-        
-      } else {
-        return response.status(401).send("Unauthorized");
-      }
-    } catch(error){
-      response.status(500).send(error.message);
-    }
-  });
-
   router.get("/", async(request, response) => {
     // loads friends page
     try {

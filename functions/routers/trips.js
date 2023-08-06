@@ -69,8 +69,12 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
       let templatePath = path.join(__dirname, '..',"views/trip.ejs");
 
       if(userSessionDetails.userSessionDetails !== null){
-        let tripDetails = await db.tripQueries.getTripByID(request.params.id);
+        let tripID = request.params.id;
+        let tripDetails = await db.tripQueries.getTripByID(tripID);
         let commonDateRanges = new TimeUtils().commonDateRanges(tripDetails.datesPreferences);
+        let uid = userSessionDetails.userSessionDetails.uid;
+        let profileDetails = await db.userQueries.getUserDetails(uid);
+        let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
 
         let payload = {
           name: userSessionDetails.userSessionDetails.name, 
@@ -79,7 +83,9 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           moment: moment,
           userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(request.params.id),
           commonAvailabilities: commonDateRanges,
-          userID: userSessionDetails.userSessionDetails.uid
+          userID: uid,
+          profileDetails: profileDetails,
+          friendsProfiles: friendsProfiles
         };
 
         return response.status(200).render(templatePath, payload);
@@ -117,6 +123,31 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
           return response.status(200).send("Created trip");
         } catch (e){
+          return response.status(500).send(e.message);
+        }
+        
+      } else {
+        return response.status(401).send("Unauthorized");
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
+  router.post("/:id", async(request, response) => {
+    // Modifies trip details
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        try {
+          await db.tripQueries.updateTrip(
+            request.body, 
+            userSessionDetails.userSessionDetails.uid
+          );
+          return response.status(200).send("Modified trip");
+        } catch (e){
+          console.log(e.message);
           return response.status(500).send(e.message);
         }
         

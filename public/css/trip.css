@@ -74,6 +74,7 @@
     box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
     justify-content: space-between;
     padding: 2%;
+    margin-top: 2%;
 }
 
 .participant-div > div{
@@ -99,6 +100,10 @@
 .dates-available-container > input{
     margin-top: 2%;
     width: fit-content;
+}
+
+.multiselect-friends-container{
+    margin-top: 2%;
 }
 
 /* phone view */

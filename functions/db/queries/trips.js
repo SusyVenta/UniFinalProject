@@ -90,4 +90,58 @@ export class TripQueries{
         return await idUsernameMap;
     }  
 
+    async updateTrip(data, userID){
+        /* 
+        data: {friendsToAdd: [], tripID: <str: tripID>, askAllParticipantsDates: <true / false>}
+        Updates the following fields: 
+            - participantsStatus: {uid: 'pending'}
+            - totalDaysAvailability: {uid: null}
+            - workingDaysAvailability: {uid: null}
+            - if askAllParticipantsDates === true -> datesPreferences: {uid: []}
+        */
+        for (let friendID of data.friendsToAdd){
+            // update participantsStatus
+            await this.parent.updateSingleKeyValueInMap(
+                "trips", 
+                data.tripID, 
+                {
+                    mapName: "participantsStatus",
+                    key: friendID,
+                    newValue: "pending"
+                }
+            );
+            
+            if(data.askAllParticipantsDates === "true"){
+                // update totalDaysAvailability
+                await this.parent.updateSingleKeyValueInMap(
+                    "trips", 
+                    data.tripID, 
+                    {
+                        mapName: "totalDaysAvailability",
+                        key: friendID,
+                        newValue: null
+                    }
+                );
+                // update workingDaysAvailability
+                await this.parent.updateSingleKeyValueInMap(
+                    "trips", 
+                    data.tripID, 
+                    {
+                        mapName: "workingDaysAvailability",
+                        key: friendID,
+                        newValue: null
+                    }
+                );
+            }
+            // add trip invite to friend so they get notified
+            await this.parent.updateDocumentAppendToArray(
+                "users", 
+                friendID, 
+                {
+                    arrayName: "tripInvites",
+                    valueToUpdate: {senderID: userID, tripID: data.tripID}
+                }
+            );
+        }
+    }
 };

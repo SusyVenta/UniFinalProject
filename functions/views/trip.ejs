@@ -25,6 +25,11 @@
   <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
   <!-- https://www.daterangepicker.com/ -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+  <!-- Tom Select -->
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+  <script src="/js/trip.js"></script>
 </head>
 
 <body>
@@ -60,7 +65,7 @@
         <div id="participants-tab" class="tab-pane active">
           <div class="tab-container">
             <div class="tab-content-top-buttons">
-              <button id="add-friend-button" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);">
+              <button id="add-friend-button" class="btn btn-secondary" onclick="showAddFriendsModal();">
                 Add friend
               </button>
             </div>
@@ -69,8 +74,10 @@
             <% var numberParticipants = Object.keys(trip.participantsStatus).length; %>
             <h5>Overview:</h5>
             <p>Participants: <%= numberParticipants %></p>
+            <input type="hidden" id="askAllParticipantsDates" value="<%= trip.askAllParticipantsDates %>">
             <% if (trip.askAllParticipantsDates === false) { %>
               <p>Chosen dates: <%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
+              <p>Waiting for participants to confirm availability</p>
             <%} else { %>
               <% if (trip.finalizedEndDate === null) { %>
                 <p>Final dates not chosen yet. Common availabilities so far:</p>
@@ -129,22 +136,24 @@
                     <h4>Status</h4>
                     <p><%- trip.participantsStatus[uid] %></p>
                   </div>
-                  <div class="participant-div-dates-available">
-                    <h4>Dates Available</h4>
-                    <div class="dates-available-container">
-                      <% var datePreferences = trip.datesPreferences[uid]; %>
-                      <% var index = 0; %>
-                      <% Object.keys(datePreferences).forEach(function(index) { %>
-                        <input class="form-control" 
-                            id="trip-availability_uid_<%- uid %>_<%- index %>" 
-                            type="text" 
-                            name="daterange"
-                            value="<%- moment(datePreferences[index][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferences[index][1].toDate()).format('DD MMM YYYY') %>"
-                            disabled/>
-                        <% index ++; %>
-                      <% }); %>
+                  <% if (trip.askAllParticipantsDates === true) { %>
+                    <div class="participant-div-dates-available">
+                      <h4>Dates Available</h4>
+                      <div class="dates-available-container">
+                        <% var datePreferences = trip.datesPreferences[uid]; %>
+                        <% var index = 0; %>
+                        <% Object.keys(datePreferences).forEach(function(index) { %>
+                          <input class="form-control" 
+                              id="trip-availability_uid_<%- uid %>_<%- index %>" 
+                              type="text" 
+                              name="daterange"
+                              value="<%- moment(datePreferences[index][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferences[index][1].toDate()).format('DD MMM YYYY') %>"
+                              disabled/>
+                          <% index ++; %>
+                        <% }); %>
+                      </div>
                     </div>
-                  </div>
+                  <%} %>
                 </div>
               <%} %>
             <% }); %>
@@ -162,20 +171,40 @@
     </div>
   </div>
   <section>
-    <!-- modal displaying authentication-related errors / info messages -->
-    <div id="trips-modal" class="modal" tabindex="-1">
+    <!-- friendship types -->
+    <% var friendshipsUIDs = profileDetails.friends; %>
+    <% var friendshipsAccepted = []; %>
+    <% Object.keys(friendshipsUIDs).forEach(function(friendUid) { %>
+      <% if (friendshipsUIDs[friendUid] === 'friends') { %>
+        <% friendshipsAccepted.push(friendUid) %>
+      <% } %>
+    <% }); %>
+    <!-- add friend modal -->
+    <div id="add-friend-modal" class="modal" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="trips-modal-title"></h5>
+            <h5 class="modal-title">Add friends to trip</h5>
           </div>
           <div class="modal-body">
-            <p id="trips-modal-message"></p>
+            <div>
+              <p>Step 1. If you haven't already</p>
+              <a class="btn btn-secondary" href="/friends" rel="nofollow">Add friends to your profile</a>
+            </div>
+            <!-- https://stackoverflow.com/questions/69530889/adding-bootstrap-5-search-bar-dropdown -->
+            <div class="multiselect-friends-container">
+              <p>Step 2. Select friends you want to add to this trip</p>
+              <select id="multiselect-friends" multiple placeholder="Add friends">
+                <% for (let friendUid of friendshipsAccepted) { %>
+                  <% var friendProfile = friendsProfiles[friendUid] %>
+                  <option value="<%= friendUid %>"><%= friendProfile.username %></option>
+                <% } %> 
+              </select>
+            </div>
           </div>
           <div class="modal-footer" id="trips-modal-footer">
-            <button id="cancel-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button id="delete-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="deleteTrip(this);">Yes, delete</button>
-            <button id="close-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK, close</button>
+            <button id="cancel-friends-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="save-friends-button" type="button" class="btn btn-secondary" onclick="addFriendsToTrip()">Save</button>
           </div>
         </div>
       </div>
