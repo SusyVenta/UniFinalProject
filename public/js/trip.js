@@ -47,16 +47,34 @@ function addFriendsToTrip(){
       xhrFields: {
         withCredentials: true
       },
-      data: jQuery.param(payload)
+      data: jQuery.param(payload),
+      success: function() {   
+        // if successful call, reload page
+        location.reload();  
+      }
     });
   }
 
-  console.log(selectedItems);
   // reload page
-  window.location.href = "/trips/" + tripID;
-  
+  //window.location.href = "/trips/" + tripID;
 };
 
 function removeFriendFromTrip(tripID, friendUID){
+  let payload = { 
+    friendToRemove: friendUID,
+    tripID: tripID
+  };
 
-}
+  $.ajax({
+    url: `/trips/` + tripID,
+    method: "POST",
+    xhrFields: {
+      withCredentials: true
+    },
+    data: jQuery.param(payload),
+    success: function() {   
+      // if successful call, reload page
+      location.reload();  
+    }
+  });
+};

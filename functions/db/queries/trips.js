@@ -95,9 +95,10 @@ export class TripQueries{
         data: {friendsToAdd: [], tripID: <str: tripID>, askAllParticipantsDates: <true / false>}
         Updates the following fields: 
             - participantsStatus: {uid: 'pending'}
-            - totalDaysAvailability: {uid: null}
-            - workingDaysAvailability: {uid: null}
-            - if askAllParticipantsDates === true -> datesPreferences: {uid: []}
+            - if askAllParticipantsDates === true :
+                - datesPreferences: {uid: []}
+                - totalDaysAvailability: {uid: null}
+                - workingDaysAvailability: {uid: null}
         */
         for (let friendID of data.friendsToAdd){
             // update participantsStatus
@@ -132,6 +133,16 @@ export class TripQueries{
                         newValue: null
                     }
                 );
+                // update datesPreferences
+                await this.parent.updateSingleKeyValueInMap(
+                    "trips", 
+                    data.tripID, 
+                    {
+                        mapName: "datesPreferences",
+                        key: friendID,
+                        newValue: null
+                    }
+                );
             }
             // add trip invite to friend so they get notified
             await this.parent.updateDocumentAppendToArray(
@@ -143,5 +154,41 @@ export class TripQueries{
                 }
             );
         }
+    }
+
+    async removeFriendFromTrip(data){
+        /* 
+        data = { friendToRemove: friendUID, tripID: tripID}
+        */ 
+        // remove UID from participantsStatus field
+        await this.parent.deleteKeyFromMap(
+            "trips", 
+            data.tripID, 
+            {
+                mapName: "participantsStatus",
+                key: data.friendToRemove
+            }
+        );
+        // remove tripID from user's trips
+        await this.parent.updateDocumentRemoveFromArray(
+            "users", 
+            data.friendToRemove, 
+            {
+                arrayName: "trips",
+                valueToRemove: data.tripID
+            }
+        );
+
+        // remove tripID from user's invites
+        let friendDetails = await this.parent.userQueries.getUserDetails(data.friendToRemove);
+        let tripInvites = friendDetails.tripInvites;
+        let updatingTripInvites = [];
+        for(let tripInvite of tripInvites){
+            if (tripInvite.tripID !== data.tripID){
+                updatingTripInvites.push(tripInvite);
+            }
+        }
+        
+        await this.parent.userQueries.updateProfile({tripInvites: updatingTripInvites}, data.friendToRemove);
     }
 };

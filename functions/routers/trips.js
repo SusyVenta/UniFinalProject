@@ -142,10 +142,19 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
       if(userSessionDetails.userSessionDetails !== null){
         try {
-          await db.tripQueries.updateTrip(
-            request.body, 
-            userSessionDetails.userSessionDetails.uid
-          );
+
+          if(request.body.hasOwnProperty("friendsToAdd")){
+            await db.tripQueries.updateTrip(
+              request.body, 
+              userSessionDetails.userSessionDetails.uid
+            );
+          }
+          if (request.body.hasOwnProperty("friendToRemove")){
+            await db.tripQueries.removeFriendFromTrip(
+              request.body
+            );
+          }
+          
           return response.status(200).send("Modified trip");
         } catch (e){
           console.log(e.message);
