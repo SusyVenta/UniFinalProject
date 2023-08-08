@@ -112,13 +112,17 @@
                 <h4>Dates Available</h4>
                 <div class="dates-available-container">
                   <% var datePreferencesCurrentUser = trip.datesPreferences[userID]; %>
-                  <% var indexCurrentUser = 0; %>
-                  <% Object.keys(datePreferencesCurrentUser).forEach(function(indexCurrentUser) { %>
-                    <p id="trip-availability_uid_<%- userID %>_<%- indexCurrentUser %>" >
-                      <%- moment(datePreferencesCurrentUser[indexCurrentUser][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferencesCurrentUser[indexCurrentUser][1].toDate()).format('DD MMM YYYY') %>
-                    </p>
-                    <% indexCurrentUser ++; %>
-                  <% }); %>
+                  <% if (datePreferencesCurrentUser == null) { %>
+                    <p>Not entered yet</p>
+                  <% } else { %> 
+                    <% var indexCurrentUser = 0; %>
+                    <% Object.keys(datePreferencesCurrentUser).forEach(function(indexCurrentUser) { %>
+                      <p id="trip-availability_uid_<%- userID %>_<%- indexCurrentUser %>" >
+                        <%- moment(datePreferencesCurrentUser[indexCurrentUser][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferencesCurrentUser[indexCurrentUser][1].toDate()).format('DD MMM YYYY') %>
+                      </p>
+                      <% indexCurrentUser ++; %>
+                    <% }); %>
+                  <% } %> 
                 </div>
               </div>
               <div class="participant-div-dates-action">
@@ -153,16 +157,20 @@
                       <h4>Dates Available</h4>
                       <div class="dates-available-container">
                         <% var datePreferences = trip.datesPreferences[uid]; %>
-                        <% var index = 0; %>
-                        <% Object.keys(datePreferences).forEach(function(index) { %>
-                          <input class="form-control" 
-                              id="trip-availability_uid_<%- uid %>_<%- index %>" 
-                              type="text" 
-                              name="daterange"
-                              value="<%- moment(datePreferences[index][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferences[index][1].toDate()).format('DD MMM YYYY') %>"
-                              disabled/>
-                          <% index ++; %>
-                        <% }); %>
+                        <% if (datePreferences == null) { %>
+                          <p>Not entered yet</p>
+                        <% } else { %> 
+                          <% var index = 0; %>
+                          <% Object.keys(datePreferences).forEach(function(index) { %>
+                            <input class="form-control" 
+                                id="trip-availability_uid_<%- uid %>_<%- index %>" 
+                                type="text" 
+                                name="daterange"
+                                value="<%- moment(datePreferences[index][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferences[index][1].toDate()).format('DD MMM YYYY') %>"
+                                disabled/>
+                            <% index ++; %>
+                          <% }); %>
+                        <% } %> 
                       </div>
                     </div>
                   <%} %>

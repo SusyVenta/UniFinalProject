@@ -45,14 +45,8 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
-        // delete trip document
-        await db.deleteDocument("trips", request.params.id);
-        // remove tripID from user's trips
-        await db.updateDocumentRemoveFromArray(
-          "users", 
-          userSessionDetails.userSessionDetails.uid, 
-          {arrayName: "trips", valueToRemove: request.params.id}
-          );
+        // delete trip document and all dependencies
+        await db.tripQueries.removeTrip(request.params.id);
 
         return response.status(200).send("Deleted " + request.params.id);
       } else {
