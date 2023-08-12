@@ -138,7 +138,7 @@
                 </div>
               </div>
               <div class="participant-div-dates-action">
-                <button id="abandon-trip-button" class="btn btn-secondary" onclick="alert('to implement')">
+                <button id="abandon-trip-button" class="btn btn-secondary" onclick="abandonTrip('<%= tripID %>', '<%= JSON.stringify(trip.participantsStatus) %>','<%= userID %>');">
                   Abandon trip
                 </button>
                 <button id="edit-preferences-button" class="btn btn-secondary" onclick="$('#edit-participant-details-modal').show();">
@@ -189,7 +189,7 @@
                   <!-- allow to remove users only if user is trip owner -->
                   <% if (trip.participantsStatus[userID] === 'owner') { %>
                     <div class="participant-div-dates-action">
-                      <button class="btn btn-secondary hundred-twenty" onclick="removeFriendFromTrip('<%= tripID %>', '<%= uid %>');">
+                      <button class="btn btn-secondary hundred-twenty" onclick="removeUserFromTrip('<%= tripID %>', '<%= uid %>');">
                         <i class="fas fa-trash"></i>
                       </button>
                     </div>
@@ -337,6 +337,23 @@
           <div class="modal-footer" id="edit-participant-details-modal-footer">
             <button id="new-trip-cancel-button" type="button" class="btn btn-secondary" onclick="$('#edit-participant-details-modal').hide();">Cancel</button>
             <button id="new-trip-create-button" type="submit" class="btn btn-secondary" onclick="saveUserAvailabilities('<%= trip.tripID %>');">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- generic modal for user confirmation -->
+  <section>
+    <div id="generic-modal" class="modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="generic-modal-title"></h5>
+          </div>
+          <div class="modal-body">
+            <p id="generic-modal-message"></p>
+          </div>
+          <div class="modal-footer" id="generic-modal-footer">
           </div>
         </div>
       </div>

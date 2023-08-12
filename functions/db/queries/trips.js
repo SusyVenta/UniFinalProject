@@ -155,7 +155,7 @@ export class TripQueries{
         }
     }
 
-    async removeFriendFromTrip(data){
+    async removeUserFromTrip(data){
         /* 
         data = { friendToRemove: friendUID, tripID: tripID}
         */ 

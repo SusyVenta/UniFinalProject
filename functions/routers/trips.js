@@ -145,7 +145,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
             );
           }
           if (request.body.hasOwnProperty("friendToRemove")){
-            await db.tripQueries.removeFriendFromTrip(
+            await db.tripQueries.removeUserFromTrip(
               request.body
             );
           }

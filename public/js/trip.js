@@ -54,14 +54,11 @@ function addFriendsToTrip(){
       }
     });
   }
-
-  // reload page
-  //window.location.href = "/trips/" + tripID;
 };
 
-function removeFriendFromTrip(tripID, friendUID){
+function removeUserFromTrip(tripID, userUID){
   let payload = { 
-    friendToRemove: friendUID,
+    friendToRemove: userUID,
     tripID: tripID
   };
 
@@ -78,7 +75,7 @@ function removeFriendFromTrip(tripID, friendUID){
     }
   });
 };
-/* edit user preferences ----------------------------------------------------------------------*/
+/* edit user preferences --------------------------------------------------------------------------------------*/
 
 function deleteDateAvailability(element){
   // deletes div with date availability
@@ -233,9 +230,6 @@ function saveUserAvailabilities(tripID){
     tripID: tripID
   };
 
-  console.log(payload);
-  console.log(tripID);
-
   $.ajax({
     url: `/trips/` + tripID,
     method: "POST",
@@ -250,3 +244,82 @@ function saveUserAvailabilities(tripID){
   }); 
   
 };
+
+/* abandon trip --------------------------------------------------------------------------*/
+function deleteTrip(tripID){
+  // deletes selected trip by calling API endpoint
+  $.ajax({
+    url: `/trips/${tripID}`,
+    method: "DELETE",
+    xhrFields: {
+      withCredentials: true
+   },
+    success : function () {
+      // reload trips page on status 200
+      window.location.href = "/trips";
+    }
+  });
+};
+
+function closeGenericModal(){
+  var genericModal = document.getElementById('generic-modal');
+  var modal = bootstrap.Modal.getInstance(genericModal);
+  modal.hide();
+}
+
+function abandonTrip(tripID, participantsStatus, userID){
+  participantsStatus = JSON.parse(participantsStatus);
+
+  let nonPendingParticipants = [];
+  for (const [key, value] of Object.entries(participantsStatus)) {
+    if (value != "pending"){
+      nonPendingParticipants.push(key);
+    }
+  }
+
+  // if there is only one user, ask confirmation to delete trip
+  if(nonPendingParticipants.length == 1){
+    // warn that trip will be removed
+    let message = ("You are the only participant in this trip. " +
+                   "Do you confirm you want to abandon and delete the trip?")
+    document.getElementById("generic-modal-message").innerHTML =  message;
+    document.getElementById("generic-modal-title").innerHTML = "";
+    // remove existing buttons
+    let footer = document.getElementById("generic-modal-footer");
+    footer.innerHTML = "";
+    // add cancel button
+    let cancelButton = document.createElement("button");
+    cancelButton.setAttribute("id", `cancel-button`);
+    cancelButton.setAttribute("type", "button");
+    cancelButton.setAttribute("class", `btn btn-secondary`);
+    cancelButton.setAttribute("onclick", 'closeGenericModal();');
+    cancelButton.innerText = "Cancel"
+    footer.appendChild(cancelButton);
+    // add confirm button
+    let confirmButton = document.createElement("button");
+    confirmButton.setAttribute("id", `confirm-button`);
+    confirmButton.setAttribute("type", "button");
+    confirmButton.setAttribute("class", `btn btn-secondary`);
+    confirmButton.innerText = "Confirm"
+    confirmButton.setAttribute("onclick", `deleteTrip('${tripID}')`);
+    footer.appendChild(confirmButton);
+
+    // show modal
+    $('#generic-modal').show();
+    var genericModal = new bootstrap.Modal(document.getElementById("generic-modal"), {});
+    genericModal.show();
+  }
+  // only allow to leave if there are other owners
+  let otherOwnersFound = false;
+  for (const [key, value] of Object.entries(participantsStatus)) {
+    if(value == "owner" && key != userID){
+      otherOwnersFound = true
+      // ok 
+    }
+  }
+
+  // alert that first some other participant needs to be made owner. 
+  if (otherOwnersFound === false){
+    
+  }
+}
