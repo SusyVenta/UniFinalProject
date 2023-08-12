@@ -17,8 +17,28 @@
     align-items: center;
 }
 
-.title{
+#title-inner-container{
+    display: flex;
+    width: fit-content;
+    flex-direction: row;
+    justify-content: center;
+    padding: 2%;
+}
+
+#title{
     background-color: rgba(255, 255, 255, 0.76);
+    position: relative;
+    margin-right: 2%;
+    padding: 2%;
+    height: 100%;
+    min-width: max-content;
+}
+
+#edit-trip-title-button{
+    width: 55px;
+    min-width: 55px;
+    height: 55px;
+    align-self: center;
 }
 
 .trip-tab{

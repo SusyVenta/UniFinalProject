@@ -153,6 +153,9 @@ export class TripQueries{
 
             await this.parent.updateFieldsDocument("trips", data.tripID, {lastUpdatedDatetimeUTC: moment.utc()});
         }
+        if(data.tripTitle){
+            await this.parent.updateFieldsDocument("trips", data.tripID, {tripTitle: data.tripTitle});
+        }
     }
 
     async removeUserFromTrip(data){

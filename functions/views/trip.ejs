@@ -40,7 +40,12 @@
     <div class="title-container"
       style="background-image: url('<%= trip.picture.src.landscape %>');"
       alt="'<%= trip.picture.alt %>' by <%= trip.picture.photographer %>" src="<%= trip.picture.src.medium %>">
-      <h1 class="title"><%= trip.tripTitle %></h1>
+      <div id="title-inner-container">
+        <h1 id="title"><%= trip.tripTitle %></h1>
+        <button id="edit-trip-title-button" class="btn btn-secondary" onclick="alterTripTitle('<%= tripID %>');">
+          <i id="edit-trip-title-button-icon" class="fas fa-pencil"></i>
+        </button>
+      </div>
     </div>
 
     <div class="trip-tab" id="trip-<%= trip.tripID %>" >
