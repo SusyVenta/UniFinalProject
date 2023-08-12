@@ -267,6 +267,37 @@ function closeGenericModal(){
   modal.hide();
 }
 
+function fillGenericModal(message, confirmFunction, showConfirmButton){
+    document.getElementById("generic-modal-message").innerHTML =  message;
+    document.getElementById("generic-modal-title").innerHTML = "";
+    // remove existing buttons
+    let footer = document.getElementById("generic-modal-footer");
+    footer.innerHTML = "";
+    // add cancel button
+    let cancelButton = document.createElement("button");
+    cancelButton.setAttribute("id", `cancel-button`);
+    cancelButton.setAttribute("type", "button");
+    cancelButton.setAttribute("class", `btn btn-secondary`);
+    cancelButton.setAttribute("onclick", 'closeGenericModal();');
+    cancelButton.innerText = "Cancel"
+    footer.appendChild(cancelButton);
+    // add confirm button
+    if(showConfirmButton === true){
+      let confirmButton = document.createElement("button");
+      confirmButton.setAttribute("id", `confirm-button`);
+      confirmButton.setAttribute("type", "button");
+      confirmButton.setAttribute("class", `btn btn-secondary`);
+      confirmButton.innerText = "Confirm"
+      confirmButton.setAttribute("onclick", confirmFunction);
+      footer.appendChild(confirmButton);
+    }
+
+    // show modal
+    $('#generic-modal').show();
+    var genericModal = new bootstrap.Modal(document.getElementById("generic-modal"), {});
+    genericModal.show();
+}
+
 function abandonTrip(tripID, participantsStatus, userID){
   participantsStatus = JSON.parse(participantsStatus);
 
@@ -282,44 +313,24 @@ function abandonTrip(tripID, participantsStatus, userID){
     // warn that trip will be removed
     let message = ("You are the only participant in this trip. " +
                    "Do you confirm you want to abandon and delete the trip?")
-    document.getElementById("generic-modal-message").innerHTML =  message;
-    document.getElementById("generic-modal-title").innerHTML = "";
-    // remove existing buttons
-    let footer = document.getElementById("generic-modal-footer");
-    footer.innerHTML = "";
-    // add cancel button
-    let cancelButton = document.createElement("button");
-    cancelButton.setAttribute("id", `cancel-button`);
-    cancelButton.setAttribute("type", "button");
-    cancelButton.setAttribute("class", `btn btn-secondary`);
-    cancelButton.setAttribute("onclick", 'closeGenericModal();');
-    cancelButton.innerText = "Cancel"
-    footer.appendChild(cancelButton);
-    // add confirm button
-    let confirmButton = document.createElement("button");
-    confirmButton.setAttribute("id", `confirm-button`);
-    confirmButton.setAttribute("type", "button");
-    confirmButton.setAttribute("class", `btn btn-secondary`);
-    confirmButton.innerText = "Confirm"
-    confirmButton.setAttribute("onclick", `deleteTrip('${tripID}')`);
-    footer.appendChild(confirmButton);
-
-    // show modal
-    $('#generic-modal').show();
-    var genericModal = new bootstrap.Modal(document.getElementById("generic-modal"), {});
-    genericModal.show();
+    fillGenericModal(message, `deleteTrip('${tripID}')`, true);
+    return;
   }
   // only allow to leave if there are other owners
   let otherOwnersFound = false;
   for (const [key, value] of Object.entries(participantsStatus)) {
     if(value == "owner" && key != userID){
-      otherOwnersFound = true
-      // ok 
+      otherOwnersFound = true;
+      let message = "Are you sure you want to remove yourself from this trip?";
+      fillGenericModal(message, `removeUserFromTrip('${tripID}', '${userUID}')`, true);
+      return;
     }
   }
 
   // alert that first some other participant needs to be made owner. 
   if (otherOwnersFound === false){
-    
+    let message = "You are currently the only owner of this trip. Please assign someone else as owner before removing yourself."
+    fillGenericModal(message, ``, false);
+    return;
   }
 }
