@@ -92,35 +92,66 @@ export class TripQueries{
 
     async updateTrip(data, userID){
         /* 
-        data: {friendsToAdd: [], tripID: <str: tripID>, askAllParticipantsDates: <true / false>}
-        Updates the following fields: 
-            - participantsStatus: {uid: 'pending'}
-            - if askAllParticipantsDates === true :
-                - datesPreferences: {uid: []}
-                - totalDaysAvailability: {uid: null}
-                - workingDaysAvailability: {uid: null}
+        Called when adding friends to trip:
+            data: {friendsToAdd: [], tripID: <str: tripID>, askAllParticipantsDates: <true / false>}
+            Updates the following fields: 
+                - participantsStatus: {uid: 'pending'}
+                - added user's tripInvites
+        Called when updating personal preferences:
+            data: {datesPreferences: [], workingDaysAvailability, totalDaysAvailability, tripID: <str: tripID>}
         */
-        for (let friendID of data.friendsToAdd){
-            // update participantsStatus
-            await this.parent.updateSingleKeyValueInMap(
-                "trips", 
-                data.tripID, 
-                {
-                    mapName: "participantsStatus",
-                    key: friendID,
-                    newValue: "pending"
-                }
-            );
+        if(data.friendsToAdd){
+            for (let friendID of data.friendsToAdd){
+                // update participantsStatus
+                await this.parent.updateSingleKeyValueInMap(
+                    "trips", 
+                    data.tripID, 
+                    {
+                        mapName: "participantsStatus",
+                        key: friendID,
+                        newValue: "pending"
+                    }
+                );
+    
+                // add trip invite to friend so they get notified
+                await this.parent.updateDocumentAppendToArray(
+                    "users", 
+                    friendID, 
+                    {
+                        arrayName: "tripInvites",
+                        valueToUpdate: {senderID: userID, tripID: data.tripID}
+                    }
+                );
+            }
+        }
+        if (data.datesPreferences){
+            let processedDatespreferences = {};
+            for (let i = 0; i < data.datesPreferences.length; i++){
+                let dateSubmitted = data.datesPreferences[i];
+                let startDate = moment(dateSubmitted.slice(0, 10), 'MM/DD/YYYY').toDate();
+                let endDate = moment(dateSubmitted.slice(13), 'MM/DD/YYYY').toDate();
+                processedDatespreferences[i] = [startDate, endDate];
+            }
 
-            // add trip invite to friend so they get notified
-            await this.parent.updateDocumentAppendToArray(
-                "users", 
-                friendID, 
-                {
-                    arrayName: "tripInvites",
-                    valueToUpdate: {senderID: userID, tripID: data.tripID}
-                }
-            );
+            let updates = {
+                workingDaysAvailability: parseInt(data.workingDaysAvailability),
+                totalDaysAvailability: parseInt(data.workingDaysAvailability),
+                datesPreferences: processedDatespreferences
+            }
+
+            for (const [key, value] of Object.entries(updates)) {
+                await this.parent.updateSingleKeyValueInMap(
+                    "trips", 
+                    data.tripID, 
+                    {
+                        mapName: key,
+                        key: userID,
+                        newValue: value
+                    }
+                );
+            }
+
+            await this.parent.updateFieldsDocument("trips", data.tripID, {lastUpdatedDatetimeUTC: moment.utc()});
         }
     }
 

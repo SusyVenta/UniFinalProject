@@ -70,10 +70,20 @@
               </button>
             </div>
           </div>
+          <!-- overview ------------------------------------>
           <div id="participants-overview-container">
-            <% var numberParticipants = Object.keys(trip.participantsStatus).length; %>
+            <% var numberParticipants = 0; %>
+            <% var numberPendingParticipants = 0; %>
+            <% for (const [uid, status] of Object.entries(trip.participantsStatus)) { %>
+              <% if (status != 'pending') { %>
+                <% numberParticipants ++; %>
+              <%} else { %>
+                <% numberPendingParticipants ++; %>
+              <%} %>
+            <%} %>
             <h5>Overview:</h5>
             <p>Participants: <%= numberParticipants %></p>
+            <p>Pending participants: <%= numberPendingParticipants %></p>
             <input type="hidden" id="askAllParticipantsDates" value="<%= trip.askAllParticipantsDates %>">
             <% if (trip.askAllParticipantsDates === false) { %>
               <p>Chosen dates: <%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
@@ -92,7 +102,7 @@
             <%} %>
           </div>
           <div id="participants-details-div-container">
-            <!-- put current user first -->
+            <!-- authenticated user details  ---------------->
             <div class="participant-div">
               <div class="participant-div-username">
                 <div class="username-picture-container">
@@ -115,13 +125,15 @@
                   <% if (datePreferencesCurrentUser == null) { %>
                     <p>Not entered yet</p>
                   <% } else { %> 
-                    <% var indexCurrentUser = 0; %>
-                    <% Object.keys(datePreferencesCurrentUser).forEach(function(indexCurrentUser) { %>
-                      <p id="trip-availability_uid_<%- userID %>_<%- indexCurrentUser %>" >
-                        <%- moment(datePreferencesCurrentUser[indexCurrentUser][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferencesCurrentUser[indexCurrentUser][1].toDate()).format('DD MMM YYYY') %>
-                      </p>
-                      <% indexCurrentUser ++; %>
-                    <% }); %>
+                    <ul>
+                      <% var indexCurrentUser = 0; %>
+                      <% Object.keys(datePreferencesCurrentUser).forEach(function(indexCurrentUser) { %>
+                        <li id="trip-availability_uid_<%- userID %>_<%- indexCurrentUser %>" >
+                          <%- moment(datePreferencesCurrentUser[indexCurrentUser][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferencesCurrentUser[indexCurrentUser][1].toDate()).format('DD MMM YYYY') %>
+                        </li>
+                        <% indexCurrentUser ++; %>
+                      <% }); %>
+                    </ul>
                   <% } %> 
                 </div>
               </div>
@@ -129,12 +141,12 @@
                 <button id="abandon-trip-button" class="btn btn-secondary" onclick="alert('to implement')">
                   Abandon trip
                 </button>
-                <button id="edit-preferences-button" class="btn btn-secondary" onclick="alert('to implement')">
+                <button id="edit-preferences-button" class="btn btn-secondary" onclick="$('#edit-participant-details-modal').show();">
                   <i class="fas fa-pencil"></i>
                 </button>
               </div>
             </div>
-            <!-- all other users -->
+            <!-- all other users  ------------------------>
             <% Object.keys(trip.participantsStatus).forEach(function(uid) { %>
               <% if (uid !== userID) { %>
                 <div class="participant-div">
@@ -198,6 +210,7 @@
         </div>
     </div>
   </div>
+  <!-- modal to add friends  ---------------------------------------------->
   <section>
     <!-- friendship types -->
     <% var friendshipsUIDs = profileDetails.friends; %>
@@ -235,6 +248,95 @@
           <div class="modal-footer" id="trips-modal-footer">
             <button id="cancel-friends-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <button id="save-friends-button" type="button" class="btn btn-secondary" onclick="addFriendsToTrip()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- modal to edit trip participant details  ---------------------------------------------->
+  <section>
+    <div id="edit-participant-details-modal" class="modal" tabindex="-1" data-bs-backdrop="static">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">Your availabilities</h1>
+            <button type="button" class="btn-close" onclick="$('#edit-participant-details-modal').hide();" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- existing availability date-range picker -->
+            <div id="date-availabilities-container">
+              <% if (datePreferencesCurrentUser != null) { %>
+                <% var indexCurrentUserModal = 0; %>
+                <% Object.keys(datePreferencesCurrentUser).forEach(function(indexCurrentUserModal) { %>
+                  <div id="date-availability-<%- indexCurrentUserModal %>" class="date-availability-container">
+                    <div class="horizontal-flex">
+                      <div class="label-and-input-container">
+                        <div class="form-control" >
+                          <i class="fa fa-calendar"></i>
+                          <input class="form-control" id="new-trip-availability-<%- indexCurrentUserModal %>" type="text" name="daterange"
+                            value="<%- moment(datePreferencesCurrentUser[indexCurrentUserModal][0].toDate()).format('MM/DD/YYYY') %> - <%- moment(datePreferencesCurrentUser[indexCurrentUserModal][1].toDate()).format('MM/DD/YYYY') %>"
+                          />
+                        </div>
+                      </div>
+                      <div class="date-availability-delete-button-container">
+                        <button id="delete_date-availability-<%- indexCurrentUserModal %>" 
+                            class="btn btn-secondary" 
+                            onclick="deleteDateAvailability(this);"
+                            name="<%- indexCurrentUserModal %>"
+                            >
+                          <span class="material-symbols-outlined modified">delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- add event listeners to availability date pickers-->
+                  <script>
+                    $(function() {
+                      $('#new-trip-availability-<%- indexCurrentUserModal %>').daterangepicker({
+                        opens: 'left'
+                      });
+                    });
+                    $(`#new-trip-availability-<%- indexCurrentUserModal %>`).on('apply.daterangepicker', function(event, picker) {
+                      let newValue = picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY');
+                
+                      document.getElementById("new-trip-availability-<%- indexCurrentUserModal %>").value = newValue;
+                    });
+                    </script>
+                  <% indexCurrentUserModal ++; %>
+                <% }); %>
+              <% } %> 
+            </div>
+
+            <!-- button to add more date ranges -->
+            <div id="add-dates-div">
+              <p>Add more date availabilities</p>
+              <button class="btn btn-secondary" onclick="addDateAvailabilityInput();">
+                <span class="fa-solid fa-add"></span>
+              </button>
+            </div>
+
+            <!-- days willing to travel -->
+            <div id="days-availability-container">
+              <label for="working-days-availability" class="form-label">
+                How many working days are you willing to travel?
+              </label>
+              <input autocomplete="one-time-code" type="number" 
+                class="form-control" id="working-days-availability" required=true 
+                value="<%- trip.workingDaysAvailability[userID] %>"
+                >
+              <label for="total-days-availability" class="form-label">
+                How many days are you willing to travel in total?
+              </label>
+              <input autocomplete="one-time-code" type="number" 
+                class="form-control" id="total-days-availability" required=true 
+                value="<%- trip.totalDaysAvailability[userID] %>"
+                >
+            </div>
+
+          </div>
+          <div class="modal-footer" id="edit-participant-details-modal-footer">
+            <button id="new-trip-cancel-button" type="button" class="btn btn-secondary" onclick="$('#edit-participant-details-modal').hide();">Cancel</button>
+            <button id="new-trip-create-button" type="submit" class="btn btn-secondary" onclick="saveUserAvailabilities('<%= trip.tripID %>');">Save</button>
           </div>
         </div>
       </div>

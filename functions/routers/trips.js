@@ -22,7 +22,8 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           let tripDetails = await db.tripQueries.getTripsForUser(
             userSessionDetails.userSessionDetails.uid
             );
-
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            console.log(tripDetails);
           let payload = {
             name: userSessionDetails.userSessionDetails.name, 
             trips: tripDetails,
@@ -146,6 +147,12 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           if (request.body.hasOwnProperty("friendToRemove")){
             await db.tripQueries.removeFriendFromTrip(
               request.body
+            );
+          }
+          if(request.body.hasOwnProperty("datesPreferences")){
+            await db.tripQueries.updateTrip(
+              request.body, 
+              userSessionDetails.userSessionDetails.uid
             );
           }
           
