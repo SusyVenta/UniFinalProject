@@ -57,7 +57,7 @@ export function settingsRouter(adminAuth, db, getUserSessionDetails = importedGe
         }
         
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);

@@ -34,7 +34,7 @@ export function profileRouter(adminAuth, db, getUserSessionDetails = importedGet
 
         return response.status(200).render(templatePath, payload);
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -57,7 +57,7 @@ export function profileRouter(adminAuth, db, getUserSessionDetails = importedGet
 
         return response.status(200).send("Deleted " + request.params.id);
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -81,7 +81,7 @@ export function profileRouter(adminAuth, db, getUserSessionDetails = importedGet
         }
         
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);

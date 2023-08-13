@@ -26,14 +26,14 @@
 }
 
 #topNavbar {
-  margin-right: 1.5rem;
+  margin-right: 2%;
   display: flex;
   justify-content: space-between;
   vertical-align: middle;
 }
 
 #topNavbar > * {
-  margin-left: 1.5rem;
+  margin-left: auto;
 }
 
 .navbarlink{
@@ -76,6 +76,10 @@
 }
 
 /* burger menu */
+#burger-menu-container{
+  align-self: center;
+}
+
 #navbar-burger-menu {
   font-size: 1.7rem;
 }
@@ -122,29 +126,72 @@
   }
 }
 
-/* ---------------breadcrumbs --------------------------*/
-#breadcrumb, h1{
-  position:absolute;
+/* notifications ------------------------------------------------*/
+/* adapted from https://codepen.io/dcode-software/pen/KKgpKog */
+#navbar-notifications{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  color: #333333;
+  background: #dddddd;
+  border: none;
+  outline: none;
+  border-radius: 50%;
 }
 
-#breadcrumb{
-  padding: 10px;
-  top: 0%;
-  left: 0%;
-  margin: 0;
-  width: fit-content;
+#navbar-notifications:hover {
+  cursor: pointer;
 }
 
-.breadcrumb{
-  background-color: white;
-  padding: 5px;
+#navbar-notifications:active {
+  background: #cccccc;
 }
 
-.breadcrumb>.active{
-  color:black;
+#navbar-notifications:focus {
+  box-shadow: none;
 }
 
-.breadcrumb>li>a{
-  color: black;
+#number-notifications-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 25px;
+  height: 25px;
+  background: #FF5555;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
 }
 
+@media only screen and (max-width: 600px) {
+  #navbar-notifications{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background: #dddddd;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+  }
+  #number-notifications-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    background: #FF5555;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }
+}

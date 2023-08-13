@@ -9,7 +9,7 @@ export class SettingsQueries{
         await this.parent.addFieldToDocument(
             "users", 
             uid, 
-            {fieldName: "notifications", fieldValue: defaultNotifications}
+            {fieldName: "notificationsSettings", fieldValue: defaultNotifications}
         );
     }
 
@@ -19,7 +19,7 @@ export class SettingsQueries{
             uid
         );
 
-        let userNotificationsSettings = userDoc.notifications;
+        let userNotificationsSettings = userDoc.notificationsSettings;
 
         return userNotificationsSettings;
     }
@@ -37,7 +37,7 @@ export class SettingsQueries{
 
     async updateUserSettings(uid, settingName, settingValue){
         let dataObj = {
-            mapName: "notifications",
+            mapName: "notificationsSettings",
             key: settingName,
             newValue: settingValue === 'true' // str to boolean
         };

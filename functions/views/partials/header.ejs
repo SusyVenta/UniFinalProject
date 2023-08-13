@@ -11,7 +11,19 @@
     </div>
     <div id="topNavbar">
       <% if ((typeof userIsAuthenticated != 'undefined') && (userIsAuthenticated === true)) { %>
+        <!-- notifications ------------------------------------------------------------>
         <div class="container-fluid">
+          <button id="navbar-notifications" type="button" class="navbar-toggler ms-auto" 
+           data-bs-toggle="dropdown" aria-expanded="false">
+           <span class="fas fa-bell"></span>
+           <span id="number-notifications-badge" class="badge">0</span>
+          </button>
+          <ul id="notifications-dropdown" class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#" rel="nofollow">Some notification</a></li>
+          </ul>
+        </div>
+        <!-- main menu ------------------------------------------------------------>
+        <div id="burger-menu-container" class="container-fluid">
           <button id="navbar-burger-menu" type="button" class="navbar-toggler ms-auto" 
            data-bs-toggle="dropdown" aria-expanded="false">
            <i class="fas fa-bars"></i>

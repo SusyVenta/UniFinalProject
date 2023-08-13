@@ -40,7 +40,7 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
         }
         
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -79,7 +79,7 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
         }
         
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -97,7 +97,7 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
         return response.status(302).redirect('/friends');
         
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -124,7 +124,7 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
         }
         
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -151,7 +151,7 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
         }
         
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -178,7 +178,7 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
         }
         
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);

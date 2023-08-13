@@ -22,8 +22,6 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           let tripDetails = await db.tripQueries.getTripsForUser(
             userSessionDetails.userSessionDetails.uid
             );
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            console.log(tripDetails);
           let payload = {
             name: userSessionDetails.userSessionDetails.name, 
             trips: tripDetails,
@@ -51,7 +49,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
         return response.status(200).send("Deleted " + request.params.id);
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -86,7 +84,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
         return response.status(200).render(templatePath, payload);
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -123,7 +121,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         }
         
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -161,7 +159,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         }
         
       } else {
-        return response.status(401).send("Unauthorized");
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);

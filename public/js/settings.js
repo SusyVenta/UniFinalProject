@@ -1,6 +1,4 @@
 function updateNotificationSetting(element){
-    console.log(element.id);
-    console.log(element.checked);
     let payload = {
         settingName: element.id,
         settingValue: element.checked

@@ -14,8 +14,10 @@ export class UserQueries{
             picturePath: null,
             friends: {},
             trips: [],
-            notifications: defaultNotifications,
-            tripInvites: []
+            notificationsSettings: defaultNotifications,
+            tripInvites: [],
+            notifications: [],
+            uid: userObject.uid
         };
         let existingUser = await this.getUserDetails(userObject.uid);
 
@@ -105,6 +107,19 @@ export class UserQueries{
             };
 
             await this.parent.updateSingleKeyValueInMap("users", friendID, dataObj2);
+
+            // add notification to friend notifications
+            let notificationData = {
+                arrayName: "notifications",
+                valueToUpdate: {
+                    message: `${user.username} sent you a friedship request`,
+                    URL: "/friends",
+                    senderUID: uid,
+                    notificationType: "friendship_request_received"
+                }
+            }
+
+            await this.parent.updateDocumentAppendToArray("users", friendID, notificationData);
         }
     }
 
