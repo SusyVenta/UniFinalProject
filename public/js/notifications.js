@@ -40,6 +40,11 @@ function getUserNotifications(userID){
             a.textContent = notification.message;
             li.appendChild(a);
             notificationsDropDown.prepend(li);
+
+            if(notification.notificationType == "friendship_request_actioned"){
+                // TODO: remove notification when user clicks on it
+                //a.addEventListener('click', function() { logIn(); });
+            }
         }
     });
 }
