@@ -35,30 +35,3 @@ service cloud.firestore {
 //    }
 //  }
 //}
-
-
-
-//service cloud.firestore {
-//  match /databases/{database}/documents {
-//    function isAuthenticated() {
-//      return request.auth != null;
-//    }
-//    function getRole(resource) {
-//      // Read from the "participantsStatus" map in the resource
-//      return resource.data.participantsStatus[request.auth.uid]
-//    }
-//    function isOneOfRoles(resource, array) {
-//      // Determine if the user is one of any array of roles
-//      return isAuthenticated() && (getRole(resource) in array);
-//    }
-//
-//    match /users/{user} {
-//      allow read: if isAuthenticated() && request.auth.uid == user; // request.auth.uid matches the docID (which is the same as UID)
-//      allow write: if false; // don't allow write operations
-//    }
-//    match /trips/{trip} {
-//      allow read: if isAuthenticated() && isOneOfRoles(resource, ['owner', 'collaborator', 'pending']);
-//      allow write: if false; // don't allow write operations
-//    }
-//  }
-//}
