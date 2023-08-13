@@ -1,7 +1,7 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js';
 import  'https://code.jquery.com/jquery-3.7.0.min.js';
 const $ = window.$;
-import { getAuth, signInWithEmailAndPassword, signOut, setPersistence, inMemoryPersistence } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js'
+import { getAuth, signInWithEmailAndPassword, signOut, setPersistence, inMemoryPersistence, browserSessionPersistence } from 'https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js'
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 
@@ -39,7 +39,11 @@ export function logIn() {
     // https://firebase.google.com/docs/auth/admin/manage-cookies
     // As httpOnly cookies are to be used, do not persist any state client side.
     // https://firebase.google.com/docs/auth/web/auth-state-persistence#web-modular-api_1
-    setPersistence(auth, inMemoryPersistence)
+
+    // browserLocalPersistence == firebase.auth.Auth.Persistence.LOCAL
+    // inMemoryPersistence == firebase.auth.Auth.Persistence.NONE 
+    // browserSessionPersistence = firebase.auth.Auth.Persistence.SESSION
+    setPersistence(auth, browserSessionPersistence) 
     .then(() => {
         /* Called when user confirms login */
         return signInWithEmailAndPassword(auth, email, password);
@@ -64,12 +68,15 @@ export function logIn() {
         }
     })
     .then(() => {
-        // A page redirect would suffice as the persistence is set to NONE.
-        return signOut(auth);
+        // A page redirect would suffice if the persistence is set to NONE.
+        // signOut(auth);
+        // we stay logged in client side so the client can connect to Firestore to get live updates
+        return 
     })
     .then(() => {
         // redirect home
         window.location.assign('/');
+        console.log(auth.currentUser);
     })
     .catch((error) => {
         const statusCode = error.code;
@@ -77,4 +84,5 @@ export function logIn() {
         showLoginPageModal("Ops! Looks like something went wrong", 
                             statusCode + "\n" + authInfoMessage);
     });
+
 }
