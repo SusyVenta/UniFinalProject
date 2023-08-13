@@ -13,5 +13,6 @@
 </footer>
 <script>
   // get live notifications
-  getUserNotifications("<%= userID %>");
+  let userId = '<% if(locals.userID){ %><%=locals.userID%><% }else{ %>undefined<% } %>'; 
+  getUserNotifications(userId);
 </script>

@@ -112,7 +112,7 @@ export class UserQueries{
             let notificationData = {
                 arrayName: "notifications",
                 valueToUpdate: {
-                    message: `${user.username} sent you a friedship request`,
+                    message: `${user.username} sent you a friendship request`,
                     URL: "/friends",
                     senderUID: uid,
                     notificationType: "friendship_request_received"
@@ -133,9 +133,34 @@ export class UserQueries{
         return friendsProfiles;
     }
 
+    async removeFriendShipRequestReceivedNotification(userDoc, uid, friendID){
+        // removed notification alerting of frienship request received
+        let notifications = userDoc.notifications;
+        let notificationToRemove = null;
+        for (let notification of notifications){
+            if (notification.notificationType === "friendship_request_received"){
+                if (notification.senderUID == friendID){
+                    notificationToRemove = notification;
+                    break;
+                }
+            }
+        }
+        
+        this.parent.updateDocumentRemoveFromArray(
+            "users", 
+            uid, 
+            {
+                arrayName: "notifications",
+                valueToRemove: notificationToRemove
+            }
+        );
+    }
+
     async removeFriend(uid, friendID){
-        /* Removes frienship from user pair */
-        // users need to be friends to remove friendship
+        /* 
+        Removes frienship from user pair or declines friendship request 
+        users need to be friends to remove friendship
+        */
         let user = await this.parent.getDocument("users", uid);
         let userFriends = user.friends;
         if(userFriends.hasOwnProperty(friendID)){
@@ -154,6 +179,39 @@ export class UserQueries{
             };
 
             this.parent.deleteKeyFromMap("users", friendID, dataObjFriend);
+
+            this.removeFriendShipRequestReceivedNotification(user, uid, friendID);
+
+            this.sendNotificationFriendshipActioned(user, uid, friendID, "rejected");
+        }
+    }
+
+    async sendNotificationFriendshipActioned(userDoc, uid, friendID, acknowledgedStatus){
+        /* 
+        If the friend wishes to be notified, adds a notification to friend's profile to communicate that
+        the friendship request has been accepted or declined.
+
+        acknowledgedStatus: accepted / rejected
+        */
+        let friendDoc = await this.parent.getDocument("users", friendID);
+
+        if (friendDoc.notificationsSettings.usersAcceptYourFriendshipRequest === true){
+            let message = `${userDoc.username} ${acknowledgedStatus} your friendship request`;
+            if (acknowledgedStatus == "rejected"){
+                message = `${userDoc.username} rejected your friendship request or removed you from their friends`;
+            }
+            // add notification to friend notifications
+            let notificationData = {
+                arrayName: "notifications",
+                valueToUpdate: {
+                    message: message,
+                    URL: "/friends",
+                    senderUID: uid,
+                    notificationType: "friendship_request_actioned"
+                }
+            }
+
+            await this.parent.updateDocumentAppendToArray("users", friendID, notificationData);
         }
     }
 
@@ -180,6 +238,10 @@ export class UserQueries{
             };
 
             this.parent.updateSingleKeyValueInMap("users", friendID, dataObjFriend);
+
+            this.removeFriendShipRequestReceivedNotification(user, uid, friendID);
+
+            this.sendNotificationFriendshipActioned(user, uid, friendID, "accepted");
         }
     }
 };
