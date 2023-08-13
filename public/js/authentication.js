@@ -1,9 +1,7 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js';
-import  'https://code.jquery.com/jquery-3.7.0.min.js';
-const $ = window.$;
-import { getAuth, signInWithEmailAndPassword, signOut, setPersistence, inMemoryPersistence, browserSessionPersistence } from 'https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js'
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
+// Initialize Firebase
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+// Initialize Firebase Authentication and get a reference to the service
+const auth = firebase.auth(firebaseApp);
 
 function showLoginPageModal(authInfoTitle, authInfoMessage) {
     document.getElementById("auth-info-title").innerHTML = authInfoTitle;
@@ -32,7 +30,7 @@ function postIdTokenToSessionLogin(url, idToken, csrfToken) {
     });
 };
 
-export function logIn() {
+function logIn() {
     const email = $("#email").val();
     const password = $("#password").val();
 
@@ -43,16 +41,16 @@ export function logIn() {
     // browserLocalPersistence == firebase.auth.Auth.Persistence.LOCAL
     // inMemoryPersistence == firebase.auth.Auth.Persistence.NONE 
     // browserSessionPersistence = firebase.auth.Auth.Persistence.SESSION
-    setPersistence(auth, browserSessionPersistence) 
+    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
     .then(() => {
         /* Called when user confirms login */
-        return signInWithEmailAndPassword(auth, email, password);
+        return auth.signInWithEmailAndPassword(email, password);
     })
     .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
         if (!user.emailVerified === true) {
-            signOut(auth).then(() => {
+            auth.signOut().then(() => {
                 showLoginPageModal("..Almost there!", 
                                     "Please verify your email before logging in");
             })

@@ -1,12 +1,9 @@
 // https://firebase.google.com/docs/firestore/quickstart#web-namespaced-api
 
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
 // Initialize Cloud Firestore and get a reference to the service
-const db = firebase.firestore();
+const db = firebase.firestore(firebaseApp);
 
+console.log(auth.currentUser);
 // use emulator DB when testing
 if (location.hostname === "localhost") {
     db.useEmulator("127.0.0.1", 8080);
@@ -29,4 +26,4 @@ function getUserNotifications(){
     });
 }
 
-getUserNotifications()
+//getUserNotifications()

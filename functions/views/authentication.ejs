@@ -13,16 +13,6 @@
   <link rel="stylesheet" href="/css/authentication.css">
   <link rel="stylesheet" href="/css/footer.css">
 
-  <!-- JS -->
-  <script type="module">
-    import { logIn } from "/js/authentication.js"; 
-
-    if (document.contains(document.getElementById("login-button"))) {
-      let loginButton = document.getElementById("login-button");
-      loginButton.addEventListener('click', function() { logIn(); });
-    };
-    
-  </script>
 </head>
 
 <body>
@@ -157,5 +147,12 @@
 
   <%- include('partials/footer'); %>
 </body>
+<script >
+  // authentication.js is imported in the header
+  if (document.contains(document.getElementById("login-button"))) {
+    let loginButton = document.getElementById("login-button");
+    loginButton.addEventListener('click', function() { logIn(); });
+  };
+</script>
 
 </html>
