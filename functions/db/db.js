@@ -2,6 +2,7 @@ import { getFirestore, FieldValue, FieldPath } from 'firebase-admin/firestore';
 import { TripQueries } from './queries/trips.js';
 import { UserQueries } from './queries/users.js';
 import { SettingsQueries } from './queries/settings.js';
+import { NotificationsQueries } from './queries/notifications.js';
 
 
 export class Database{
@@ -16,6 +17,7 @@ export class Database{
     constructor(adminAuth){
         // As an admin, the app has access to read and write all data, regardless of Security Rules
         this.db = getFirestore(adminAuth);
+        this.notificationsQueries = new NotificationsQueries(this);
         this.userQueries = new UserQueries(this);
         this.tripQueries = new TripQueries(this);
         this.settingsQueries = new SettingsQueries(this);

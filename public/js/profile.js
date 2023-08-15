@@ -111,5 +111,20 @@ function initializeCroppie(input) {
     // submit form
     document.getElementById("search-bar-container").submit();
 
-    console.log(searchString);
+  }
+
+  function removeFriend(friendID){
+    $.ajax({
+      url: `/friends/${friendID}`,
+      method: "DELETE",
+      xhrFields: {
+        withCredentials: true
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+      },
+      success : function () {
+        window.location.href = "/friends";
+      }
+    });
   }

@@ -12,7 +12,7 @@ export function notificationsRouter(adminAuth, db, getUserSessionDetails = impor
       if(userSessionDetails.userSessionDetails !== null){
         // delete notification
         let uid = userSessionDetails.userSessionDetails.uid;
-        await db.userQueries.removeNotification(uid, request.params.id);
+        await db.notificationsQueries.removeNotification(uid, request.params.id);
 
         return response.status(200).send("Deleted " + uid);
       } else {

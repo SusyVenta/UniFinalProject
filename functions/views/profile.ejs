@@ -73,7 +73,7 @@
           </div>
           <div id="edit-profile-picture-container">
             <!-- Profile picture edit button -->
-            <button type="button" id="change-picture-button" class="btn btn-secondary" onclick="openEditPictureModal()">
+            <button type="button" id="change-picture-button" class="btn btn-secondary" ="openEditPictureModal()">
               Edit picture
             </button>
           </div>
@@ -226,12 +226,9 @@
                       <p><%= friendProfile.username %></p>
                     </div>
                     <div class="friend-search-result-right">
-                      <form method="POST" action="/friends/remove">
-                        <input type="hidden" name="friendID" value="<%= friendUid %>">
-                        <button class="btn btn-secondary" type=submit>
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </form>
+                      <button class="btn btn-secondary" type=button onclick="removeFriend('<%= friendUid %>');">
+                        <i class="fas fa-trash"></i>
+                      </button>
                     </div>
                   </div>
               <% } %> 

@@ -131,7 +131,7 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
     }
   });
 
-  router.post("/remove", async(request, response) => {
+  router.delete("/:id", async(request, response) => {
     // search for users whose username or email matches the searched string
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
@@ -139,12 +139,10 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
       if(userSessionDetails.userSessionDetails !== null){
         try {
           let uid = userSessionDetails.userSessionDetails.uid;
-          let friendID = request.body.friendID;
+          let friendID = request.params.id;
           await db.userQueries.removeFriend(uid, friendID);
 
-          let sessionCookie = request.cookies.__session;
-          response.cookie("__session", sessionCookie);
-          return response.status(302).redirect('/friends');
+          return response.status(200).send('successfully deleted');
 
         } catch (e){
           return response.status(500).send(e.message);

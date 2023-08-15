@@ -89,40 +89,22 @@ export class UserQueries{
 
         if (friendActionAlreadyPresent !== true){
             // add friend to UID's friend
-        
             let dataObj = {
                 mapName: "friends",
                 key: friendID,
                 newValue: "sent_pending"
             };
-
             await this.parent.updateSingleKeyValueInMap("users", uid, dataObj);
 
             // add UID to friend's friends 
-
             let dataObj2 = {
                 mapName: "friends",
                 key: uid,
                 newValue: "received_pending"
             };
-
             await this.parent.updateSingleKeyValueInMap("users", friendID, dataObj2);
 
-            // add notification to friend notifications
-            let friendDoc = await this.parent.getDocument("users", friendID);
-            if (friendDoc.notificationsSettings.newFriendshipRequestReceived === true){
-                let notificationData = {
-                    arrayName: "notifications",
-                    valueToUpdate: {
-                        message: `${user.username} sent you a friendship request`,
-                        URL: "/friends",
-                        senderUID: uid,
-                        notificationType: "friendship_request_received",
-                        notification_id: "friendship_request_received_" + uid
-                    }
-                }
-                await this.parent.updateDocumentAppendToArray("users", friendID, notificationData);
-            }
+            await this.parent.notificationsQueries.sendNotification(uid, friendID, "friendship_request_received");
         }
     }
 
@@ -136,35 +118,23 @@ export class UserQueries{
         return friendsProfiles;
     }
 
-    async removeFriendShipRequestReceivedNotification(userDoc, uid, friendID){
-        // removes notification alerting of frienship request received
-        let notifications = userDoc.notifications;
-        let notificationToRemove = null;
-        for (let notification of notifications){
-            if (notification.notificationType === "friendship_request_received"){
-                if (notification.senderUID == friendID){
-                    notificationToRemove = notification;
-                    break;
-                }
-            }
-        }
-        
-        this.parent.updateDocumentRemoveFromArray(
-            "users", 
-            uid, 
-            {
-                arrayName: "notifications",
-                valueToRemove: notificationToRemove
-            }
-        );
-    }
-
     async removeFriend(uid, friendID){
         /* 
         Removes frienship from user pair or declines friendship request 
-        users need to be friends to remove friendship
+        users need to be friends to remove friendship.
+        If the friend has any trips in common with the user, throw error
         */
         let user = await this.parent.getDocument("users", uid);
+        let userTripIDs = user.trips;
+
+        for (let tripID of userTripIDs){
+            let userTrip = await this.parent.getDocument("trips", tripID);
+            let participants = userTrip.participantsStatus;
+            if (participants.hasOwnProperty(friendID)){
+                throw new Error("Can't remove friend as you have trips in common. Please remove yourself from these trips or remove your friend from them before retrying.");  
+            }
+        }
+        
         let userFriends = user.friends;
         if(userFriends.hasOwnProperty(friendID)){
             // delete from authenticated user 
@@ -183,39 +153,8 @@ export class UserQueries{
 
             this.parent.deleteKeyFromMap("users", friendID, dataObjFriend);
 
-            this.removeFriendShipRequestReceivedNotification(user, uid, friendID);
-
-            this.sendNotificationFriendshipActioned(user, uid, friendID, "rejected");
-        }
-    }
-
-    async sendNotificationFriendshipActioned(userDoc, uid, friendID, acknowledgedStatus){
-        /* 
-        If the friend wishes to be notified, adds a notification to friend's profile to communicate that
-        the friendship request has been accepted or declined.
-
-        acknowledgedStatus: accepted / rejected
-        */
-        let friendDoc = await this.parent.getDocument("users", friendID);
-
-        if (friendDoc.notificationsSettings.usersAcceptYourFriendshipRequest === true){
-            let message = `${userDoc.username} ${acknowledgedStatus} your friendship request`;
-            if (acknowledgedStatus == "rejected"){
-                message = `${userDoc.username} rejected your friendship request or removed you from their friends`;
-            }
-            // add notification to friend notifications
-            let notificationData = {
-                arrayName: "notifications",
-                valueToUpdate: {
-                    message: message,
-                    URL: "/friends",
-                    senderUID: uid,
-                    notificationType: "friendship_request_actioned",
-                    notification_id: "friendship_request_actioned_" + uid
-                }
-            }
-
-            await this.parent.updateDocumentAppendToArray("users", friendID, notificationData);
+            await this.parent.notificationsQueries.removeNotification(uid, "friendship_request_received_" + friendID);
+            await this.parent.notificationsQueries.sendNotification(uid, friendID, "friendship_request_rejected");
         }
     }
 
@@ -243,33 +182,8 @@ export class UserQueries{
 
             this.parent.updateSingleKeyValueInMap("users", friendID, dataObjFriend);
 
-            this.removeFriendShipRequestReceivedNotification(user, uid, friendID);
-
-            this.sendNotificationFriendshipActioned(user, uid, friendID, "accepted");
+            await this.parent.notificationsQueries.removeNotification(uid, "friendship_request_received_" + friendID);
+            await this.parent.notificationsQueries.sendNotification(uid, friendID, "friendship_request_accepted");
         }
-    }
-
-    async removeNotification(uid, notificationID){
-        // uid: user that received the notification
-
-        let userDoc = await this.parent.getDocument("users", uid);
-        let notifications = userDoc.notifications;
-
-        let notificationToRemove = null;
-        for (let notification of notifications){
-            if (notification.notification_id === notificationID){
-                notificationToRemove = notification;
-                break;
-            }
-        }
-        
-        this.parent.updateDocumentRemoveFromArray(
-            "users", 
-            uid, 
-            {
-                arrayName: "notifications",
-                valueToRemove: notificationToRemove
-            }
-        );
     }
 };
