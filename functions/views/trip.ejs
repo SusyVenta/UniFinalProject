@@ -42,9 +42,11 @@
       alt="'<%= trip.picture.alt %>' by <%= trip.picture.photographer %>" src="<%= trip.picture.src.medium %>">
       <div id="title-inner-container">
         <h1 id="title"><%= trip.tripTitle %></h1>
-        <button id="edit-trip-title-button" class="btn btn-secondary" onclick="alterTripTitle('<%= tripID %>');">
-          <i id="edit-trip-title-button-icon" class="fas fa-pencil"></i>
-        </button>
+        <% if (trip.participantsStatus[userID] !== 'pending') { %>
+          <button id="edit-trip-title-button" class="btn btn-secondary" onclick="alterTripTitle('<%= tripID %>');">
+            <i id="edit-trip-title-button-icon" class="fas fa-pencil"></i>
+          </button>
+        <%} %>
       </div>
     </div>
 
@@ -125,25 +127,27 @@
                 <h4>Status</h4>
                 <p><%- trip.participantsStatus[userID] %></p>
               </div>
-              <div class="participant-div-dates-available">
-                <h4>Dates Available</h4>
-                <div class="dates-available-container">
-                  <% var datePreferencesCurrentUser = trip.datesPreferences[userID]; %>
-                  <% if (datePreferencesCurrentUser == null) { %>
-                    <p>Not entered yet</p>
-                  <% } else { %> 
-                    <ul>
-                      <% var indexCurrentUser = 0; %>
-                      <% Object.keys(datePreferencesCurrentUser).forEach(function(indexCurrentUser) { %>
-                        <li id="trip-availability_uid_<%- userID %>_<%- indexCurrentUser %>" >
-                          <%- moment(datePreferencesCurrentUser[indexCurrentUser][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferencesCurrentUser[indexCurrentUser][1].toDate()).format('DD MMM YYYY') %>
-                        </li>
-                        <% indexCurrentUser ++; %>
-                      <% }); %>
-                    </ul>
-                  <% } %> 
+              <% if (trip.askAllParticipantsDates === true) { %>
+                <div class="participant-div-dates-available">
+                  <h4>Dates Available</h4>
+                  <div class="dates-available-container">
+                    <% var datePreferencesCurrentUser = trip.datesPreferences[userID]; %>
+                    <% if (datePreferencesCurrentUser == null) { %>
+                      <p>Not entered yet</p>
+                    <% } else { %> 
+                      <ul>
+                        <% var indexCurrentUser = 0; %>
+                        <% Object.keys(datePreferencesCurrentUser).forEach(function(indexCurrentUser) { %>
+                          <li id="trip-availability_uid_<%- userID %>_<%- indexCurrentUser %>" >
+                            <%- moment(datePreferencesCurrentUser[indexCurrentUser][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferencesCurrentUser[indexCurrentUser][1].toDate()).format('DD MMM YYYY') %>
+                          </li>
+                          <% indexCurrentUser ++; %>
+                        <% }); %>
+                      </ul>
+                    <% } %> 
+                  </div>
                 </div>
-              </div>
+              <% } %>
               <div class="participant-div-dates-action">
                 <% if (trip.participantsStatus[userID] === 'pending') { %>
                   <button id="abandon-trip-button" class="btn btn-secondary" onclick="acceptTripInvite('<%= tripID %>', '<%= JSON.stringify(trip.participantsStatus) %>','<%= userID %>');">
@@ -156,9 +160,11 @@
                   <button id="abandon-trip-button" class="btn btn-secondary" onclick="abandonTrip('<%= tripID %>', '<%= JSON.stringify(trip.participantsStatus) %>','<%= userID %>');">
                     Abandon trip
                   </button>
-                  <button id="edit-preferences-button" class="btn btn-secondary" onclick="$('#edit-participant-details-modal').show();">
-                    <i class="fas fa-pencil"></i>
-                  </button>
+                  <% if ((trip.participantsStatus[userID] === 'owner') || (trip.askAllParticipantsDates === true)) { %>
+                    <button id="edit-preferences-button" class="btn btn-secondary" onclick="$('#edit-participant-details-modal').show();">
+                      <i class="fas fa-pencil"></i>
+                    </button>
+                  <% } %> 
                 <% } %> 
               </div>
             </div>
@@ -188,16 +194,15 @@
                         <% if (datePreferences == null) { %>
                           <p>Not entered yet</p>
                         <% } else { %> 
-                          <% var index = 0; %>
-                          <% Object.keys(datePreferences).forEach(function(index) { %>
-                            <input class="form-control" 
-                                id="trip-availability_uid_<%- uid %>_<%- index %>" 
-                                type="text" 
-                                name="daterange"
-                                value="<%- moment(datePreferences[index][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferences[index][1].toDate()).format('DD MMM YYYY') %>"
-                                disabled/>
-                            <% index ++; %>
-                          <% }); %>
+                          <ul>
+                            <% var index = 0; %>
+                            <% Object.keys(datePreferences).forEach(function(index) { %>
+                              <li id="trip-availability_uid_<%- uid %>_<%- index %>"  >
+                                <%- moment(datePreferences[index][0].toDate()).format('DD MMM YYYY') %> - <%- moment(datePreferences[index][1].toDate()).format('DD MMM YYYY') %>
+                              </li>
+                              <% index ++; %>
+                            <% }); %>
+                          </ul>
                         <% } %> 
                       </div>
                     </div>

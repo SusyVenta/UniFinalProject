@@ -36,7 +36,7 @@ export class NotificationsQueries{
             },
             trip_invite_received: {
                 data: {
-                    message: "%SENDER% sent you a request to join their trip",
+                    message: "%SENDER% sent you a request to join their trip '%TRIPTITLE%'",
                     URL: "/trips/%TRIPID%",
                     senderUID: "%SENDERID%",
                     notification_id: "trip_invite_received_%TRIPID%",
@@ -46,7 +46,7 @@ export class NotificationsQueries{
             },
             trip_invite_accepted: {
                 data: {
-                    message: "%SENDER% accepted the invitation to join your trip",
+                    message: "%SENDER% accepted the invitation to join your trip '%TRIPTITLE%'",
                     URL: "/trips/%TRIPID%",
                     senderUID: "%SENDERID%",
                     notification_id: "trip_invite_accepted_%TRIPID%",
@@ -56,7 +56,7 @@ export class NotificationsQueries{
             },
             trip_invite_rejected: {
                 data: {
-                    message: "%SENDER% declined the invitation to join your trip",
+                    message: "%SENDER% declined the invitation to join your trip '%TRIPTITLE%'",
                     URL: "/trips/%TRIPID%",
                     senderUID: "%SENDERID%",
                     notification_id: "trip_invite_rejected_%TRIPID%",
@@ -94,23 +94,25 @@ export class NotificationsQueries{
     async sendNotification(senderID, recipientID, notificationType, tripID = null){
         // if the recipient wishes to be notified, sends the specific notification
         let senderDoc = await this.parent.getDocument("users", senderID);
+        let tripDoc = await this.parent.getDocument("trips", tripID);
+
         let stringReplacements = {
             "%SENDERID%": senderID, 
             "%SENDER%": senderDoc.username,
-            "%TRIPID%": tripID
+            "%TRIPID%": tripID,
+            "%TRIPTITLE%": tripDoc.tripTitle
         };
 
-        let notificationData = this.notificationTypes[notificationType].data;
+        // don't modify in place
+        let notificationData = structuredClone(this.notificationTypes[notificationType].data);
         let notificationSettingName = this.notificationTypes[notificationType].notificationsSettings;
 
         // replace all placeholders 
-        Object.keys(notificationData).forEach(function(key){ 
-            notificationData[key] = notificationData[key].replace(
-                /%\w+%/g, 
-                function(all) {
-                    return stringReplacements[all] || all;
-                }) 
-        });
+        for (const [placeholder, value] of Object.entries(stringReplacements)) {
+            for (const [notificationName, notificationValue] of Object.entries(notificationData)) {
+                notificationData[notificationName] = notificationValue.replace(placeholder, value);
+            }
+        }
 
         let recipientdDoc = await this.parent.getDocument("users", recipientID);
 

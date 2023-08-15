@@ -155,13 +155,23 @@ export class TripQueries{
         }
         if(data.userAcceptingTripInvite){
             // update participantsStatus
-            await this.parent.updateSingleKeyValueInMap(
+            this.parent.updateSingleKeyValueInMap(
                 "trips", 
                 data.tripID, 
                 {
                     mapName: "participantsStatus",
                     key: userID,
                     newValue: "collaborator"
+                }
+            );
+            
+            // add tripID to user's trips
+            this.parent.updateDocumentAppendToArray(
+                "users", 
+                userID, 
+                {
+                    arrayName: "trips",
+                    valueToUpdate: data.tripID
                 }
             );
 
@@ -171,7 +181,7 @@ export class TripQueries{
             );
             
             // notify inviter that invitation was accepted
-            await this.parent.notificationsQueries.sendNotification(
+            this.parent.notificationsQueries.sendNotification(
                 userID, 
                 notificationDetails.senderUID, 
                 "trip_invite_accepted",
@@ -217,7 +227,7 @@ export class TripQueries{
                 "trip_invite_rejected", 
                 data.tripID
             );
-        }
+        } 
     }
 
     async removeTrip(tripID){

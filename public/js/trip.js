@@ -51,6 +51,9 @@ function addFriendsToTrip(){
       success: function() {   
         // if successful call, reload page
         location.reload();  
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
       }
     });
   }
