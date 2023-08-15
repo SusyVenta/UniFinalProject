@@ -14,32 +14,34 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
   const router = new express.Router();
 
   router.get("/", async(request, response) => {
-      let indexPath = path.join(__dirname, '..',"views/trips.ejs");
-      try {
-        let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+    // list all trips for user
+    let indexPath = path.join(__dirname, '..',"views/trips.ejs");
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
-        if(userSessionDetails.userSessionDetails !== null){
-          let tripDetails = await db.tripQueries.getTripsForUser(
-            userSessionDetails.userSessionDetails.uid
-            );
-          let payload = {
-            name: userSessionDetails.userSessionDetails.name, 
-            trips: tripDetails,
-            userIsAuthenticated: true,
-            userID: userSessionDetails.userSessionDetails.uid
-          };
+      if(userSessionDetails.userSessionDetails !== null){
+        let tripDetails = await db.tripQueries.getTripsForUser(
+          userSessionDetails.userSessionDetails.uid
+          );
+        let payload = {
+          name: userSessionDetails.userSessionDetails.name, 
+          trips: tripDetails,
+          userIsAuthenticated: true,
+          userID: userSessionDetails.userSessionDetails.uid
+        };
 
-          return response.status(200).render(indexPath, payload);
-        } else {
-          return response.status(302).redirect('/auth/login');
-        }
-
-      } catch(error){
-        response.status(500).send(error.message);
+        return response.status(200).render(indexPath, payload);
+      } else {
+        return response.status(302).redirect('/auth/login');
       }
-    });
+
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
 
   router.delete("/:id", async(request, response) => {
+    // delete trip
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
@@ -69,20 +71,24 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         let profileDetails = await db.userQueries.getUserDetails(uid);
         let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
 
-        let payload = {
-          name: userSessionDetails.userSessionDetails.name, 
-          trip: tripDetails,
-          userIsAuthenticated: true,
-          moment: moment,
-          userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(request.params.id),
-          commonAvailabilities: commonDateRanges,
-          userID: uid,
-          profileDetails: profileDetails,
-          friendsProfiles: friendsProfiles,
-          tripID: tripID
-        };
-
-        return response.status(200).render(templatePath, payload);
+        if (tripDetails.participantsStatus.hasOwnProperty(uid)){
+          let payload = {
+            name: userSessionDetails.userSessionDetails.name, 
+            trip: tripDetails,
+            userIsAuthenticated: true,
+            moment: moment,
+            userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(request.params.id),
+            commonAvailabilities: commonDateRanges,
+            userID: uid,
+            profileDetails: profileDetails,
+            friendsProfiles: friendsProfiles,
+            tripID: tripID
+          };
+  
+          return response.status(200).render(templatePath, payload);
+        } else {
+          return response.status(302).redirect('/auth/login');
+        }
       } else {
         return response.status(302).redirect('/auth/login');
       }
@@ -134,28 +140,35 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
-        try {
+        let uid = userSessionDetails.userSessionDetails.uid;
+        let tripDetails = await db.tripQueries.getTripByID(request.body.tripID);
+        if (tripDetails.participantsStatus.hasOwnProperty(uid)){
+          try {
 
-          if(
-            request.body.hasOwnProperty("friendsToAdd") || 
-            request.body.hasOwnProperty("datesPreferences") || 
-            request.body.hasOwnProperty("tripTitle")
-            ){
-            await db.tripQueries.updateTrip(
-              request.body, 
-              userSessionDetails.userSessionDetails.uid
-            );
+            if(
+              request.body.hasOwnProperty("friendsToAdd") || 
+              request.body.hasOwnProperty("datesPreferences") || 
+              request.body.hasOwnProperty("tripTitle") || 
+              request.body.hasOwnProperty("userAcceptingTripInvite")
+              ){
+              await db.tripQueries.updateTrip(
+                request.body, 
+                userSessionDetails.userSessionDetails.uid
+              );
+            }
+            if (request.body.hasOwnProperty("friendToRemove")){
+              await db.tripQueries.removeUserFromTrip(
+                request.body
+              );
+            }
+            
+            return response.status(200).send("Modified trip");
+          } catch (e){
+            console.log(e.message);
+            return response.status(500).send(e.message);
           }
-          if (request.body.hasOwnProperty("friendToRemove")){
-            await db.tripQueries.removeUserFromTrip(
-              request.body
-            );
-          }
-          
-          return response.status(200).send("Modified trip");
-        } catch (e){
-          console.log(e.message);
-          return response.status(500).send(e.message);
+        } else {
+          return response.status(302).redirect('/auth/login');
         }
         
       } else {

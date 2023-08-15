@@ -153,6 +153,31 @@ export class TripQueries{
         if(data.tripTitle){
             await this.parent.updateFieldsDocument("trips", data.tripID, {tripTitle: data.tripTitle});
         }
+        if(data.userAcceptingTripInvite){
+            // update participantsStatus
+            await this.parent.updateSingleKeyValueInMap(
+                "trips", 
+                data.tripID, 
+                {
+                    mapName: "participantsStatus",
+                    key: userID,
+                    newValue: "collaborator"
+                }
+            );
+
+            // remove trip invite from user's notifications
+            let notificationDetails = await this.parent.notificationsQueries.removeNotification(
+                userID, "trip_invite_received_" + data.tripID
+            );
+            
+            // notify inviter that invitation was accepted
+            await this.parent.notificationsQueries.sendNotification(
+                userID, 
+                notificationDetails.senderUID, 
+                "trip_invite_accepted",
+                data.tripID
+            );
+        }
     }
 
     async removeUserFromTrip(data){

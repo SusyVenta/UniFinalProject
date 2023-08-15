@@ -357,7 +357,34 @@ function abandonTrip(tripID, participantsStatus, userID){
 
 function acceptTripInvite(tripID, participantsStatus, userID){
   // accepts invitation to join a trip
-  console.log("accepting");
+  participantsStatus = JSON.parse(participantsStatus);
+
+  if (!(participantsStatus.hasOwnProperty(userID))){
+    let message = "Error: You are not a member of this trip."
+    fillGenericModal(message, ``, false);
+    return;
+  }
+
+  let payload = { 
+    userAcceptingTripInvite: userID,
+    tripID: tripID
+  };
+
+  $.ajax({
+    url: `/trips/` + tripID,
+    method: "POST",
+    xhrFields: {
+      withCredentials: true
+    },
+    data: jQuery.param(payload),
+    success: function() {   
+      // reload page
+      location.reload(); 
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+      alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+    }
+  });
 }
 
 function alterTripTitle(tripID){
