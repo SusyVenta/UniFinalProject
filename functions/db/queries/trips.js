@@ -180,9 +180,19 @@ export class TripQueries{
         );
 
         // remove tripID from user's notifications
-        await this.parent.notificationsQueries.removeNotification(
+        let notificationDetails = await this.parent.notificationsQueries.removeNotification(
             data.friendToRemove, "trip_invite_received_" + data.tripID
         );
+
+        if (notificationDetails != null){
+            // notify trip owner of invitation declined
+            this.parent.notificationsQueries.sendNotification(
+                data.friendToRemove, 
+                notificationDetails.senderUID, 
+                "trip_invite_rejected", 
+                data.tripID
+            );
+        }
     }
 
     async removeTrip(tripID){

@@ -55,8 +55,8 @@ function getUserNotifications(userID){
             a.textContent = notification.message;
 
             if(
-                notification.notificationType == "friendship_request_accepted" || 
-                notification.notificationType == "friendship_request_rejected"
+                (notification.notificationType).includes("accepted") || 
+                (notification.notificationType).includes("rejected")
             ){
                 // remove notification when user clicks on it
                 a.addEventListener('click', function(event) { 

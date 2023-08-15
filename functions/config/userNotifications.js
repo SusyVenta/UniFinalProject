@@ -6,5 +6,6 @@ export let defaultNotifications = {
     newCommentsAddedToPlans: true,
     newEventsAddedToPlans: true,
     allParticipantsVoted: true,
-    newInviteToJoinTrip: true
+    newInviteToJoinTrip: true,
+    usersAcceptYourTripInvitation: true
 }

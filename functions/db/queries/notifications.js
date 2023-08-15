@@ -4,6 +4,16 @@ export class NotificationsQueries{
         this.parent = parentClass;
 
         this.notificationTypes = {
+            friendship_request_received: {
+                data: {
+                    message: "%SENDER% sent you a friendship request",
+                    URL: "/friends",
+                    senderUID: "%SENDERID%",
+                    notification_id: "friendship_request_received_%SENDERID%",
+                    notificationType: "friendship_request_received"
+                },
+                notificationsSettings: "newFriendshipRequestReceived"
+            },
             friendship_request_accepted: {
                 data: {
                     message: "%SENDER% accepted your friendship request",
@@ -24,16 +34,6 @@ export class NotificationsQueries{
                 },
                 notificationsSettings: "usersAcceptYourFriendshipRequest"
             },
-            friendship_request_received: {
-                data: {
-                    message: "%SENDER% sent you a friendship request",
-                    URL: "/friends",
-                    senderUID: "%SENDERID%",
-                    notification_id: "friendship_request_received_%SENDERID%",
-                    notificationType: "friendship_request_received"
-                },
-                notificationsSettings: "newFriendshipRequestReceived"
-            },
             trip_invite_received: {
                 data: {
                     message: "%SENDER% sent you a request to join their trip",
@@ -43,6 +43,26 @@ export class NotificationsQueries{
                     notificationType: "trip_invite_received"
                 },
                 notificationsSettings: "newInviteToJoinTrip"
+            },
+            trip_invite_accepted: {
+                data: {
+                    message: "%SENDER% accepted the invitation to join your trip",
+                    URL: "/trips/%TRIPID%",
+                    senderUID: "%SENDERID%",
+                    notification_id: "trip_invite_accepted_%TRIPID%",
+                    notificationType: "trip_invite_accepted"
+                },
+                notificationsSettings: "usersAcceptYourTripInvitation"
+            },
+            trip_invite_rejected: {
+                data: {
+                    message: "%SENDER% declined the invitation to join your trip",
+                    URL: "/trips/%TRIPID%",
+                    senderUID: "%SENDERID%",
+                    notification_id: "trip_invite_rejected_%TRIPID%",
+                    notificationType: "trip_invite_rejected"
+                },
+                notificationsSettings: "usersAcceptYourTripInvitation"
             }
         }
     };
@@ -68,6 +88,7 @@ export class NotificationsQueries{
                 valueToRemove: notificationToRemove
             }
         );
+        return notificationToRemove;
     }
 
     async sendNotification(senderID, recipientID, notificationType, tripID = null){
