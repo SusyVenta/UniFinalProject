@@ -15,7 +15,6 @@ export class UserQueries{
             friends: {},
             trips: [],
             notificationsSettings: defaultNotifications,
-            tripInvites: [],
             notifications: [],
             uid: userObject.uid
         };

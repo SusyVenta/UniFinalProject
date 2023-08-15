@@ -94,9 +94,8 @@ export class TripQueries{
         /* 
         Called when adding friends to trip:
             data: {friendsToAdd: [], tripID: <str: tripID>, askAllParticipantsDates: <true / false>}
-            Updates the following fields: 
-                - participantsStatus: {uid: 'pending'}
-                - added user's tripInvites
+            Updates field 'participantsStatus': {uid: 'pending'}
+            Sends a notification to the added friend
         Called when updating personal preferences:
             data: {datesPreferences: [], workingDaysAvailability, totalDaysAvailability, tripID: <str: tripID>}
         */
@@ -113,14 +112,12 @@ export class TripQueries{
                     }
                 );
     
-                // add trip invite to friend so they get notified
-                await this.parent.updateDocumentAppendToArray(
-                    "users", 
+                // notify friend
+                await this.parent.notificationsQueries.sendNotification(
+                    userID, 
                     friendID, 
-                    {
-                        arrayName: "tripInvites",
-                        valueToUpdate: {senderID: userID, tripID: data.tripID}
-                    }
+                    "trip_invite_received",
+                    data.tripID
                 );
             }
         }

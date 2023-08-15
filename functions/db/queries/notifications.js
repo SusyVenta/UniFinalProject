@@ -33,6 +33,16 @@ export class NotificationsQueries{
                     notificationType: "friendship_request_received"
                 },
                 notificationsSettings: "newFriendshipRequestReceived"
+            },
+            trip_invite_received: {
+                data: {
+                    message: "%SENDER% sent you a request to join their trip",
+                    URL: "/trips/%TRIPID%",
+                    senderUID: "%SENDERID%",
+                    notification_id: "trip_invite_received_%SENDERID%",
+                    notificationType: "trip_invite_received"
+                },
+                notificationsSettings: "newInviteToJoinTrip"
             }
         }
     };
@@ -60,10 +70,14 @@ export class NotificationsQueries{
         );
     }
 
-    async sendNotification(senderID, recipientID, notificationType){
+    async sendNotification(senderID, recipientID, notificationType, tripID = null){
         // if the recipient wishes to be notified, sends the specific notification
         let senderDoc = await this.parent.getDocument("users", senderID);
-        let stringReplacements = {"%SENDERID%": senderID, "%SENDER%": senderDoc.username};
+        let stringReplacements = {
+            "%SENDERID%": senderID, 
+            "%SENDER%": senderDoc.username,
+            "%TRIPID%": tripID
+        };
 
         let notificationData = this.notificationTypes[notificationType].data;
         let notificationSettingName = this.notificationTypes[notificationType].notificationsSettings;

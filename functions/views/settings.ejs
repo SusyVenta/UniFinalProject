@@ -120,6 +120,19 @@
         onchange="updateNotificationSetting(this);">
       <% } %>
     </div>
+    <div class="toggle-container">
+      <label for="newInviteToJoinTrip" class="form-label">A friend invites you to join a trip</label>
+      <% if (userSettings.newInviteToJoinTrip === true) { %>
+        <input id="newInviteToJoinTrip" type="checkbox" data-toggle="toggle" 
+        data-style="ios" class="notification-input"
+        onchange="updateNotificationSetting(this);"
+        checked>
+      <% } else { %>  
+        <input id="newInviteToJoinTrip" type="checkbox" data-toggle="toggle" 
+        data-style="ios" class="notification-input"
+        onchange="updateNotificationSetting(this);">
+      <% } %>
+    </div>
   </div>
   
   <%- include('partials/footer'); %>
