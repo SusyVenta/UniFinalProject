@@ -56,7 +56,7 @@ function addFriendsToTrip(){
   }
 };
 
-function removeUserFromTrip(tripID, userUID){
+function removeUserFromTrip(tripID, userUID, redirectTrips = false){
   let payload = { 
     friendToRemove: userUID,
     tripID: tripID
@@ -70,8 +70,16 @@ function removeUserFromTrip(tripID, userUID){
     },
     data: jQuery.param(payload),
     success: function() {   
-      // if successful call, reload page
-      location.reload();  
+      if (redirectTrips === 'true'){
+        // called when user rejects trip invite. redirect to trips
+        window.location.href = "/trips";
+      } else {
+        // if user removes a collaborator, reload trip page
+        location.reload();  
+      }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+      alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
     }
   });
 };
@@ -299,7 +307,14 @@ function fillGenericModal(message, confirmFunction, showConfirmButton){
 }
 
 function abandonTrip(tripID, participantsStatus, userID){
+  // abandon trip or reject trip invite
   participantsStatus = JSON.parse(participantsStatus);
+
+  if (!(participantsStatus.hasOwnProperty(userID))){
+    let message = "Error: You are not a member of this trip."
+    fillGenericModal(message, ``, false);
+    return;
+  }
 
   let nonPendingParticipants = [];
   for (const [key, value] of Object.entries(participantsStatus)) {
@@ -309,7 +324,7 @@ function abandonTrip(tripID, participantsStatus, userID){
   }
 
   // if there is only one user, ask confirmation to delete trip
-  if(nonPendingParticipants.length == 1){
+  if((nonPendingParticipants.length == 1) && (participantsStatus[userID] != "pending")){
     // warn that trip will be removed
     let message = ("You are the only participant in this trip. " +
                    "Do you confirm you want to abandon and delete the trip?")
@@ -322,7 +337,12 @@ function abandonTrip(tripID, participantsStatus, userID){
     if(value == "owner" && key != userID){
       otherOwnersFound = true;
       let message = "Are you sure you want to remove yourself from this trip?";
-      fillGenericModal(message, `removeUserFromTrip('${tripID}', '${userUID}')`, true);
+      let redirectTrips = false;
+      if (participantsStatus[userID] == "pending"){
+        redirectTrips = true;
+      }
+
+      fillGenericModal(message, `removeUserFromTrip('${tripID}', '${userID}', '${redirectTrips}')`, true);
       return;
     }
   }
@@ -333,6 +353,11 @@ function abandonTrip(tripID, participantsStatus, userID){
     fillGenericModal(message, ``, false);
     return;
   }
+}
+
+function acceptTripInvite(tripID, participantsStatus, userID){
+  // accepts invitation to join a trip
+  console.log("accepting");
 }
 
 function alterTripTitle(tripID){

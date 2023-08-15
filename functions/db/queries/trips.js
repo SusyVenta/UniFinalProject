@@ -157,6 +157,7 @@ export class TripQueries{
 
     async removeUserFromTrip(data){
         /* 
+        Removes user from trip or rejects invitation to join a trip
         data = { friendToRemove: friendUID, tripID: tripID}
         */ 
         // remove UID from participantsStatus field
@@ -178,17 +179,10 @@ export class TripQueries{
             }
         );
 
-        // remove tripID from user's invites
-        let friendDetails = await this.parent.userQueries.getUserDetails(data.friendToRemove);
-        let tripInvites = friendDetails.tripInvites;
-        let updatingTripInvites = [];
-        for(let tripInvite of tripInvites){
-            if (tripInvite.tripID !== data.tripID){
-                updatingTripInvites.push(tripInvite);
-            }
-        }
-        
-        await this.parent.userQueries.updateProfile({tripInvites: updatingTripInvites}, data.friendToRemove);
+        // remove tripID from user's notifications
+        await this.parent.notificationsQueries.removeNotification(
+            data.friendToRemove, "trip_invite_received_" + data.tripID
+        );
     }
 
     async removeTrip(tripID){
@@ -209,16 +203,10 @@ export class TripQueries{
                 );
             }
 
-            // remove tripID from user's invites
-            let friendDetails = await this.parent.userQueries.getUserDetails(participantUID);
-            let tripInvites = friendDetails.tripInvites;
-            let updatingTripInvites = [];
-            for(let tripInvite of tripInvites){
-                if (tripInvite.tripID !== tripID){
-                    updatingTripInvites.push(tripInvite);
-                }
-            }
-            await this.parent.userQueries.updateProfile({tripInvites: updatingTripInvites}, participantUID);
+            // remove tripID from user's notifications
+            await this.parent.notificationsQueries.removeNotification(
+                participantUID, "trip_invite_received_" + tripID
+            );
         }
 
         // delete trip document

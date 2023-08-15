@@ -39,7 +39,7 @@ export class NotificationsQueries{
                     message: "%SENDER% sent you a request to join their trip",
                     URL: "/trips/%TRIPID%",
                     senderUID: "%SENDERID%",
-                    notification_id: "trip_invite_received_%SENDERID%",
+                    notification_id: "trip_invite_received_%TRIPID%",
                     notificationType: "trip_invite_received"
                 },
                 notificationsSettings: "newInviteToJoinTrip"

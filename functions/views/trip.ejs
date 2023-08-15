@@ -69,11 +69,13 @@
         <!-- ---------------------------- participants ------------------------->
         <div id="participants-tab" class="tab-pane active">
           <div class="tab-container">
-            <div class="tab-content-top-buttons">
-              <button id="add-friend-button" class="btn btn-secondary" onclick="showAddFriendsModal();">
-                Add friends
-              </button>
-            </div>
+            <% if (trip.participantsStatus[userID] === 'owner') { %>
+              <div class="tab-content-top-buttons">
+                <button id="add-friend-button" class="btn btn-secondary" onclick="showAddFriendsModal();">
+                  Add friends
+                </button>
+              </div>
+            <%} %>
           </div>
           <!-- overview ------------------------------------>
           <div id="participants-overview-container">
@@ -143,12 +145,21 @@
                 </div>
               </div>
               <div class="participant-div-dates-action">
-                <button id="abandon-trip-button" class="btn btn-secondary" onclick="abandonTrip('<%= tripID %>', '<%= JSON.stringify(trip.participantsStatus) %>','<%= userID %>');">
-                  Abandon trip
-                </button>
-                <button id="edit-preferences-button" class="btn btn-secondary" onclick="$('#edit-participant-details-modal').show();">
-                  <i class="fas fa-pencil"></i>
-                </button>
+                <% if (trip.participantsStatus[userID] === 'pending') { %>
+                  <button id="abandon-trip-button" class="btn btn-secondary" onclick="acceptTripInvite('<%= tripID %>', '<%= JSON.stringify(trip.participantsStatus) %>','<%= userID %>');">
+                    Join
+                  </button>
+                  <button id="abandon-trip-button" class="btn btn-secondary" onclick="abandonTrip('<%= tripID %>', '<%= JSON.stringify(trip.participantsStatus) %>','<%= userID %>');">
+                    Don't join
+                  </button>
+                <% } else { %> 
+                  <button id="abandon-trip-button" class="btn btn-secondary" onclick="abandonTrip('<%= tripID %>', '<%= JSON.stringify(trip.participantsStatus) %>','<%= userID %>');">
+                    Abandon trip
+                  </button>
+                  <button id="edit-preferences-button" class="btn btn-secondary" onclick="$('#edit-participant-details-modal').show();">
+                    <i class="fas fa-pencil"></i>
+                  </button>
+                <% } %> 
               </div>
             </div>
             <!-- all other users  ------------------------>
