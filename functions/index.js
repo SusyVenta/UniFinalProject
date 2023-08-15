@@ -10,6 +10,7 @@ import { dirname } from 'path';
 import { homeRouter} from "./routers/home.js";
 import { tripsRouter} from "./routers/trips.js";
 import { profileRouter} from "./routers/profile.js";
+import { notificationsRouter } from "./routers/notifications.js";
 import { authenticationRouter} from "./routers/authentication.js";
 import { legalRouter} from "./routers/legal.js";
 import { settingsRouter} from "./routers/settings.js";
@@ -69,6 +70,7 @@ app.use("/legal", legalRouter());
 app.use("/trips", tripsRouter(adminAuth, db));
 app.use("/profile", profileRouter(adminAuth, db));
 app.use("/settings", settingsRouter(adminAuth, db));
-app.use("/friends", friendsRouter(adminAuth, db))
+app.use("/friends", friendsRouter(adminAuth, db));
+app.use("/notifications", notificationsRouter(adminAuth, db));
 
 export const exportedapp = functions.https.onRequest(app);

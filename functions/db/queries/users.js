@@ -115,7 +115,8 @@ export class UserQueries{
                     message: `${user.username} sent you a friendship request`,
                     URL: "/friends",
                     senderUID: uid,
-                    notificationType: "friendship_request_received"
+                    notificationType: "friendship_request_received",
+                    notification_id: "friendship_request_received_" + uid
                 }
             }
 
@@ -134,7 +135,7 @@ export class UserQueries{
     }
 
     async removeFriendShipRequestReceivedNotification(userDoc, uid, friendID){
-        // removed notification alerting of frienship request received
+        // removes notification alerting of frienship request received
         let notifications = userDoc.notifications;
         let notificationToRemove = null;
         for (let notification of notifications){
@@ -207,7 +208,8 @@ export class UserQueries{
                     message: message,
                     URL: "/friends",
                     senderUID: uid,
-                    notificationType: "friendship_request_actioned"
+                    notificationType: "friendship_request_actioned",
+                    notification_id: "friendship_request_actioned_" + uid
                 }
             }
 
@@ -243,5 +245,29 @@ export class UserQueries{
 
             this.sendNotificationFriendshipActioned(user, uid, friendID, "accepted");
         }
+    }
+
+    async removeNotification(uid, notificationID){
+        // uid: user that received the notification
+
+        let userDoc = await this.parent.getDocument("users", uid);
+        let notifications = userDoc.notifications;
+
+        let notificationToRemove = null;
+        for (let notification of notifications){
+            if (notification.notification_id === notificationID){
+                notificationToRemove = notification;
+                break;
+            }
+        }
+        
+        this.parent.updateDocumentRemoveFromArray(
+            "users", 
+            uid, 
+            {
+                arrayName: "notifications",
+                valueToRemove: notificationToRemove
+            }
+        );
     }
 };

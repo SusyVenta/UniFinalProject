@@ -8,6 +8,18 @@ if (location.hostname === "localhost") {
     db.useEmulator("127.0.0.1", 8080);
   }
 
+function deleteNotification(notificationId){
+    // deletes selected notification by calling API endpoint
+
+    $.ajax({
+        url: `/notifications/${notificationId}`,
+        method: "DELETE",
+        xhrFields: {
+            withCredentials: true
+        }
+    });
+};
+
 function getUserNotifications(userID){
     /* 
     Gets data for currently authenticates user in real time. 
@@ -29,6 +41,9 @@ function getUserNotifications(userID){
         let notificationsNumber = document.getElementById("number-notifications-badge");
         notificationsNumber.innerHTML = data.notifications.length;
 
+        // reset notifications
+        notificationsDropDown.innerHTML = "";
+
         // add notifications as dropdown items
         let notifications = data.notifications;
         for (let notification of notifications){
@@ -38,13 +53,18 @@ function getUserNotifications(userID){
             a.setAttribute("href", notification.URL);
             a.setAttribute("rel", "nofollow");
             a.textContent = notification.message;
-            li.appendChild(a);
-            notificationsDropDown.prepend(li);
 
             if(notification.notificationType == "friendship_request_actioned"){
-                // TODO: remove notification when user clicks on it
-                //a.addEventListener('click', function() { logIn(); });
+                // remove notification when user clicks on it
+                a.addEventListener('click', function(event) { 
+                    event.preventDefault(); 
+                    deleteNotification(notification.notification_id); 
+                    window.location = this.href;
+                });
             }
+
+            li.appendChild(a);
+            notificationsDropDown.prepend(li);
         }
     });
 }
