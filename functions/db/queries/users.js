@@ -109,18 +109,20 @@ export class UserQueries{
             await this.parent.updateSingleKeyValueInMap("users", friendID, dataObj2);
 
             // add notification to friend notifications
-            let notificationData = {
-                arrayName: "notifications",
-                valueToUpdate: {
-                    message: `${user.username} sent you a friendship request`,
-                    URL: "/friends",
-                    senderUID: uid,
-                    notificationType: "friendship_request_received",
-                    notification_id: "friendship_request_received_" + uid
+            let friendDoc = await this.parent.getDocument("users", friendID);
+            if (friendDoc.notificationsSettings.newFriendshipRequestReceived === true){
+                let notificationData = {
+                    arrayName: "notifications",
+                    valueToUpdate: {
+                        message: `${user.username} sent you a friendship request`,
+                        URL: "/friends",
+                        senderUID: uid,
+                        notificationType: "friendship_request_received",
+                        notification_id: "friendship_request_received_" + uid
+                    }
                 }
+                await this.parent.updateDocumentAppendToArray("users", friendID, notificationData);
             }
-
-            await this.parent.updateDocumentAppendToArray("users", friendID, notificationData);
         }
     }
 
