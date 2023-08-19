@@ -288,7 +288,14 @@ function saveUserAvailabilities(tripID){
 };
 
 function saveTripFinalDates(tripID){
-  let finalizedDates = document.getElementById("new-final-date-availability").value;
+  let finalizedDates = document.getElementById("new-final-date-availability");
+  
+  if(finalizedDates){
+    finalizedDates = finalizedDates.value;
+  }else{
+    finalizedDates = null;
+  }
+
   console.log(finalizedDates);
 
   $.ajax({

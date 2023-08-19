@@ -155,6 +155,17 @@
     margin-right: 2%;
 }
 
+.final-dates-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+}
+
+#edit-final-date-button{
+    margin-left: 2%;
+}
+
 /* phone view */
 @media only screen and (max-width: 600px) {
     .participant-div > div{

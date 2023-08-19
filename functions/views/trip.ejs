@@ -128,7 +128,12 @@
                 <%} %>
 
               <%} else { %>
-                <p>Chosen dates: <%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
+                <div class="final-dates-container">
+                  <p>Chosen dates: <%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
+                  <button id="edit-final-date-button" class="btn btn-secondary" onclick="$('#choose-final-dates-modal').show();">
+                    <i class="fas fa-pencil"></i>
+                  </button>
+                </div>
               <%} %>
             <%} %>
           </div>
@@ -323,27 +328,58 @@
                   <div class="label-and-input-container">
                     <div class="form-control" >
                       <i class="fa fa-calendar"></i>
-                      <input class="form-control" id="new-final-date-availability" type="text" name="daterange"/>
+                      <% if (trip.finalizedEndDate === null) { %>
+                        <input class="form-control" id="new-final-date-availability" type="text" name="daterange"/>
+                      <% } else { %> 
+                        <input class="form-control" id="new-final-date-availability" 
+                            type="text" name="daterange"
+                            value="<%- moment(trip.finalizedStartDate).format('MM/DD/YYYY') %> - <%- moment(trip.finalizedEndDate).format('MM/DD/YYYY') %>"
+                          />
+
+                        <div class="date-availability-delete-button-container">
+                          <button 
+                              class="btn btn-secondary" 
+                              onclick="$('#final-date-availability').remove();"
+                              >
+                            <span class="material-symbols-outlined modified">delete</span>
+                          </button>
+                        </div>
+                      <%} %>
                     </div>
                   </div>
                 </div>
               </div>
               <!-- add event listeners to availability date pickers-->
-              <script>
-                $(function() {
-                  $('#new-final-date-availability').daterangepicker({
-                    opens: 'left',
-                    minYear: moment().year(),
-                    startDate: moment().date(),
-                    endDate: moment().date()
+              <% if (trip.finalizedEndDate === null) { %>
+                <script>
+                  $(function() {
+                    $('#new-final-date-availability').daterangepicker({
+                      opens: 'left',
+                      minYear: moment().year(),
+                      startDate: moment().date(),
+                      endDate: moment().date()
+                    });
                   });
-                });
-                $(`#new-final-date-availability`).on('apply.daterangepicker', function(event, picker) {
-                  let newValue = picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY');
+                  $(`#new-final-date-availability`).on('apply.daterangepicker', function(event, picker) {
+                    let newValue = picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY');
 
-                  document.getElementById("new-final-date-availability").value = newValue;
-                });
-              </script>
+                    document.getElementById("new-final-date-availability").value = newValue;
+                  });
+                </script>
+              <% } else { %> 
+                <script>
+                  $(function() {
+                    $('#new-final-date-availability').daterangepicker({
+                      opens: 'left'
+                    });
+                  });
+                  $(`#new-final-date-availability`).on('apply.daterangepicker', function(event, picker) {
+                    let newValue = picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY');
+
+                    document.getElementById("new-final-date-availability").value = newValue;
+                  });
+                </script>
+              <%} %>
             </div>
 
           </div>
