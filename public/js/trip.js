@@ -279,10 +279,34 @@ function saveUserAvailabilities(tripID){
     success: function() {   
       // if successful call, reload page
       location.reload();  
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+      alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
     }
   }); 
   
 };
+
+function saveTripFinalDates(tripID){
+  let finalizedDates = document.getElementById("new-final-date-availability").value;
+  console.log(finalizedDates);
+
+  $.ajax({
+    url: `/trips/` + tripID,
+    method: "POST",
+    xhrFields: {
+      withCredentials: true
+    },
+    data: jQuery.param({finalizedDates: finalizedDates, tripID: tripID}),
+    success: function() {   
+      // if successful call, reload page
+      location.reload();  
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+      alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+    }
+  }); 
+}
 
 /* abandon trip --------------------------------------------------------------------------*/
 function deleteTrip(tripID){
@@ -296,6 +320,9 @@ function deleteTrip(tripID){
     success : function () {
       // reload trips page on status 200
       window.location.href = "/trips";
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+      alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
     }
   });
 };
@@ -480,6 +507,9 @@ function alterTripTitle(tripID){
       success: function() {   
         // if successful call, reload page
         location.reload();  
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
       }
     }); 
   }

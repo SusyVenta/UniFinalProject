@@ -152,7 +152,8 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
               request.body.hasOwnProperty("friendsToAdd") || 
               request.body.hasOwnProperty("datesPreferences") || 
               request.body.hasOwnProperty("tripTitle") || 
-              request.body.hasOwnProperty("userAcceptingTripInvite")
+              request.body.hasOwnProperty("userAcceptingTripInvite") ||
+              request.body.hasOwnProperty("finalizedDates")
               ){
               await db.tripQueries.updateTrip(
                 request.body, 

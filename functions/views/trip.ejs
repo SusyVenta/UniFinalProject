@@ -104,18 +104,31 @@
             <%} else { %>
               <% if (trip.finalizedEndDate === null) { %>
                 <% if ((numberParticipants == Object.keys(trip.datesPreferences).length) && (numberPendingParticipants == 0)) { %>
-                  <p>All participants entered their availability. Time to finalize the trip dates! Common availabilities:</p>
+                  <p>All participants entered their availability. The trip owner can now finalize the trip dates! Common availabilities:</p>
+                  
+                  <ul>
+                    <% for(let dateset of commonAvailabilities) { %>
+                      <li><%= moment(dateset.start).format('DD MMM YYYY') %> - <%= moment(dateset.end).format('DD MMM YYYY') %></li>
+                    <% } %>
+                  </ul>   
+
+                  <% if (trip.participantsStatus[userID] === 'owner') { %>
+                    <button id="edit-preferences-button" class="btn btn-secondary" onclick="$('#choose-final-dates-modal').show();">
+                      Choose final dates
+                    </button>
+                  <% } %> 
                 <%} else { %>
                   <p>Final dates not chosen yet. Waiting for participants to enter their availability. Common availabilities so far:</p>
-                <%} %>
                 
-                <ul>
-                <% for(let dateset of commonAvailabilities) { %>
-                  <li><%= moment(dateset.start).format('DD MMM YYYY') %> - <%= moment(dateset.end).format('DD MMM YYYY') %></li>
-                <% } %>
-                </ul>
+                  <ul>
+                    <% for(let dateset of commonAvailabilities) { %>
+                      <li><%= moment(dateset.start).format('DD MMM YYYY') %> - <%= moment(dateset.end).format('DD MMM YYYY') %></li>
+                    <% } %>
+                  </ul>                
+                <%} %>
+
               <%} else { %>
-                <p>Final dates chosen: <%= moment(trip.finalizedEndDate).format('DD MMM YYYY') %></p>
+                <p>Chosen dates: <%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
               <%} %>
             <%} %>
           </div>
@@ -278,6 +291,65 @@
           <div class="modal-footer" id="trips-modal-footer">
             <button id="cancel-friends-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <button id="save-friends-button" type="button" class="btn btn-secondary" onclick="addFriendsToTrip()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- modal to choose final dates  --------------------------------------------------------->
+  <section>
+    <div id="choose-final-dates-modal" class="modal" tabindex="-1" data-bs-backdrop="static">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">Choose the trip final dates</h1>
+            <button type="button" class="btn-close" onclick="$('#choose-final-dates-modal').hide();" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- common availabilities-->
+            <div>
+              <p>Common availabilities:</p>
+              <ul>
+                <% for(let dateset of commonAvailabilities) { %>
+                  <li><%= moment(dateset.start).format('DD MMM YYYY') %> - <%= moment(dateset.end).format('DD MMM YYYY') %></li>
+                <% } %>
+              </ul> 
+            </div>
+            <!-- existing availability date-range picker -->
+            <div id="date-availabilities-container">
+              <p>Choose final dates:</p>
+              <div id="final-date-availability" class="date-availability-container">
+                <div class="horizontal-flex">
+                  <div class="label-and-input-container">
+                    <div class="form-control" >
+                      <i class="fa fa-calendar"></i>
+                      <input class="form-control" id="new-final-date-availability" type="text" name="daterange"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- add event listeners to availability date pickers-->
+              <script>
+                $(function() {
+                  $('#new-final-date-availability').daterangepicker({
+                    opens: 'left',
+                    minYear: moment().year(),
+                    startDate: moment().date(),
+                    endDate: moment().date()
+                  });
+                });
+                $(`#new-final-date-availability`).on('apply.daterangepicker', function(event, picker) {
+                  let newValue = picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY');
+
+                  document.getElementById("new-final-date-availability").value = newValue;
+                });
+              </script>
+            </div>
+
+          </div>
+          <div class="modal-footer" id="choose-final-dates-modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="$('#choose-final-dates-modal').hide();">Cancel</button>
+            <button type="submit" class="btn btn-secondary" onclick="saveTripFinalDates('<%= trip.tripID %>');">Save</button>
           </div>
         </div>
       </div>

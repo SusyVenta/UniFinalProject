@@ -106,6 +106,27 @@ export class TripQueries{
                 data[key] = []
             }
         }
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.log(data);
+        if(data.finalizedDates){
+            let startDate = moment(data.finalizedDates.slice(0, 10), 'MM/DD/YYYY').toDate();
+            let endDate = moment(data.finalizedDates.slice(13), 'MM/DD/YYYY').toDate();
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            console.log(startDate);
+            console.log(endDate);
+
+            let payload = {
+                finalizedStartDate: startDate,
+                finalizedEndDate: endDate
+            }
+            await this.parent.updateFieldsDocument("trips", data.tripID, payload);
+
+            // remove notification from owner
+            await this.parent.notificationsQueries.removeNotification(
+                userID, "trip_dates_can_be_chosen_" + data.tripID
+            );
+            return;
+        }
 
         if(data.friendsToAdd){
             for (let friendID of data.friendsToAdd){
