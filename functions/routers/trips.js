@@ -87,10 +87,14 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
   
           return response.status(200).render(templatePath, payload);
         } else {
-          return response.status(302).redirect('/auth/login');
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/trips');
         }
       } else {
-        return response.status(302).redirect('/auth/login');
+        let sessionCookie = request.cookies.__session;
+        response.cookie("__session", sessionCookie);
+        return response.status(302).redirect('/trips');
       }
     } catch(error){
       response.status(500).send(error.message);
@@ -144,7 +148,6 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         let tripDetails = await db.tripQueries.getTripByID(request.body.tripID);
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
           try {
-
             if(
               request.body.hasOwnProperty("friendsToAdd") || 
               request.body.hasOwnProperty("datesPreferences") || 

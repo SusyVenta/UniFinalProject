@@ -96,10 +96,19 @@
             <input type="hidden" id="askAllParticipantsDates" value="<%= trip.askAllParticipantsDates %>">
             <% if (trip.askAllParticipantsDates === false) { %>
               <p>Chosen dates: <%= trip.finalizedStartDate %> - <%= trip.finalizedEndDate %></p>
-              <p>Waiting for participants to confirm availability</p>
+              <% if (numberPendingParticipants == 0) { %>
+                <p>All participants confirmed availability</p>
+              <%} else { %>
+                <p>Waiting for participants to confirm availability</p>
+              <%} %>
             <%} else { %>
               <% if (trip.finalizedEndDate === null) { %>
-                <p>Final dates not chosen yet. Common availabilities so far:</p>
+                <% if ((numberParticipants == Object.keys(trip.datesPreferences).length) && (numberPendingParticipants == 0)) { %>
+                  <p>All participants entered their availability. Time to finalize the trip dates! Common availabilities:</p>
+                <%} else { %>
+                  <p>Final dates not chosen yet. Waiting for participants to enter their availability. Common availabilities so far:</p>
+                <%} %>
+                
                 <ul>
                 <% for(let dateset of commonAvailabilities) { %>
                   <li><%= moment(dateset.start).format('DD MMM YYYY') %> - <%= moment(dateset.end).format('DD MMM YYYY') %></li>

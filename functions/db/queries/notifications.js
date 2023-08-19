@@ -63,6 +63,26 @@ export class NotificationsQueries{
                     notificationType: "trip_invite_rejected"
                 },
                 notificationsSettings: "usersAcceptYourTripInvitation"
+            },
+            trip_must_choose_dates: {
+                data: {
+                    message: "Please enter your availabilities for the trip '%TRIPTITLE%'",
+                    URL: "/trips/%TRIPID%",
+                    senderUID: "%SENDERID%",
+                    notification_id: "trip_must_choose_dates_%TRIPID%",
+                    notificationType: "trip_must_choose_dates"
+                },
+                notificationsSettings: "friendsRequestYourInput"
+            },
+            trip_cannot_choose_dates: {
+                data: {
+                    message: "The owner of your trip '%TRIPTITLE%' wants you to confirm your availability on the set dates or leave the trip.",
+                    URL: "/trips/%TRIPID%",
+                    senderUID: "%SENDERID%",
+                    notification_id: "trip_cannot_choose_dates_%TRIPID%",
+                    notificationType: "trip_cannot_choose_dates"
+                },
+                notificationsSettings: "friendsRequestYourInput"
             }
         }
     };

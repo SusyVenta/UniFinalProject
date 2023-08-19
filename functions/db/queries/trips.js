@@ -99,6 +99,14 @@ export class TripQueries{
         Called when updating personal preferences:
             data: {datesPreferences: [], workingDaysAvailability, totalDaysAvailability, tripID: <str: tripID>}
         */
+
+        // https://stackoverflow.com/questions/6622224/jquery-removes-empty-arrays-when-sending
+        for (const [key, value] of Object.entries(data)) {
+            if(value == ""){
+                data[key] = []
+            }
+        }
+
         if(data.friendsToAdd){
             for (let friendID of data.friendsToAdd){
                 // update participantsStatus
@@ -121,6 +129,7 @@ export class TripQueries{
                 );
             }
         }
+        // update dates preferences
         if (data.datesPreferences){
             let processedDatespreferences = {};
             for (let i = 0; i < data.datesPreferences.length; i++){
@@ -137,22 +146,32 @@ export class TripQueries{
             }
 
             for (const [key, value] of Object.entries(updates)) {
-                await this.parent.updateSingleKeyValueInMap(
-                    "trips", 
-                    data.tripID, 
-                    {
-                        mapName: key,
-                        key: userID,
-                        newValue: value
-                    }
-                );
+                if((Object.keys(value).length == 0) && (typeof(value) == "object")){
+                    await this.parent.deleteKeyFromMap("trips", data.tripID, {mapName: key, key: userID});
+                } else {
+                    await this.parent.updateSingleKeyValueInMap(
+                        "trips", 
+                        data.tripID, 
+                        {
+                            mapName: key,
+                            key: userID,
+                            newValue: value
+                        }
+                    );
+                }
             }
+
+            await this.parent.notificationsQueries.removeNotification(
+                userID, "trip_must_choose_dates_" + data.tripID
+            );
 
             await this.parent.updateFieldsDocument("trips", data.tripID, {lastUpdatedDatetimeUTC: moment.utc()});
         }
+        // update trip title
         if(data.tripTitle){
             await this.parent.updateFieldsDocument("trips", data.tripID, {tripTitle: data.tripTitle});
         }
+        // user accepts trip invite
         if(data.userAcceptingTripInvite){
             // update participantsStatus
             this.parent.updateSingleKeyValueInMap(
@@ -187,6 +206,28 @@ export class TripQueries{
                 "trip_invite_accepted",
                 data.tripID
             );
+
+            // if askAllParticipantsDates === true, notify user that they need to choose dates
+            let tripDoc = await this.getTripByID(data.tripID);
+            let askAllParticipantsDates = tripDoc.askAllParticipantsDates;
+
+            if ( askAllParticipantsDates === true){
+                this.parent.notificationsQueries.sendNotification(
+                    userID, 
+                    userID, 
+                    "trip_must_choose_dates",
+                    data.tripID
+                );
+            } else {
+                // if askAllParticipantsDates === false, notify user that the dates are set. join or leave
+                this.parent.notificationsQueries.sendNotification(
+                    userID, 
+                    userID, 
+                    "trip_cannot_choose_dates",
+                    data.tripID
+                );
+            }
+            
         }
     }
 
@@ -204,6 +245,37 @@ export class TripQueries{
                 key: data.friendToRemove
             }
         );
+
+        // remove UID from datesPreferences field
+        await this.parent.deleteKeyFromMap(
+            "trips", 
+            data.tripID, 
+            {
+                mapName: "datesPreferences",
+                key: data.friendToRemove
+            }
+        );
+
+        // remove UID from totalDaysAvailability field
+        await this.parent.deleteKeyFromMap(
+            "trips", 
+            data.tripID, 
+            {
+                mapName: "totalDaysAvailability",
+                key: data.friendToRemove
+            }
+        );
+
+        // remove UID from workingDaysAvailability field
+        await this.parent.deleteKeyFromMap(
+            "trips", 
+            data.tripID, 
+            {
+                mapName: "workingDaysAvailability",
+                key: data.friendToRemove
+            }
+        );
+        
         // remove tripID from user's trips
         await this.parent.updateDocumentRemoveFromArray(
             "users", 
@@ -217,6 +289,10 @@ export class TripQueries{
         // remove tripID from user's notifications
         let notificationDetails = await this.parent.notificationsQueries.removeNotification(
             data.friendToRemove, "trip_invite_received_" + data.tripID
+        );
+
+        await this.parent.notificationsQueries.removeNotification(
+            data.friendToRemove, "trip_must_choose_dates_" + data.tripID
         );
 
         if (notificationDetails != null){

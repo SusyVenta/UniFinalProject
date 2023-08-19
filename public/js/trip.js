@@ -138,10 +138,10 @@ function addDateAvailabilityInput(){
   let maxExistingDateAvailabilityID = 0;
 
   for (let dateAvailabilityID of existingDateAvailabilityInputs){
-    let idNo = (dateAvailabilityID.id).replace("date-availability-", "");
+    let idNo = parseInt((dateAvailabilityID.id).replace("date-availability-", ""));
 
-    if(parseInt(idNo) > maxExistingDateAvailabilityID){
-      maxExistingDateAvailabilityID = parseInt(idNo)
+    if(idNo > maxExistingDateAvailabilityID){
+      maxExistingDateAvailabilityID = idNo
     }
   }
   let newId = maxExistingDateAvailabilityID + 1;
@@ -254,8 +254,16 @@ function saveUserAvailabilities(tripID){
     }
   }  
 
+  // // https://stackoverflow.com/questions/6622224/jquery-removes-empty-arrays-when-sending
+  let datesPreferences = "";
+  let modifiedDates = getSelectedDates();
+
+  if(modifiedDates.length > 0){
+    datesPreferences = modifiedDates;
+  }
+
   let payload = { 
-    datesPreferences: getSelectedDates(),
+    datesPreferences: datesPreferences, 
     workingDaysAvailability: nullChecks.workingDays.value,
     totalDaysAvailability: nullChecks.totalDays.value,
     tripID: tripID
