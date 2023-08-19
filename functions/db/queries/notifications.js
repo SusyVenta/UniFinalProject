@@ -83,6 +83,16 @@ export class NotificationsQueries{
                     notificationType: "trip_cannot_choose_dates"
                 },
                 notificationsSettings: "friendsRequestYourInput"
+            },
+            trip_dates_can_be_chosen: {
+                data: {
+                    message: "All participants of your trip '%TRIPTITLE%' have entered their dates availabilities. Please choose the trip final dates",
+                    URL: "/trips/%TRIPID%",
+                    senderUID: "%SENDERID%",
+                    notification_id: "trip_dates_can_be_chosen_%TRIPID%",
+                    notificationType: "trip_dates_can_be_chosen"
+                },
+                notificationsSettings: "friendsRequestYourInput"
             }
         }
     };

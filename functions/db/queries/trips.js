@@ -166,6 +166,36 @@ export class TripQueries{
             );
 
             await this.parent.updateFieldsDocument("trips", data.tripID, {lastUpdatedDatetimeUTC: moment.utc()});
+
+            // if askAllParticipantsDates === true and all participants entered dates 
+            // preferences, send notification to trip owner
+            let tripDoc = await this.getTripByID(data.tripID);
+            let askAllParticipantsDates = tripDoc.askAllParticipantsDates;
+            if(askAllParticipantsDates === true){
+                let participantsStatus = tripDoc.participantsStatus;
+                
+                for (const [participantID, status] of Object.entries(participantsStatus)) {
+                    if (status == "pending"){
+                        return;
+                    }
+                }
+
+                let participantsIDs = Object.keys(participantsStatus);
+                let datesPreferences = tripDoc.datesPreferences;
+                for (let participantID of participantsIDs){
+                    if(!(datesPreferences.hasOwnProperty(participantID))){
+                        return;
+                    }
+                }
+
+                // notify trip owner that final dates can be chosen
+                this.parent.notificationsQueries.sendNotification(
+                    tripDoc.tripOwner, 
+                    tripDoc.tripOwner, 
+                    "trip_dates_can_be_chosen",
+                    data.tripID
+                );
+            }
         }
         // update trip title
         if(data.tripTitle){
