@@ -94,14 +94,18 @@ export class NotificationsQueries{
     async sendNotification(senderID, recipientID, notificationType, tripID = null){
         // if the recipient wishes to be notified, sends the specific notification
         let senderDoc = await this.parent.getDocument("users", senderID);
-        let tripDoc = await this.parent.getDocument("trips", tripID);
 
         let stringReplacements = {
             "%SENDERID%": senderID, 
             "%SENDER%": senderDoc.username,
-            "%TRIPID%": tripID,
-            "%TRIPTITLE%": tripDoc.tripTitle
+            "%TRIPID%": tripID
         };
+
+        if (tripID != null){
+            let tripDoc = await this.parent.getDocument("trips", tripID);
+
+            stringReplacements["%TRIPTITLE%"] = tripDoc.tripTitle;
+        }
 
         // don't modify in place
         let notificationData = structuredClone(this.notificationTypes[notificationType].data);

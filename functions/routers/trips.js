@@ -153,7 +153,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
               ){
               await db.tripQueries.updateTrip(
                 request.body, 
-                userSessionDetails.userSessionDetails.uid
+                uid
               );
             }
             if (request.body.hasOwnProperty("friendToRemove")){
@@ -161,7 +161,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
                 request.body
               );
             }
-            
+
             return response.status(200).send("Modified trip");
           } catch (e){
             console.log(e.message);

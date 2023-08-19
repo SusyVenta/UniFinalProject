@@ -59,7 +59,7 @@ function addFriendsToTrip(){
   }
 };
 
-function removeUserFromTrip(tripID, userUID, redirectTrips = false){
+function removeUserFromTrip(tripID, userUID){
   let payload = { 
     friendToRemove: userUID,
     tripID: tripID
@@ -73,13 +73,29 @@ function removeUserFromTrip(tripID, userUID, redirectTrips = false){
     },
     data: jQuery.param(payload),
     success: function() {   
-      if (redirectTrips === 'true'){
-        // called when user rejects trip invite. redirect to trips
-        window.location.href = "/trips";
-      } else {
-        // if user removes a collaborator, reload trip page
-        location.reload();  
-      }
+      location.reload();  
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+      alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+    }
+  });
+};
+
+function removeMyselfFromTrip(tripID, userUID){
+  let payload = { 
+    friendToRemove: userUID,
+    tripID: tripID
+  };
+
+  $.ajax({
+    url: `/trips/` + tripID,
+    method: "POST",
+    xhrFields: {
+      withCredentials: true
+    },
+    data: jQuery.param(payload),
+    success: function() {   
+      window.location.href = "/trips";
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) { 
       alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
@@ -117,14 +133,18 @@ function addDateAvailabilityInput(){
   </div>
   */
   let dateAvailabilitiesContainer = document.getElementById("date-availabilities-container");
-  let dateAvailabilityIDs = document.querySelectorAll('[id^="date-availability-"]');
-  let numberExistingDatePickers = 0;
-  for (let dateAvailabilityID of dateAvailabilityIDs){
-    if(parseInt(dateAvailabilityID) > numberExistingDatePickers){
-      numberExistingDatePickers = parseInt(dateAvailabilityID)
+  let existingDateAvailabilityInputs = document.querySelectorAll('[id^="date-availability-"]');
+
+  let maxExistingDateAvailabilityID = 0;
+
+  for (let dateAvailabilityID of existingDateAvailabilityInputs){
+    let idNo = (dateAvailabilityID.id).replace("date-availability-", "");
+
+    if(parseInt(idNo) > maxExistingDateAvailabilityID){
+      maxExistingDateAvailabilityID = parseInt(idNo)
     }
   }
-  let newId = numberExistingDatePickers + 1;
+  let newId = maxExistingDateAvailabilityID + 1;
 
   // form control ------------------------------------
   let formControlDiv = document.createElement("div");
@@ -340,12 +360,8 @@ function abandonTrip(tripID, participantsStatus, userID){
     if(value == "owner" && key != userID){
       otherOwnersFound = true;
       let message = "Are you sure you want to remove yourself from this trip?";
-      let redirectTrips = false;
-      if (participantsStatus[userID] == "pending"){
-        redirectTrips = true;
-      }
 
-      fillGenericModal(message, `removeUserFromTrip('${tripID}', '${userID}', '${redirectTrips}')`, true);
+      fillGenericModal(message, `removeMyselfFromTrip('${tripID}', '${userID}')`, true);
       return;
     }
   }
