@@ -105,7 +105,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title" id="new-event-modal-title">New Event</h1>
-            <button type="button" class="btn-close" onclick="$('#new-event-modal').hide();" aria-label="Close"></button>
+            <button type="button" id="new-event-modal-close-button" class="btn-close" onclick="$('#new-event-modal').hide();" aria-label="Close"></button>
           </div>
           <div class="modal-body">
 
@@ -120,27 +120,27 @@
               </button>
               <ul class="dropdown-menu date-collection-type" aria-labelledby="event-type">
                 <li>
-                  <button class="dropdown-item event-type"
+                  <button class="dropdown-item event-type" id="event-type-option-city"
                     onclick="document.getElementById('event-type').innerHTML = 'City';">City</button>
                 </li>
                 <li>
-                  <button class="dropdown-item event-type" 
+                  <button class="dropdown-item event-type" id="event-type-option-accommodation"
                     onclick="document.getElementById('event-type').innerHTML = 'Accommodation';">Accommodation</button>
                 </li>
                 <li>
-                  <button class="dropdown-item event-type" 
+                  <button class="dropdown-item event-type" id="event-type-option-transportation"
                     onclick="document.getElementById('event-type').innerHTML = 'Transportation';">Transportation</button>
                 </li>
                 <li>
-                  <button class="dropdown-item event-type" 
+                  <button class="dropdown-item event-type" id="event-type-option-attraction"
                     onclick="document.getElementById('event-type').innerHTML = 'Attraction / Event';">Attraction / Event</button>
                 </li>
                 <li>
-                  <button class="dropdown-item event-type" 
+                  <button class="dropdown-item event-type" id="event-type-option-food"
                     onclick="document.getElementById('event-type').innerHTML = 'Food & Drinks';">Food & Drinks</button>
                 </li>
                 <li>
-                  <button class="dropdown-item event-type" 
+                  <button class="dropdown-item event-type" id="event-type-option-todo"
                     onclick="document.getElementById('event-type').innerHTML = 'Task to do';">Task to do</button>
                 </li>
               </ul>
@@ -186,7 +186,7 @@
             </select>
 
             <!-- ask participants if they will join -->
-            <input  class="form-check-input" type="checkbox" id="new-event-ask-participation-confirmation" value='false' onclick="(document.getElementById('new-event-ask-participation-confirmation').value === 'false') ? 'true' : 'false'">
+            <input  class="form-check-input" type="checkbox" id="new-event-ask-participation-confirmation">
             <label for="new-event-ask-participation-confirmation">Ask participants if they will join</label><br><br>
 
             <!-- dropdown event type -->

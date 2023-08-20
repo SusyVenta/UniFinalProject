@@ -20,7 +20,10 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
         }else{
             username = friendsProfiles[uid].username;
         }
-        options.push({value: uid, text: username})
+
+        if (status != "pending"){
+            options.push({value: uid, text: username})
+        }
     }
 
     try{
@@ -47,6 +50,56 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
     }
 
   };
+
+  function showEventDetails(eventData){
+    let eventID = eventData.docID;
+
+    // clone new-event-modal
+    let newEventModal = document.getElementById("new-event-modal");
+    let selectedEventModal = newEventModal.cloneNode(true); //clone element and children
+
+    // change element id
+    let newDivID = eventID + "-" + selectedEventModal.id;
+
+    // check if new id already exists. If so, delete it. 
+    let potentiallyExistingID = document.getElementById(newDivID);
+    if((potentiallyExistingID !== undefined) && (potentiallyExistingID !== null)){
+        potentiallyExistingID.remove();
+    }
+
+    selectedEventModal.setAttribute("id", newDivID);
+
+    // rename all child elements with an ID
+    let allDescendantNodes = selectedEventModal.querySelectorAll("*");
+
+    for (let child of allDescendantNodes){
+        if (child.hasAttribute('id')){
+            child.setAttribute("id", eventID + "-" + child.id);
+        }
+    }
+    console.log(selectedEventModal);
+
+    // add to page body 
+    document.body.appendChild(selectedEventModal);
+
+    // reset title
+    document.getElementById(eventID + "-new-event-modal-title").innerHTML = eventData.title;
+    document.getElementById(eventID + "-new-event-modal-close-button").setAttribute("onclick", `$('#${newDivID}').hide();`);
+    document.getElementById(eventID + "-event-type").value = eventData.eventType;
+    let eventTypeOptions = document.querySelectorAll(`[id^="${newDivID}-event-type-option"]`);
+    for (let eventTypeOption of eventTypeOptions){
+        let newOnclick = String(eventTypeOption.onclick).replace("'event-type'", `'${newDivID}-event-type'`);
+        eventTypeOptions.setAttribute("onclick", newOnclick);
+    }
+    document.getElementById(eventID + "-new-event-title").value = eventData.title;
+    document.getElementById(eventID + "-new-event-availability-start").value = eventData.startDatetime;
+    document.getElementById(eventID + "-new-event-availability-end").value = eventData.endDatetime;
+    document.getElementById(eventID + "-new-event-address").value = eventData.address;
+    document.getElementById(eventID + "-new-event-description").value = eventData.description;
+    document.getElementById(eventID + "-new-event-ask-participation-confirmation").checked = eventData.askParticipantsIfTheyJoin;
+    
+    $(`#${newDivID}`).show();
+  }
   
   function saveEvent(tripID){
     /* Calls API endpoint to add friends to trip */
@@ -142,6 +195,29 @@ function getTripEvents(tripID){
             eventStatus.setAttribute("class", `event-status`);
             eventStatus.innerHTML = "Status: " + eventData.status;
             divEventContainer.appendChild(eventStatus);
+            
+
+            let divParticipantsAndCommentsContainer = document.createElement("div");
+            divParticipantsAndCommentsContainer.setAttribute("class", `participants-comments-container`);
+
+            let participants = document.createElement("div");
+            participants.setAttribute("class", `participants-container`);
+            let participantsTextP = document.createElement("p");
+            participantsTextP.setAttribute("class", `number-participants-p`);
+            participantsTextP.innerHTML = eventData.participants.length + " participants ";
+            participants.appendChild(participantsTextP);
+            divParticipantsAndCommentsContainer.appendChild(participants);
+
+            let pNumberComments = document.createElement("p");
+            pNumberComments.setAttribute("class", `number-comments-p`);
+            pNumberComments.innerHTML = eventData.comments.length + " comments ";
+            divParticipantsAndCommentsContainer.appendChild(pNumberComments);
+
+            divEventContainer.appendChild(divParticipantsAndCommentsContainer);
+
+            divEventContainer.addEventListener('click', function(){
+                showEventDetails(eventData);
+            });
 
             eventsContainer.appendChild(divEventContainer);
         }

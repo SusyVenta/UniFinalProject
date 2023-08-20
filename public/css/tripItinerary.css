@@ -80,10 +80,18 @@ p{
     padding: 2px;
 }
 
-.event-dates, .event-status{
-    font-size: small;
-}
-
 .event-title{
     font-weight: bold;
+}
+
+.participants-comments-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: fit-content;
+}
+
+.event-dates, .event-status, .number-participants-p, .number-comments-p{
+    font-size: small;
 }
