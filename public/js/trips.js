@@ -88,7 +88,7 @@ function deleteTrip(item){
 };
 
 function redirectTripView(element, tripId){
-  window.location.href = `/trips/${tripId}`;
+  window.location.href = `/trips/${tripId}/participants`;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

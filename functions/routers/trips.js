@@ -58,10 +58,53 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
     }
   });
 
-  router.get("/:id", async(request, response) => {
+  router.get("/:id/participants", async(request, response) => {
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
-      let templatePath = path.join(__dirname, '..',"views/trip.ejs");
+      let templatePath = path.join(__dirname, '..',"views/tripParticipants.ejs");
+
+      if(userSessionDetails.userSessionDetails !== null){
+        let tripID = request.params.id;
+        let tripDetails = await db.tripQueries.getTripByID(tripID);
+        let commonDateRanges = new TimeUtils().commonDateRanges(tripDetails.datesPreferences);
+        let uid = userSessionDetails.userSessionDetails.uid;
+        let profileDetails = await db.userQueries.getUserDetails(uid);
+        let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
+
+        if (tripDetails.participantsStatus.hasOwnProperty(uid)){
+          let payload = {
+            name: userSessionDetails.userSessionDetails.name, 
+            trip: tripDetails,
+            userIsAuthenticated: true,
+            moment: moment,
+            userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(request.params.id),
+            commonAvailabilities: commonDateRanges,
+            userID: uid,
+            profileDetails: profileDetails,
+            friendsProfiles: friendsProfiles,
+            tripID: tripID
+          };
+  
+          return response.status(200).render(templatePath, payload);
+        } else {
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/trips');
+        }
+      } else {
+        let sessionCookie = request.cookies.__session;
+        response.cookie("__session", sessionCookie);
+        return response.status(302).redirect('/trips');
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
+  router.get("/:id/itinerary", async(request, response) => {
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+      let templatePath = path.join(__dirname, '..',"views/tripItinerary.ejs");
 
       if(userSessionDetails.userSessionDetails !== null){
         let tripID = request.params.id;
@@ -169,6 +212,37 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
             return response.status(200).send("Modified trip");
           } catch (e){
             console.log(e.message);
+            return response.status(500).send(e.message);
+          }
+        } else {
+          return response.status(302).redirect('/auth/login');
+        }
+        
+      } else {
+        return response.status(302).redirect('/auth/login');
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
+  router.post("/:tripId/itinerary", async(request, response) => {
+    // Creates new event in the trip itinerary
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        let uid = userSessionDetails.userSessionDetails.uid;
+        let tripID = request.params.tripId;
+
+        let tripDetails = await db.tripQueries.getTripByID(tripID);
+        if (tripDetails.participantsStatus.hasOwnProperty(uid)){
+          try {
+            await db.tripItineraryQueries.createEvent(tripID, request.body, uid);
+
+            return response.status(200).send("Created new trip event");
+          } catch (e){
+
             return response.status(500).send(e.message);
           }
         } else {

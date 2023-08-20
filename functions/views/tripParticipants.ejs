@@ -18,7 +18,8 @@
   <link rel="stylesheet" href="/css/generic.css">
   <link rel="stylesheet" href="/css/footer.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-  <link rel="stylesheet" href="/css/trip.css">
+  <link rel="stylesheet" href="/css/tripCommon.css">
+  <link rel="stylesheet" href="/css/tripParticipants.css">
 
   <!-- JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -29,7 +30,8 @@
   <!-- Tom Select -->
   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
-  <script src="/js/trip.js"></script>
+  <script src="/js/tripCommon.js"></script>
+  <script src="/js/tripParticipants.js"></script>
 </head>
 
 <body>
@@ -54,16 +56,16 @@
       <!-- tab names -->
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#participants-tab" data-bs-toggle="tab">Participants</a>
+          <a class="nav-link active" aria-current="page" href="/trips/<%= trip.tripID %>/participants" >Participants</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#itinerary" data-bs-toggle="tab" data-bs-toggle="tab">Itinerary</a>
+          <a class="nav-link" href="/trips/<%= trip.tripID %>/itinerary" >Itinerary</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#polls" data-bs-toggle="tab" data-bs-toggle="tab">Polls</a>
+          <a class="nav-link" href="/trips/<%= trip.tripID %>/polls" >Polls</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#settings" data-bs-toggle="tab" data-bs-toggle="tab">Settings</a>
+          <a class="nav-link" href="/trips/<%= trip.tripID %>/settings" >Settings</a>
         </li>
       </ul>
       <!-- tab content -->
@@ -246,15 +248,6 @@
               <%} %>
             <% }); %>
           </div>
-        </div>
-        <div id="itinerary" class="tab-pane fade">
-          <p>Itinerary: </p>
-        </div>
-        <div id="polls" class="tab-pane fade">
-          <p>Polls: </p>
-        </div>
-        <div id="settings" class="tab-pane fade">
-          <p>Settings: </p>
         </div>
     </div>
   </div>

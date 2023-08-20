@@ -1,0 +1,50 @@
+#itinerary-tab{
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+}
+
+#itinerary-tab > *{
+    margin-top: 2%;
+}
+
+#finalized-dates{
+    /* draws dotted line */ 
+    border: 3px dotted #bbb;
+    padding: 2%;
+}
+
+/* new event modal -------------------------------------------------------------------------------*/
+/* event type drop down ----------------------*/
+
+.modal-content{
+    padding: 2%;
+    padding-right: 4%;
+}
+
+.modal-body > *{
+    margin-top: 1%;
+}
+
+.dropdown.date-collection-type{
+    max-width: 100%;
+}
+
+.event-dates-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.event-dates-container :nth-child(2) {
+    margin-left: 2%;
+}
+
+
+/* phone view */
+@media only screen and (max-width: 600px) {
+    .event-dates-container :nth-child(2) {
+        margin-left: 0%;
+    }
+}

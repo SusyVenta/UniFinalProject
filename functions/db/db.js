@@ -1,5 +1,6 @@
 import { getFirestore, FieldValue, FieldPath } from 'firebase-admin/firestore';
 import { TripQueries } from './queries/trips.js';
+import { TripItineraryQueries } from './queries/tripItinerary.js';
 import { UserQueries } from './queries/users.js';
 import { SettingsQueries } from './queries/settings.js';
 import { NotificationsQueries } from './queries/notifications.js';
@@ -20,6 +21,7 @@ export class Database{
         this.notificationsQueries = new NotificationsQueries(this);
         this.userQueries = new UserQueries(this);
         this.tripQueries = new TripQueries(this);
+        this.tripItineraryQueries = new TripItineraryQueries(this);
         this.settingsQueries = new SettingsQueries(this);
     }
 
@@ -38,8 +40,18 @@ export class Database{
         // creates document with content in the specified collection.
         // If the collection doesn't exist, it creates it.
         // document ID is assigned automatically and returned
-        let tripsCollection = await this.db.collection(collectionName);
-        let addedDoc = await tripsCollection.add(dataToAdd);
+        let collection = await this.db.collection(collectionName);
+        let addedDoc = await collection.add(dataToAdd);
+        
+        let addedDocID = addedDoc["_path"]["segments"][1];
+        return addedDocID;
+    }
+
+    async createDocumentWithDataInSubCollection(collectionName, docID, subcollectionName, dataToAdd){
+        // creates document with content in a subcollection within the specified collection and document.
+        // If the subcollection doesn't exist, it creates it.
+        // document ID is assigned automatically and returned
+        let addedDoc = await this.db.collection(collectionName).doc(docID).collection(subcollectionName).add(dataToAdd);
         
         let addedDocID = addedDoc["_path"]["segments"][1];
         return addedDocID;

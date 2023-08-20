@@ -37,7 +37,7 @@ export class NotificationsQueries{
             trip_invite_received: {
                 data: {
                     message: "%SENDER% sent you a request to join their trip '%TRIPTITLE%'",
-                    URL: "/trips/%TRIPID%",
+                    URL: "/trips/%TRIPID%/participants",
                     senderUID: "%SENDERID%",
                     notification_id: "trip_invite_received_%TRIPID%",
                     notificationType: "trip_invite_received"
@@ -47,7 +47,7 @@ export class NotificationsQueries{
             trip_invite_accepted: {
                 data: {
                     message: "%SENDER% accepted the invitation to join your trip '%TRIPTITLE%'",
-                    URL: "/trips/%TRIPID%",
+                    URL: "/trips/%TRIPID%/participants",
                     senderUID: "%SENDERID%",
                     notification_id: "trip_invite_accepted_%TRIPID%",
                     notificationType: "trip_invite_accepted"
@@ -57,7 +57,7 @@ export class NotificationsQueries{
             trip_invite_rejected: {
                 data: {
                     message: "%SENDER% declined the invitation to join your trip '%TRIPTITLE%'",
-                    URL: "/trips/%TRIPID%",
+                    URL: "/trips/%TRIPID%/participants",
                     senderUID: "%SENDERID%",
                     notification_id: "trip_invite_rejected_%TRIPID%",
                     notificationType: "trip_invite_rejected"
@@ -67,7 +67,7 @@ export class NotificationsQueries{
             trip_must_choose_dates: {
                 data: {
                     message: "Please enter your availabilities for the trip '%TRIPTITLE%'",
-                    URL: "/trips/%TRIPID%",
+                    URL: "/trips/%TRIPID%/participants",
                     senderUID: "%SENDERID%",
                     notification_id: "trip_must_choose_dates_%TRIPID%",
                     notificationType: "trip_must_choose_dates"
@@ -77,7 +77,7 @@ export class NotificationsQueries{
             trip_cannot_choose_dates: {
                 data: {
                     message: "The owner of your trip '%TRIPTITLE%' wants you to confirm your availability on the set dates or leave the trip.",
-                    URL: "/trips/%TRIPID%",
+                    URL: "/trips/%TRIPID%/participants",
                     senderUID: "%SENDERID%",
                     notification_id: "trip_cannot_choose_dates_%TRIPID%",
                     notificationType: "trip_cannot_choose_dates"
@@ -87,7 +87,7 @@ export class NotificationsQueries{
             trip_dates_can_be_chosen: {
                 data: {
                     message: "All participants of your trip '%TRIPTITLE%' have entered their dates availabilities. Please choose the trip final dates",
-                    URL: "/trips/%TRIPID%",
+                    URL: "/trips/%TRIPID%/participants",
                     senderUID: "%SENDERID%",
                     notification_id: "trip_dates_can_be_chosen_%TRIPID%",
                     notificationType: "trip_dates_can_be_chosen"
