@@ -1,3 +1,8 @@
+p{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
 #itinerary-tab{
     display: flex;
     flex-direction: column;
@@ -47,4 +52,38 @@
     .event-dates-container :nth-child(2) {
         margin-left: 0%;
     }
+}
+
+/* event divs --------------------------------------------------------------------------------------*/
+.event-container{
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+    padding: 1%;
+}
+
+.event-container > * {
+    margin-top: 5px;
+}
+
+.event-type-title-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: fit-content;
+}
+
+.listed-event-event-type{
+    background-color: aquamarine;
+    width: fit-content;
+    padding: 2px;
+}
+
+.event-dates, .event-status{
+    font-size: small;
+}
+
+.event-title{
+    font-weight: bold;
 }

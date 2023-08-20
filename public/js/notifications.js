@@ -28,7 +28,8 @@ function getUserNotifications(userID){
 
     https://firebase.google.com/docs/firestore/query-data/listen
 
-    This function is called in the footer partial
+    This file is imported in sharedHead partial.
+    This function is called in the footer partial.
     */
     let notificationsDropDown = document.getElementById("notifications-dropdown");
 

@@ -23,6 +23,12 @@ service cloud.firestore {
     match /trips/{trip} {
       allow read: if isAuthenticated() && isOneOfRoles(resource, ['owner', 'collaborator', 'pending']);
       allow write: if false; // don't allow write operations
+
+      // Explicitly define rules for the 'events' subcollection
+      match /events/{eventId} {
+          allow read: if isAuthenticated() && isOneOfRoles(get(/databases/$(database)/documents/trips/$(trip)), ['owner', 'collaborator', 'pending']); 
+          allow write: if false; // don't allow write operations
+      }
     }
   }
 }

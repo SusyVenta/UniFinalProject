@@ -63,3 +63,69 @@ function showAddEventModal(){
         }
       });
   };
+
+  
+function getTripEvents(tripID){
+    /* 
+    Gets data for currently authenticates user in real time. 
+    Whenever anything changes in this document, data is pushed to the client.
+    Updates events as they're added or removed
+
+    https://firebase.google.com/docs/firestore/query-data/listen
+    */
+    let eventsContainer = document.getElementById("events-container");
+
+    
+    db.collection(`trips`).doc(tripID).collection("events").onSnapshot((querySnapshot) => {
+        let allEvents = [];
+
+        querySnapshot.forEach((doc) => {
+            let data = doc.data();
+            data.docID = doc.id;
+            allEvents.push(data);
+        });
+
+        allEvents.sort(function(a,b){
+            // Sort ascending (oldest to newest). To get descending, swap a and b below
+            return a.startDatetime.toDate() - b.startDatetime.toDate();
+        });
+
+        // remove previous events
+        eventsContainer.innerHTML = "";
+
+        for (let eventData of allEvents){
+            // create div for the event
+            let divEventContainer = document.createElement("div");
+            divEventContainer.setAttribute("class", `event-container`);
+            divEventContainer.setAttribute("id", eventData.docID);
+
+            let divEventTitleAndTypeContainer = document.createElement("div");
+            divEventTitleAndTypeContainer.setAttribute("class", `event-type-title-container`);
+
+            let divEventCategory = document.createElement("p");
+            divEventCategory.setAttribute("class", `listed-event-event-type`);
+            divEventCategory.innerHTML = eventData.eventType;
+
+            let pEventTitle = document.createElement("p");
+            pEventTitle.setAttribute("class", `event-title`);
+            pEventTitle.innerHTML = eventData.title;
+
+            divEventTitleAndTypeContainer.appendChild(pEventTitle);
+            divEventTitleAndTypeContainer.appendChild(divEventCategory);
+            divEventContainer.appendChild(divEventTitleAndTypeContainer);
+
+            let pEventDates = document.createElement("p");
+            pEventDates.setAttribute("class", `event-dates`);
+            pEventDates.innerHTML = moment(eventData.startDatetime.toDate()).format("DD MMM YYYY hh:mm A") + " - " + moment(eventData.endDatetime.toDate()).format("DD MMM YYYY hh:mm A");
+            divEventContainer.appendChild(pEventDates);
+
+            let eventStatus = document.createElement("p");
+            eventStatus.setAttribute("class", `event-status`);
+            eventStatus.innerHTML = "Status: " + eventData.status;
+            divEventContainer.appendChild(eventStatus);
+
+            eventsContainer.appendChild(divEventContainer);
+        }
+        
+    });
+}

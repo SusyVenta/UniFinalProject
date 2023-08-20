@@ -90,6 +90,9 @@
           <div>
             <button class="btn btn-secondary" onclick="showAddEventModal();">Add event</a>
           </div>
+          <div id="events-container">
+
+          </div>
         </div>
       </div>
     </div>
@@ -224,7 +227,7 @@
       </div>
     </div>
   </section>
-
+  <!-- date pickers listeners --------------------------------------------------------------------->
   <script>
     $(function() {
       $('#new-event-availability-start').daterangepicker({
@@ -261,6 +264,13 @@
 
       document.getElementById("new-event-availability-end").value = newValue;
     });
+  </script>
+
+  <!-- trip event listeners -->
+  <script>
+    // get live notifications
+    let tripID = '<%= trip.tripID %>'; 
+    getTripEvents(tripID);
   </script>
   
   <%- include('partials/footer'); %>
