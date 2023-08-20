@@ -1,10 +1,28 @@
-function showAddEventModal(){
+function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
     /* 
     When user clicks on 'Add event' button, opens the modal to carry out this action.
-    Inside the modal, initialize multiselect searchable dropdown menu to add friends
+    Inside the modal, initialize multiselect searchable dropdown menu to add friends.
+
+    tripParticipants: {<uid>: <owner / collaborator / pending>, ..}
     */
     $('#new-event-modal').show();
-    
+
+    let participants = JSON.parse(tripParticipants);
+    let friendsProfiles = JSON.parse(friendsProfilesIn);
+
+    // <option value="<%= friendUid %>"><%= friendProfile.username %></option>
+    let options = [];
+
+    for (const [uid, status] of Object.entries(participants)) {
+        let username = "";
+        if(uid == userID){
+            username = 'you'
+        }else{
+            username = friendsProfiles[uid].username;
+        }
+        options.push({value: uid, text: username})
+    }
+
     try{
         // render searchable select used to add friends to trip
         // https://stackoverflow.com/questions/69530889/adding-bootstrap-5-search-bar-dropdown
@@ -12,15 +30,15 @@ function showAddEventModal(){
         new TomSelect("#new-trip-event-multiselect-friends", {
             plugins: ['remove_button'],
             create: true,
+            labelField: 'text', // name displayed when element is selected
+            searchField: 'text', // name displayed in the search bar
+            valueField: 'value', // actual value that is sent to the backend below
             onItemAdd: function() {
-            this.setTextboxValue('');
-            this.refreshOptions();
+                this.setTextboxValue('');
+                this.refreshOptions();
             },
-            render: {
-            item: function(data, escape) {
-                return '<div>' + escape(data.text) + '</div>';
-            }
-            }
+            options: options,
+            items: Object.keys(participants) // initially selected items. specified by ID (valueField)
         });
     }catch(e){
         if(e.message != "Tom Select already initialized on this element"){
@@ -44,7 +62,8 @@ function showAddEventModal(){
         address: document.getElementById("new-event-address").value,
         description: document.getElementById("new-event-description").value,
         askParticipantsIfTheyJoin: document.getElementById("new-event-ask-participation-confirmation").checked,
-        status: document.getElementById("event-status").innerHTML
+        status: document.getElementById("event-status").innerHTML,
+        comments: []
     }
 
     $.ajax({

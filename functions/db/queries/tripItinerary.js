@@ -85,7 +85,13 @@ export class TripItineraryQueries{
             sanitizedDataToAdd.status = false;
         }
 
-        console.log(JSON.stringify(sanitizedDataToAdd));
+        // comments
+        if (dataToAdd.hasOwnProperty('comments')){
+            sanitizedDataToAdd.comments = comments;
+        }else{
+            sanitizedDataToAdd.comments = [];
+        }
+
         return await this.parent.createDocumentWithDataInSubCollection("trips", tripID, "events", sanitizedDataToAdd);
     }
 };

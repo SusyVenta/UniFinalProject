@@ -88,7 +88,7 @@
             <%} %>
           </div>
           <div>
-            <button class="btn btn-secondary" onclick="showAddEventModal();">Add event</a>
+            <button class="btn btn-secondary" onclick="showAddEventModal('<%= JSON.stringify(trip.participantsStatus) %>', '<%= JSON.stringify(friendsProfiles) %>', '<%= userID %>');">Add event</a>
           </div>
           <div id="events-container">
 
@@ -182,11 +182,7 @@
 
             <!-- add friends to event -->
             <label for="new-trip-event-multiselect-friends" class="form-label">Participants: </label>
-            <select id="new-trip-event-multiselect-friends" multiple placeholder="Add friends">
-              <% for (let friendUid of friendshipsAccepted) { %>
-                <% var friendProfile = friendsProfiles[friendUid] %>
-                <option value="<%= friendUid %>"><%= friendProfile.username %></option>
-              <% } %> 
+            <select id="new-trip-event-multiselect-friends" multiple placeholder="">
             </select>
 
             <!-- ask participants if they will join -->
