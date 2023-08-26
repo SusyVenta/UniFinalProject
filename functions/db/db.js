@@ -68,6 +68,14 @@ export class Database{
         await docRef.update(dataToAdd);
     }
 
+    async deleteDocumentInSubcollection(collectionName, docID, subcollectionName, subcollectionID){
+        // deletes document in sub collection
+        let docRef = await this.db.collection(collectionName).doc(docID)
+                    .collection(subcollectionName).doc(subcollectionID);
+        
+        await docRef.delete();
+    }
+
     async createDocumentWithDataSpecifyDocID(collectionName, docID, dataToAdd){
         // adds document to the specified collection
         // If the collection doesn't exist, it creates it.

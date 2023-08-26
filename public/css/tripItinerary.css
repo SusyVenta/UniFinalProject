@@ -31,6 +31,10 @@ p{
     margin-top: 1%;
 }
 
+.modal-footer{
+    justify-content: space-between;
+}
+
 .dropdown.date-collection-type{
     max-width: 100%;
 }
@@ -110,6 +114,6 @@ p{
     font-size: small;
 }
 
-#hidden-friends-profiles, #hidden-user-uid, #hidden-trip-participants{
+#hidden-friends-profiles, #hidden-user-uid, #hidden-trip-participants, #hidden-trip-id{
     visibility: hidden;
 }

@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 
 export class TripItineraryQueries{
     constructor(parentClass){
@@ -96,5 +94,10 @@ export class TripItineraryQueries{
             return await this.parent.updateDocumentWithDataInSubCollection("trips", tripID, "events", eventID, sanitizedDataToAdd);
         }
         
+    }
+
+    async removeTripEvent(tripID, eventID){
+        // removes trip event from trip
+        this.parent.deleteDocumentInSubcollection("trips", tripID, "events", eventID);
     }
 };

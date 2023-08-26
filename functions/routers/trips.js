@@ -289,5 +289,38 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
     }
   });
 
+  router.delete("/:tripId/itinerary/:eventID", async(request, response) => {
+    // Deletes trip itinerary event
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        let uid = userSessionDetails.userSessionDetails.uid;
+        let tripID = request.params.tripId;
+        let eventID = request.params.eventID;
+
+        let tripDetails = await db.tripQueries.getTripByID(tripID);
+        if (tripDetails.participantsStatus.hasOwnProperty(uid)){
+          try {
+            // delete trip document and all dependencies
+            await db.tripItineraryQueries.removeTripEvent(tripID, eventID);
+
+            return response.status(200).send("Deleted trip event");
+          } catch (e){
+
+            return response.status(500).send(e.message);
+          }
+        } else {
+          return response.status(302).redirect('/auth/login');
+        }
+        
+      } else {
+        return response.status(302).redirect('/auth/login');
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
   return router;
 };

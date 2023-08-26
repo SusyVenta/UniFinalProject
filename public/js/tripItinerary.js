@@ -49,9 +49,26 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
         }
     }
 
-  };
+};
 
-  function showEventDetails(eventData){
+function deleteEvent(tripID, eventID){
+    $.ajax({
+        url: `/trips/` + tripID + "/itinerary/" + eventID,
+        method: "DELETE",
+        xhrFields: {
+          withCredentials: true
+        },
+        success: function() {   
+          // if successful call, reload page
+          location.reload();  
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+          alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+        }
+    });
+}
+
+function showEventDetails(eventData){
     let eventID = eventData.docID;
 
     // clone new-event-modal
@@ -169,10 +186,30 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
         "onclick", 
         `saveEvent('${saveButton.name}', '${eventID}');`);
 
+    // add delete event button
+    let deleteEventButton = document.createElement("button");
+    deleteEventButton.setAttribute("class", `btn btn-secondary`);
+    deleteEventButton.setAttribute("type", `button`);
+    deleteEventButton.setAttribute("id", `${eventID}-event-delete-button`);
+    deleteEventButton.innerHTML = "Delete event";
+
+    let tripID = document.getElementById("hidden-trip-id").innerHTML.trim();
+    deleteEventButton.addEventListener(
+        "click", 
+        function(){
+            // opens pop up with OK or Cancel buttons
+            if (confirm("Are you sure you want to remove this trip event?")) {
+                deleteEvent(tripID, eventID);
+            }
+        }
+    );
+    let deleteEventContainer = document.getElementById(`${eventID}-event-modal-footer-left`);
+    deleteEventContainer.appendChild(deleteEventButton);
+
     $(`#${newDivID}`).show();
-  }
+}
   
-  function saveEvent(tripID, eventID=null){
+function saveEvent(tripID, eventID=null){
     /* Calls API endpoint to add friends to trip */
     let idPart = `${eventID}-`;
     if (eventID === null){
@@ -215,9 +252,8 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
           alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
         }
       });
-  };
-
-  
+};
+ 
 function getTripEvents(tripID){
     /* 
     Gets data for currently authenticates user in real time. 
