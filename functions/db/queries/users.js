@@ -108,11 +108,15 @@ export class UserQueries{
     }
 
     async getFriendsProfiles(userData){
-        /* userData: content of document for UID */
+        /* userData: content of document for UID 
+        Because of EJS rendering problems (URLs), removes user notifications 
+        */
         let friendsProfiles = {};
 
         for (const [uid, value] of Object.entries(userData.friends)){
-            friendsProfiles[uid] = await this.getUserDetails(uid);
+            let userDetails = await this.getUserDetails(uid);
+            delete userDetails["notifications"];
+            friendsProfiles[uid] = userDetails;
         } 
         return friendsProfiles;
     }

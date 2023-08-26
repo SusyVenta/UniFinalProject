@@ -32,7 +32,7 @@ function addFriendsToTrip(){
   let control = select.tomselect;
   let selectedItems = control.items;
   let askAllParticipantsDates = document.getElementById("askAllParticipantsDates").value;
-  let tripID = (window.location.href).split("/").at(-1);
+  let tripID = (window.location.href).split("/").at(-2);
 
   if( selectedItems.length > 0){
     let payload = { 

@@ -5,6 +5,8 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
 
     tripParticipants: {<uid>: <owner / collaborator / pending>, ..}
     */
+   console.log(tripParticipants);
+   console.log(friendsProfilesIn);
     $('#new-event-modal').show();
 
     let participants = JSON.parse(tripParticipants);

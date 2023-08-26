@@ -181,7 +181,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
     }
   });
 
-  router.post("/:id", async(request, response) => {
+  router.post("/:tripId/participants", async(request, response) => {
     // Modifies trip details
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}

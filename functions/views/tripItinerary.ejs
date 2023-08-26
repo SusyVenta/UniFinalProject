@@ -88,7 +88,7 @@
             <%} %>
           </div>
           <div>
-            <button class="btn btn-secondary" onclick="showAddEventModal('<%= JSON.stringify(trip.participantsStatus) %>', '<%= JSON.stringify(friendsProfiles) %>', '<%= userID %>');">Add event</a>
+            <button class="btn btn-secondary" onclick="showAddEventModal('<%= JSON.stringify(trip.participantsStatus) %>', '<%= JSON.stringify(friendsProfiles) %>', '<%= userID %>');">Add event</button>
           </div>
           <div id="events-container">
 
@@ -155,14 +155,14 @@
               <div id="date-availability-1" class="date-availability-container">
                 <div class="event-dates-container">
                   <div class="label-and-input-container-start-date">
-                    <label for="new-event-availability-1" class="form-label">Start datetime:</label>
+                    <p >Start datetime:</p>
                     <div class="form-control" >
                       <i class="fa fa-calendar"></i>
                       <input class="form-control" id="new-event-availability-start" type="text" name="daterange"/>
                     </div>
                   </div>
                   <div class="label-and-input-container-end-date">
-                    <label for="new-event-availability-1" class="form-label">End datetime:</label>
+                    <p >End datetime:</p>
                     <div class="form-control" >
                       <i class="fa fa-calendar"></i>
                       <input class="form-control" id="new-event-availability-end" type="text" name="daterange"/>
