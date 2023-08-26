@@ -128,20 +128,23 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
     
     // event participants 
     let friendsProfiles = JSON.parse(document.getElementById("hidden-friends-profiles").innerHTML);
+    let tripParticipants = JSON.parse(document.getElementById("hidden-trip-participants").innerHTML);
     let userUID = document.getElementById("hidden-user-uid").innerHTML.trim();
     // [value: <uid>, text: <username>]
     let options = [];
- 
-    for (let participantUID of eventData.participants){
+    
+    for (const [participantUID, status] of Object.entries(tripParticipants)) {
         if(participantUID == userUID){
             options.push({value: participantUID, text: "you"})
         } else {
             options.push({value: participantUID, text: friendsProfiles[participantUID].username})
         }
     }
+
     try{
         // render prepopulated searchable select showing existing event participants
-        new TomSelect(`#${eventID}-new-trip-event-multiselect-friends`, {
+        let tomElement = document.getElementById(`${eventID}-new-trip-event-multiselect-friends`);
+        new TomSelect(tomElement, {
             plugins: ['remove_button'],
             create: true,
             labelField: 'text', // name displayed when element is selected
@@ -156,33 +159,49 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
         });
     }catch(e){
         if(e.message != "Tom Select already initialized on this element"){
-            alert(e.message);
+            alert("Tom select error\n" + e.message);
         }
     }
+
+    // change save function
+    let saveButton = document.getElementById(`${eventID}-new-event-create-button`);
+    saveButton.setAttribute(
+        "onclick", 
+        `saveEvent('${saveButton.name}', '${eventID}');`);
 
     $(`#${newDivID}`).show();
   }
   
-  function saveEvent(tripID){
+  function saveEvent(tripID, eventID=null){
     /* Calls API endpoint to add friends to trip */
-    let select = document.getElementById('new-trip-event-multiselect-friends');
+    let idPart = `${eventID}-`;
+    if (eventID === null){
+        idPart = '';
+    }
+    
+    let select = document.getElementById(`${idPart}new-trip-event-multiselect-friends`);
     let control = select.tomselect;
 
     let payload = {
         participants: control.items,
-        eventType: document.getElementById("event-type").innerHTML,
-        title: document.getElementById("new-event-title").value,
-        startDatetime: document.getElementById("new-event-availability-start").value,
-        endDatetime: document.getElementById("new-event-availability-end").value,
-        address: document.getElementById("new-event-address").value,
-        description: document.getElementById("new-event-description").value,
-        askParticipantsIfTheyJoin: document.getElementById("new-event-ask-participation-confirmation").checked,
-        status: document.getElementById("event-status").innerHTML,
+        eventType: document.getElementById(`${idPart}event-type`).innerHTML,
+        title: document.getElementById(`${idPart}new-event-title`).value,
+        startDatetime: document.getElementById(`${idPart}new-event-availability-start`).value,
+        endDatetime: document.getElementById(`${idPart}new-event-availability-end`).value,
+        address: document.getElementById(`${idPart}new-event-address`).value,
+        description: document.getElementById(`${idPart}new-event-description`).value,
+        askParticipantsIfTheyJoin: document.getElementById(`${idPart}new-event-ask-participation-confirmation`).checked,
+        status: document.getElementById(`${idPart}event-status`).innerHTML,
         comments: []
     }
 
+    let urlEnd = eventID;
+    if (eventID === null){
+        urlEnd = "new";
+    }
+
     $.ajax({
-        url: `/trips/` + tripID + "/itinerary",
+        url: `/trips/` + tripID + "/itinerary/" + urlEnd,
         method: "POST",
         xhrFields: {
           withCredentials: true

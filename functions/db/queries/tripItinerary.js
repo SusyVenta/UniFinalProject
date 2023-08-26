@@ -6,8 +6,8 @@ export class TripItineraryQueries{
         this.parent = parentClass;
     };
 
-    async createEvent(tripID, dataToAdd, uid){
-        // adds document to trip collection 'events'
+    async createOrModifyEvent(tripID, dataToAdd, eventID=null){
+        // if eventID is null, adds document to trip collection 'events'. Otherwise modifies existing event.
         // If the collection doesn't exist, it creates it.
         let sanitizedDataToAdd = {};
 
@@ -91,7 +91,12 @@ export class TripItineraryQueries{
         }else{
             sanitizedDataToAdd.comments = [];
         }
-
-        return await this.parent.createDocumentWithDataInSubCollection("trips", tripID, "events", sanitizedDataToAdd);
+        
+        if (eventID === null){
+            return await this.parent.createDocumentWithDataInSubCollection("trips", tripID, "events", sanitizedDataToAdd);
+        } else {
+            return await this.parent.updateDocumentWithDataInSubCollection("trips", tripID, "events", eventID, sanitizedDataToAdd);
+        }
+        
     }
 };

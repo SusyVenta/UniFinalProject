@@ -97,6 +97,9 @@
         <div id="hidden-friends-profiles">
           <%= JSON.stringify(friendsProfiles) %>
         </div>
+        <div id="hidden-trip-participants">
+          <%= JSON.stringify(trip.participantsStatus) %>
+        </div>
         <div id="hidden-user-uid">
           <%= userID %>
         </div>
@@ -116,7 +119,7 @@
           <div class="modal-body">
 
             <!-- dropdown event type -->
-            <label for="event-type" class="form-label">Event type: </label>
+            <p>Event type: </p>
             <div class="dropdown event-type" id="event-type-container">
               <button 
                   class="btn btn-secondary dropdown-toggle" 
@@ -153,7 +156,7 @@
             </div>
 
             <!-- name / description -->
-            <label for="new-event-title" class="form-label">Name / Description</label>
+            <p>Name / Description</p>
             <input autocomplete="one-time-code" class="form-control" id="new-event-title" required=true >
 
             <!-- start and end datetimes -->
@@ -179,25 +182,27 @@
             </div>
 
             <!-- address -->
-            <label for="new-event-address" class="form-label">Address</label>
+            <p>Address</p>
             <input autocomplete="one-time-code" class="form-control" id="new-event-address" required=false >
 
             <!-- description & notes -->
-            <label for="new-event-address" class="form-label">Description & Notes</label>
+            <p>Description & Notes</p>
             <textarea autocomplete="one-time-code" class="form-control" id="new-event-description" required=false ></textarea>
 
             <!-- add friends to event -->
-            <label for="new-trip-event-multiselect-friends" class="form-label">Participants: </label>
+            <p>Participants: </p>
             <select id="new-trip-event-multiselect-friends" multiple placeholder="">
             </select>
 
             <!-- ask participants if they will join -->
-            <input  class="form-check-input" type="checkbox" id="new-event-ask-participation-confirmation">
-            <label for="new-event-ask-participation-confirmation">Ask participants if they will join</label><br><br>
-
+            <div class="ask-event-participation-input-container">
+              <input  class="form-check-input" type="checkbox" id="new-event-ask-participation-confirmation">
+              <p>Ask participants if they will join</p>
+            </div>
+            
             <!-- dropdown event type -->
             <div class="dropdown event-type" id="event-status-container">
-              <label for="event-status" class="form-label">Event status: </label>
+              <p>Event status: </p>
               <button 
                   class="btn btn-secondary dropdown-toggle" 
                   type="button" id="event-status" 
@@ -226,7 +231,7 @@
           </div>
           <div class="modal-footer" id="new-event-modal-footer">
             <button id="new-event-cancel-button" type="button" class="btn btn-secondary" onclick="$('#new-event-modal').hide();">Cancel</button>
-            <button id="new-event-create-button" type="submit" class="btn btn-secondary" onclick="saveEvent('<%= trip.tripID %>');">Save</button>
+            <button id="new-event-create-button" type="submit" class="btn btn-secondary" name='<%= trip.tripID %>' onclick="saveEvent('<%= trip.tripID %>');">Save</button>
           </div>
         </div>
       </div>

@@ -226,7 +226,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
     }
   });
 
-  router.post("/:tripId/itinerary", async(request, response) => {
+  router.post("/:tripId/itinerary/new", async(request, response) => {
     // Creates new event in the trip itinerary
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
@@ -238,9 +238,41 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         let tripDetails = await db.tripQueries.getTripByID(tripID);
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
           try {
-            await db.tripItineraryQueries.createEvent(tripID, request.body, uid);
+            await db.tripItineraryQueries.createOrModifyEvent(tripID, request.body);
 
             return response.status(200).send("Created new trip event");
+          } catch (e){
+
+            return response.status(500).send(e.message);
+          }
+        } else {
+          return response.status(302).redirect('/auth/login');
+        }
+        
+      } else {
+        return response.status(302).redirect('/auth/login');
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
+  router.post("/:tripId/itinerary/:eventID", async(request, response) => {
+    // Modifies trip itinerary event
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        let uid = userSessionDetails.userSessionDetails.uid;
+        let tripID = request.params.tripId;
+        let eventID = request.params.eventID;
+
+        let tripDetails = await db.tripQueries.getTripByID(tripID);
+        if (tripDetails.participantsStatus.hasOwnProperty(uid)){
+          try {
+            await db.tripItineraryQueries.createOrModifyEvent(tripID, request.body, eventID);
+
+            return response.status(200).send("Updated trip event");
           } catch (e){
 
             return response.status(500).send(e.message);

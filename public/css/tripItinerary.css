@@ -46,6 +46,20 @@ p{
     margin-left: 2%;
 }
 
+.ask-event-participation-input-container{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.ask-event-participation-input-container > p{
+    margin-left: 1%;
+}
+
+.dropdown.event-type > button, .label-and-input-container-start-date > div,
+.label-and-input-container-end-date > div{
+    margin-top: 1%;
+}
 
 /* phone view */
 @media only screen and (max-width: 600px) {
@@ -96,6 +110,6 @@ p{
     font-size: small;
 }
 
-#hidden-friends-profiles, #hidden-user-uid{
+#hidden-friends-profiles, #hidden-user-uid, #hidden-trip-participants{
     visibility: hidden;
 }

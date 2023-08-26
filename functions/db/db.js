@@ -57,6 +57,17 @@ export class Database{
         return addedDocID;
     }
 
+    async updateDocumentWithDataInSubCollection(collectionName, docID, subcollectionName, 
+                                                subcollectionID, dataToAdd){
+        // creates document with content in a subcollection within the specified collection and document.
+        // If the subcollection doesn't exist, it creates it.
+        // document ID is assigned automatically and returned
+        let docRef = await this.db.collection(collectionName).doc(docID)
+                    .collection(subcollectionName).doc(subcollectionID);
+        
+        await docRef.update(dataToAdd);
+    }
+
     async createDocumentWithDataSpecifyDocID(collectionName, docID, dataToAdd){
         // adds document to the specified collection
         // If the collection doesn't exist, it creates it.
