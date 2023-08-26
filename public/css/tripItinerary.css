@@ -95,3 +95,7 @@ p{
 .event-dates, .event-status, .number-participants-p, .number-comments-p{
     font-size: small;
 }
+
+#hidden-friends-profiles, #hidden-user-uid{
+    visibility: hidden;
+}

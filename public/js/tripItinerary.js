@@ -5,14 +5,12 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
 
     tripParticipants: {<uid>: <owner / collaborator / pending>, ..}
     */
-   console.log(tripParticipants);
-   console.log(friendsProfilesIn);
     $('#new-event-modal').show();
 
     let participants = JSON.parse(tripParticipants);
     let friendsProfiles = JSON.parse(friendsProfilesIn);
 
-    // <option value="<%= friendUid %>"><%= friendProfile.username %></option>
+    // [value: <uid>, text: <username>]
     let options = [];
 
     for (const [uid, status] of Object.entries(participants)) {
@@ -79,7 +77,6 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
             child.setAttribute("id", eventID + "-" + child.id);
         }
     }
-    console.log(selectedEventModal);
 
     // add to page body 
     document.body.appendChild(selectedEventModal);
@@ -87,19 +84,82 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
     // reset title
     document.getElementById(eventID + "-new-event-modal-title").innerHTML = eventData.title;
     document.getElementById(eventID + "-new-event-modal-close-button").setAttribute("onclick", `$('#${newDivID}').hide();`);
-    document.getElementById(eventID + "-event-type").value = eventData.eventType;
-    let eventTypeOptions = document.querySelectorAll(`[id^="${newDivID}-event-type-option"]`);
+    
+    document.getElementById(eventID + "-event-type").innerHTML = eventData.eventType;
+    let eventTypeOptions = document.querySelectorAll(`[id^="${eventID}-event-type-option"]`);
     for (let eventTypeOption of eventTypeOptions){
-        let newOnclick = String(eventTypeOption.onclick).replace("'event-type'", `'${newDivID}-event-type'`);
-        eventTypeOptions.setAttribute("onclick", newOnclick);
+        eventTypeOption.setAttribute(
+            "onclick", 
+            `document.getElementById('${eventID}-event-type').innerHTML = '${eventTypeOption.innerHTML.trim()}';`);
     }
+
+    document.getElementById(eventID + "-event-status").innerHTML = eventData.status;
+    let eventStatusOptions = document.querySelectorAll(`[id^="${eventID}-event-status-option"]`);
+    for (let eventStatusOption of eventStatusOptions){
+        eventStatusOption.setAttribute(
+            "onclick", 
+            `document.getElementById('${eventID}-event-status').innerHTML = '${eventStatusOption.innerHTML.trim()}';`);
+    }
+
     document.getElementById(eventID + "-new-event-title").value = eventData.title;
-    document.getElementById(eventID + "-new-event-availability-start").value = eventData.startDatetime;
-    document.getElementById(eventID + "-new-event-availability-end").value = eventData.endDatetime;
+
+    for (let startOrEnd of ["start", "end"]){
+        document.getElementById(eventID + `-new-event-availability-${startOrEnd}`).value = moment(eventData[`${startOrEnd}Datetime`].toDate()).format('DD/MM/YYYY hh:mm A');
+        
+        $(`#${eventID}-new-event-availability-${startOrEnd}`).daterangepicker({
+            timePicker: true,
+            singleDatePicker: true,
+            opens: 'left',
+            locale: {
+              format: 'DD/MM/YYYY hh:mm A'
+            }
+        });
+    
+        $(`#${eventID}-new-event-availability-${startOrEnd}`).on('apply.daterangepicker', function(event, picker) {
+          let newValue = picker.startDate.format('DD/MM/YYYY hh:mm A');
+    
+          document.getElementById(`${eventID}-new-event-availability-${startOrEnd}`).value = newValue;
+        });
+    }
+    
     document.getElementById(eventID + "-new-event-address").value = eventData.address;
     document.getElementById(eventID + "-new-event-description").value = eventData.description;
     document.getElementById(eventID + "-new-event-ask-participation-confirmation").checked = eventData.askParticipantsIfTheyJoin;
     
+    // event participants 
+    let friendsProfiles = JSON.parse(document.getElementById("hidden-friends-profiles").innerHTML);
+    let userUID = document.getElementById("hidden-user-uid").innerHTML.trim();
+    // [value: <uid>, text: <username>]
+    let options = [];
+ 
+    for (let participantUID of eventData.participants){
+        if(participantUID == userUID){
+            options.push({value: participantUID, text: "you"})
+        } else {
+            options.push({value: participantUID, text: friendsProfiles[participantUID].username})
+        }
+    }
+    try{
+        // render prepopulated searchable select showing existing event participants
+        new TomSelect(`#${eventID}-new-trip-event-multiselect-friends`, {
+            plugins: ['remove_button'],
+            create: true,
+            labelField: 'text', // name displayed when element is selected
+            searchField: 'text', // name displayed in the search bar
+            valueField: 'value', // actual value that is sent to the backend below
+            onItemAdd: function() {
+                this.setTextboxValue('');
+                this.refreshOptions();
+            },
+            options: options,
+            items: eventData.participants // initially selected items. specified by ID (valueField)
+        });
+    }catch(e){
+        if(e.message != "Tom Select already initialized on this element"){
+            alert(e.message);
+        }
+    }
+
     $(`#${newDivID}`).show();
   }
   

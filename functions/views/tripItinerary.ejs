@@ -94,6 +94,12 @@
 
           </div>
         </div>
+        <div id="hidden-friends-profiles">
+          <%= JSON.stringify(friendsProfiles) %>
+        </div>
+        <div id="hidden-user-uid">
+          <%= userID %>
+        </div>
       </div>
     </div>
   </div>
@@ -201,14 +207,17 @@
               <ul class="dropdown-menu" aria-labelledby="event-type">
                 <li>
                   <button class="dropdown-item event-type"
+                    id="event-status-option-to_book"
                     onclick="document.getElementById('event-status').innerHTML = 'to book';">to book</button>
                 </li>
                 <li>
                   <button class="dropdown-item event-type"
+                    id="event-status-option-booked"
                     onclick="document.getElementById('event-status').innerHTML = 'booked';">booked</button>
                 </li>
                 <li>
                   <button class="dropdown-item event-type" 
+                  id="event-status-option-awaiting_votes"
                     onclick="document.getElementById('event-status').innerHTML = 'awaiting votes';">awaiting votes</button>
                 </li>
               </ul>
