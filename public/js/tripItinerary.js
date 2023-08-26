@@ -104,7 +104,7 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
     document.getElementById(eventID + "-new-event-title").value = eventData.title;
 
     for (let startOrEnd of ["start", "end"]){
-        document.getElementById(eventID + `-new-event-availability-${startOrEnd}`).value = moment(eventData[`${startOrEnd}Datetime`].toDate()).format('DD/MM/YYYY hh:mm A');
+        document.getElementById(eventID + `-new-event-availability-${startOrEnd}`).value = eventData[`${startOrEnd}Datetime`];
         
         $(`#${eventID}-new-event-availability-${startOrEnd}`).daterangepicker({
             timePicker: true,
@@ -178,7 +178,7 @@ function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
     if (eventID === null){
         idPart = '';
     }
-    
+
     let select = document.getElementById(`${idPart}new-trip-event-multiselect-friends`);
     let control = select.tomselect;
 
@@ -240,7 +240,7 @@ function getTripEvents(tripID){
 
         allEvents.sort(function(a,b){
             // Sort ascending (oldest to newest). To get descending, swap a and b below
-            return a.startDatetime.toDate() - b.startDatetime.toDate();
+            return moment(a.startDatetime, 'DD/MM/YYYY hh:mm A') - moment(b.startDatetime, 'DD/MM/YYYY hh:mm A');
         });
 
         // remove previous events
@@ -269,7 +269,7 @@ function getTripEvents(tripID){
 
             let pEventDates = document.createElement("p");
             pEventDates.setAttribute("class", `event-dates`);
-            pEventDates.innerHTML = moment(eventData.startDatetime.toDate()).format("DD MMM YYYY hh:mm A") + " - " + moment(eventData.endDatetime.toDate()).format("DD MMM YYYY hh:mm A");
+            pEventDates.innerHTML = eventData.startDatetime + " - " + eventData.endDatetime;
             divEventContainer.appendChild(pEventDates);
 
             let eventStatus = document.createElement("p");

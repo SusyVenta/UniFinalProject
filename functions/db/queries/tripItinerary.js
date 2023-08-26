@@ -41,9 +41,8 @@ export class TripItineraryQueries{
 
         // startDatetime
         if (dataToAdd.hasOwnProperty('startDatetime')){
-            // datetime format: "20/08/2023 01:00 PM"
-            let stringifiedDate = moment((dataToAdd.startDatetime).trim(), 'DD/MM/YYYY hh:mm A').toDate();
-            sanitizedDataToAdd.startDatetime = stringifiedDate;
+            // datetime format: "20/08/2023 01:00 PM". Save as string
+            sanitizedDataToAdd.startDatetime = dataToAdd.startDatetime.trim();
         }else{
             throw new Error("Start Datetime must be specified");
         }
@@ -51,8 +50,7 @@ export class TripItineraryQueries{
         // endDatetime
         if (dataToAdd.hasOwnProperty('endDatetime')){
             // datetime format: "20/08/2023 01:00 PM"
-            let stringifiedDate = moment((dataToAdd.endDatetime).trim(), 'DD/MM/YYYY hh:mm A').toDate();
-            sanitizedDataToAdd.endDatetime = stringifiedDate;
+            sanitizedDataToAdd.endDatetime = dataToAdd.endDatetime.trim();
         }else{
             throw new Error("End Datetime must be specified");
         }
