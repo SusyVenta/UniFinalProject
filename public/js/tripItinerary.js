@@ -1,3 +1,4 @@
+
 function showAddEventModal(tripParticipants, friendsProfilesIn, userID){
     /* 
     When user clicks on 'Add event' button, opens the modal to carry out this action.
@@ -280,6 +281,246 @@ function saveEvent(tripID, eventID=null){
         }
       });
 };
+
+function createNewEventDOMElements(eventData){
+    // create div for the event
+    let divEventContainer = document.createElement("div");
+    divEventContainer.setAttribute("class", `event-container`);
+    divEventContainer.setAttribute("id", eventData.docID);
+
+    let divEventTitleAndTypeContainer = document.createElement("div");
+    divEventTitleAndTypeContainer.setAttribute("class", `event-type-title-container`);
+
+    let divEventCategory = document.createElement("p");
+    divEventCategory.setAttribute("class", `listed-event-event-type`);
+    divEventCategory.innerHTML = eventData.eventType;
+
+    let pEventTitle = document.createElement("p");
+    pEventTitle.setAttribute("class", `event-title`);
+    pEventTitle.innerHTML = eventData.title;
+
+    divEventTitleAndTypeContainer.appendChild(pEventTitle);
+    divEventTitleAndTypeContainer.appendChild(divEventCategory);
+    divEventContainer.appendChild(divEventTitleAndTypeContainer);
+
+    let pEventDates = document.createElement("p");
+    pEventDates.setAttribute("class", `event-dates`);
+    pEventDates.innerHTML = eventData.startDatetime + " - " + eventData.endDatetime;
+    divEventContainer.appendChild(pEventDates);
+
+    let eventStatus = document.createElement("p");
+    eventStatus.setAttribute("class", `event-status`);
+    eventStatus.innerHTML = "Status: " + eventData.status;
+    divEventContainer.appendChild(eventStatus);
+    
+
+    let divParticipantsAndCommentsContainer = document.createElement("div");
+    divParticipantsAndCommentsContainer.setAttribute("class", `participants-comments-container`);
+
+    let participants = document.createElement("div");
+    participants.setAttribute("class", `participants-container`);
+    let participantsTextP = document.createElement("p");
+    participantsTextP.setAttribute("class", `number-participants-p`);
+    participantsTextP.innerHTML = eventData.participants.length + " participants ";
+    participants.appendChild(participantsTextP);
+    divParticipantsAndCommentsContainer.appendChild(participants);
+
+    let pNumberComments = document.createElement("p");
+    pNumberComments.setAttribute("class", `number-comments-p`);
+    pNumberComments.innerHTML = eventData.comments.length + " comments ";
+    pNumberComments.addEventListener('click', function(event){
+        event.stopPropagation(); // don't open event modal
+        
+        let commentsSection = document.getElementById(`comments-container-`+ eventData.docID);
+        commentsSection.style.display = commentsSection.style.display === 'none' ? 'flex' : 'none';
+    });
+    divParticipantsAndCommentsContainer.appendChild(pNumberComments);
+
+    divEventContainer.appendChild(divParticipantsAndCommentsContainer);
+
+    // add comment section
+    let divAddCommentContainer = document.createElement("div");
+    divAddCommentContainer.setAttribute("class", `add-comment-container`);
+
+    let addCommentButton = document.createElement("button");
+    addCommentButton.setAttribute("class", `btn btn-secondary`);
+    addCommentButton.setAttribute("id", `add-comment-button-` + eventData.docID);
+    addCommentButton.setAttribute("name", eventData.docID);
+    addCommentButton.innerHTML = " Comment";
+    let addCommentIcon = document.createElement("i");
+    addCommentIcon.setAttribute("class", `fas fa-comment`);
+    addCommentButton.prepend(addCommentIcon);
+    addCommentButton.addEventListener('click', function(event){
+        event.stopPropagation(); // don't open event modal
+
+        // check if comment section exists
+        let commentSection = document.getElementById(`add-comment-input-` + event.target.name);
+        if (commentSection === null){
+            // create comment input section
+            let divAddCommentInputContainer = document.createElement("div");
+            divAddCommentInputContainer.setAttribute("id", `add-comment-input-container-`+ eventData.docID);
+            divAddCommentInputContainer.setAttribute("class", `input-group mb-3`);
+            let inputField = document.createElement("input");
+            inputField.setAttribute("id", `add-comment-input-` + eventData.docID);
+            inputField.setAttribute("class", `form-control form-control-lg`);
+            inputField.setAttribute("placeholder", `Add a comment...`);
+            inputField.setAttribute("type", `text`);
+            inputField.setAttribute("aria-describedby", `post-comment-button-` + eventData.docID);
+            inputField.addEventListener('click', function(event){
+                event.stopPropagation(); // don't open event modal
+            });
+            divAddCommentInputContainer.appendChild(inputField);
+            // post button
+            let postCommentButton = document.createElement("button");
+            postCommentButton.setAttribute("id", `post-comment-button-` + eventData.docID);
+            postCommentButton.setAttribute("class", `btn btn-secondary`);
+            postCommentButton.setAttribute("type", `button`);
+            postCommentButton.innerHTML = "post";
+            postCommentButton.addEventListener('click', function(event){
+                event.stopPropagation(); // don't open event modal
+                let commentText = document.getElementById(`add-comment-input-` + eventData.docID).value;
+                
+                $.ajax({
+                    url: `/trips/` + tripID + "/itinerary/" + eventData.docID,
+                    method: "POST",
+                    xhrFields: {
+                      withCredentials: true
+                    },
+                    data: jQuery.param({
+                        "comment": commentText,
+                        "time": moment().format('DD/MM/YYYY hh:mm A')
+                    }),
+                    success: function() {   
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                      alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+                    }
+                  });
+            });
+            divAddCommentInputContainer.appendChild(postCommentButton);
+
+            let commentEventContainer = document.getElementById(event.target.name);
+            commentEventContainer.appendChild(divAddCommentInputContainer);
+        } else {
+            document.getElementById(`add-comment-input-container-` + eventData.docID).remove();
+        }
+    });
+    divAddCommentContainer.appendChild(addCommentButton);
+    divEventContainer.appendChild(divAddCommentContainer);
+
+    // display comments
+    let divCommentsContainer = document.createElement("div");
+    divCommentsContainer.setAttribute("id", `comments-container-`+ eventData.docID);
+    divCommentsContainer.setAttribute("class", `comments-container`);
+
+    let parsedTripParticipantsUIDsPictures = JSON.parse(tripParticipantsUIDsPictures);
+    for (let commentData of eventData.comments){
+        let divCommentToDisplayContainer = document.createElement("div");
+        divCommentToDisplayContainer.setAttribute("class", `saved-event-comment`);
+        
+        let commenterImage = document.createElement("img");
+        let profilePic = parsedTripParticipantsUIDsPictures[commentData.userID].picture;
+        if(profilePic === null){
+            profilePic = "/assets/defaultUserImage.jpg";
+        }
+        commenterImage.setAttribute("src", profilePic);
+        commenterImage.setAttribute("class", "commenter-image");
+        divCommentToDisplayContainer.appendChild(commenterImage);
+
+        let commenterUsernameAndTextContainer = document.createElement("div");
+        commenterUsernameAndTextContainer.setAttribute("class", `commenterUsernameAndTextContainer`);
+
+        let commenerUsername = document.createElement("p");
+        commenerUsername.setAttribute("class", "commenter-username");
+        commenerUsername.innerHTML = parsedTripParticipantsUIDsPictures[commentData.userID].username;
+        commenterUsernameAndTextContainer.appendChild(commenerUsername);
+
+        let commentDateTime = document.createElement("p");
+        commentDateTime.setAttribute("class", "comment-datetime");
+        commentDateTime.innerHTML = commentData.time;
+        commenterUsernameAndTextContainer.appendChild(commentDateTime);
+
+        let commentText = document.createElement("p");
+        commentText.setAttribute("class", "comment-text");
+        commentText.innerHTML = commentData.commentText;
+        commenterUsernameAndTextContainer.appendChild(commentText);
+
+        divCommentToDisplayContainer.appendChild(commenterUsernameAndTextContainer);
+
+        divCommentsContainer.appendChild(divCommentToDisplayContainer);
+    }
+    divEventContainer.appendChild(divCommentsContainer);
+
+    // add event modal to DOM
+    createEventDetailsModal(eventData);
+
+    divEventContainer.addEventListener('click', function(){
+        $(`#${eventData.docID}-new-event-modal`).show();
+    });
+    return divEventContainer;
+}
+
+function removeExistingEventDomElements(docID){
+    let elementToRemove = document.getElementById(docID);
+    if(elementToRemove !== null){
+        elementToRemove.remove();
+    }
+}
+
+function addNewEventDomElements(eventData, docID, allEvents){
+    eventData.docID = docID;
+
+    let eventsContainer = document.getElementById("events-container");
+    let docIDMapTODocIDMinusOne = getPreviousDocIDMap(allEvents);
+    console.log(docIDMapTODocIDMinusOne);
+
+    let newEventDomElements = createNewEventDOMElements(eventData);
+    let elementBeforeID = docIDMapTODocIDMinusOne[docID];
+    if(elementBeforeID === null){
+        // add as first element
+        eventsContainer.prepend(newEventDomElements);
+    }else{
+        let elementBefore = document.getElementById(elementBeforeID);
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentElement
+        elementBefore.insertAdjacentElement('afterend', newEventDomElements);
+    }
+}
+
+function getSortedEvents(querySnapshot){
+    let allEvents = [];
+
+    querySnapshot.forEach((doc) => {
+        let data = doc.data();
+        data.docID = doc.id;
+        allEvents.push(data);
+    });
+
+    allEvents.sort(function(a,b){
+        // Sort ascending (oldest to newest). To get descending, swap a and b below
+        return moment(a.startDatetime, 'DD/MM/YYYY hh:mm A') - moment(b.startDatetime, 'DD/MM/YYYY hh:mm A');
+    });
+    return allEvents;
+}
+
+function getPreviousDocIDMap(allEvents){
+    /* Events appear ordered by event date on the page.
+    If any new events are added, we need to make sure to add them in the correct order,
+    after existing elements with previous start dates.
+
+    :returns: {<null or previous docID>: <next docID>}
+    */
+
+    // for new elements, need to know after what existing element to insert
+    let docIDMapTODocIDMinusOne = {};
+    for (let i = 0; i < allEvents.length; i++) {
+        if(i > 0){
+            docIDMapTODocIDMinusOne[allEvents[i].docID] = allEvents[i - 1].docID;
+        }else{
+            docIDMapTODocIDMinusOne[allEvents[i].docID] = null;
+        }
+    }
+    return docIDMapTODocIDMinusOne;
+}
  
 function getTripEvents(tripID){
     /* 
@@ -289,204 +530,37 @@ function getTripEvents(tripID){
 
     https://firebase.google.com/docs/firestore/query-data/listen
     */
-    let eventsContainer = document.getElementById("events-container");
-
-    
     db.collection(`trips`).doc(tripID).collection("events").onSnapshot((querySnapshot) => {
-        let allEvents = [];
-
-        querySnapshot.forEach((doc) => {
-            let data = doc.data();
-            data.docID = doc.id;
-            allEvents.push(data);
-        });
-
-        allEvents.sort(function(a,b){
-            // Sort ascending (oldest to newest). To get descending, swap a and b below
-            return moment(a.startDatetime, 'DD/MM/YYYY hh:mm A') - moment(b.startDatetime, 'DD/MM/YYYY hh:mm A');
-        });
-
-        // remove previous events
-        eventsContainer.innerHTML = "";
-
-        for (let eventData of allEvents){
-            // create div for the event
-            let divEventContainer = document.createElement("div");
-            divEventContainer.setAttribute("class", `event-container`);
-            divEventContainer.setAttribute("id", eventData.docID);
-
-            let divEventTitleAndTypeContainer = document.createElement("div");
-            divEventTitleAndTypeContainer.setAttribute("class", `event-type-title-container`);
-
-            let divEventCategory = document.createElement("p");
-            divEventCategory.setAttribute("class", `listed-event-event-type`);
-            divEventCategory.innerHTML = eventData.eventType;
-
-            let pEventTitle = document.createElement("p");
-            pEventTitle.setAttribute("class", `event-title`);
-            pEventTitle.innerHTML = eventData.title;
-
-            divEventTitleAndTypeContainer.appendChild(pEventTitle);
-            divEventTitleAndTypeContainer.appendChild(divEventCategory);
-            divEventContainer.appendChild(divEventTitleAndTypeContainer);
-
-            let pEventDates = document.createElement("p");
-            pEventDates.setAttribute("class", `event-dates`);
-            pEventDates.innerHTML = eventData.startDatetime + " - " + eventData.endDatetime;
-            divEventContainer.appendChild(pEventDates);
-
-            let eventStatus = document.createElement("p");
-            eventStatus.setAttribute("class", `event-status`);
-            eventStatus.innerHTML = "Status: " + eventData.status;
-            divEventContainer.appendChild(eventStatus);
-            
-
-            let divParticipantsAndCommentsContainer = document.createElement("div");
-            divParticipantsAndCommentsContainer.setAttribute("class", `participants-comments-container`);
-
-            let participants = document.createElement("div");
-            participants.setAttribute("class", `participants-container`);
-            let participantsTextP = document.createElement("p");
-            participantsTextP.setAttribute("class", `number-participants-p`);
-            participantsTextP.innerHTML = eventData.participants.length + " participants ";
-            participants.appendChild(participantsTextP);
-            divParticipantsAndCommentsContainer.appendChild(participants);
-
-            let pNumberComments = document.createElement("p");
-            pNumberComments.setAttribute("class", `number-comments-p`);
-            pNumberComments.innerHTML = eventData.comments.length + " comments ";
-            pNumberComments.addEventListener('click', function(event){
-                event.stopPropagation(); // don't open event modal
-                
-                let commentsSection = document.getElementById(`comments-container-`+ eventData.docID);
-                commentsSection.style.display = commentsSection.style.display === 'none' ? 'flex' : 'none';
-            });
-            divParticipantsAndCommentsContainer.appendChild(pNumberComments);
-
-            divEventContainer.appendChild(divParticipantsAndCommentsContainer);
-
-            // add comment section
-            let divAddCommentContainer = document.createElement("div");
-            divAddCommentContainer.setAttribute("class", `add-comment-container`);
-
-            let addCommentButton = document.createElement("button");
-            addCommentButton.setAttribute("class", `btn btn-secondary`);
-            addCommentButton.setAttribute("id", `add-comment-button-` + eventData.docID);
-            addCommentButton.setAttribute("name", eventData.docID);
-            addCommentButton.innerHTML = " Comment";
-            let addCommentIcon = document.createElement("i");
-            addCommentIcon.setAttribute("class", `fas fa-comment`);
-            addCommentButton.prepend(addCommentIcon);
-            addCommentButton.addEventListener('click', function(event){
-                event.stopPropagation(); // don't open event modal
-
-                // check if comment section exists
-                let commentSection = document.getElementById(`add-comment-input-` + event.target.name);
-                if (commentSection === null){
-                    // create comment input section
-                    let divAddCommentInputContainer = document.createElement("div");
-                    divAddCommentInputContainer.setAttribute("id", `add-comment-input-container-`+ eventData.docID);
-                    divAddCommentInputContainer.setAttribute("class", `input-group mb-3`);
-                    let inputField = document.createElement("input");
-                    inputField.setAttribute("id", `add-comment-input-` + eventData.docID);
-                    inputField.setAttribute("class", `form-control form-control-lg`);
-                    inputField.setAttribute("placeholder", `Add a comment...`);
-                    inputField.setAttribute("type", `text`);
-                    inputField.setAttribute("aria-describedby", `post-comment-button-` + eventData.docID);
-                    inputField.addEventListener('click', function(event){
-                        event.stopPropagation(); // don't open event modal
-                    });
-                    divAddCommentInputContainer.appendChild(inputField);
-                    // post button
-                    let postCommentButton = document.createElement("button");
-                    postCommentButton.setAttribute("id", `post-comment-button-` + eventData.docID);
-                    postCommentButton.setAttribute("class", `btn btn-secondary`);
-                    postCommentButton.setAttribute("type", `button`);
-                    postCommentButton.innerHTML = "post";
-                    postCommentButton.addEventListener('click', function(event){
-                        event.stopPropagation(); // don't open event modal
-                        let commentText = document.getElementById(`add-comment-input-` + eventData.docID).value;
-                        
-                        $.ajax({
-                            url: `/trips/` + tripID + "/itinerary/" + eventData.docID,
-                            method: "POST",
-                            xhrFields: {
-                              withCredentials: true
-                            },
-                            data: jQuery.param({
-                                "comment": commentText,
-                                "time": moment().format('DD/MM/YYYY hh:mm A')
-                            }),
-                            success: function() {   
-                            },
-                            error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                              alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
-                            }
-                          });
-                    });
-                    divAddCommentInputContainer.appendChild(postCommentButton);
-
-                    let commentEventContainer = document.getElementById(event.target.name);
-                    commentEventContainer.appendChild(divAddCommentInputContainer);
-                } else {
-                    document.getElementById(`add-comment-input-container-` + eventData.docID).remove();
-                }
-            });
-            divAddCommentContainer.appendChild(addCommentButton);
-            divEventContainer.appendChild(divAddCommentContainer);
-
-            // display comments
-            let divCommentsContainer = document.createElement("div");
-            divCommentsContainer.setAttribute("id", `comments-container-`+ eventData.docID);
-            divCommentsContainer.setAttribute("class", `comments-container`);
-
-            let parsedTripParticipantsUIDsPictures = JSON.parse(tripParticipantsUIDsPictures);
-            for (let commentData of eventData.comments){
-                let divCommentToDisplayContainer = document.createElement("div");
-                divCommentToDisplayContainer.setAttribute("class", `saved-event-comment`);
-                
-                let commenterImage = document.createElement("img");
-                let profilePic = parsedTripParticipantsUIDsPictures[commentData.userID].picture;
-                if(profilePic === null){
-                    profilePic = "/assets/defaultUserImage.jpg";
-                }
-                commenterImage.setAttribute("src", profilePic);
-                commenterImage.setAttribute("class", "commenter-image");
-                divCommentToDisplayContainer.appendChild(commenterImage);
-
-                let commenterUsernameAndTextContainer = document.createElement("div");
-                commenterUsernameAndTextContainer.setAttribute("class", `commenterUsernameAndTextContainer`);
-
-                let commenerUsername = document.createElement("p");
-                commenerUsername.setAttribute("class", "commenter-username");
-                commenerUsername.innerHTML = parsedTripParticipantsUIDsPictures[commentData.userID].username;
-                commenterUsernameAndTextContainer.appendChild(commenerUsername);
-
-                let commentDateTime = document.createElement("p");
-                commentDateTime.setAttribute("class", "comment-datetime");
-                commentDateTime.innerHTML = commentData.time;
-                commenterUsernameAndTextContainer.appendChild(commentDateTime);
-
-                let commentText = document.createElement("p");
-                commentText.setAttribute("class", "comment-text");
-                commentText.innerHTML = commentData.commentText;
-                commenterUsernameAndTextContainer.appendChild(commentText);
-
-                divCommentToDisplayContainer.appendChild(commenterUsernameAndTextContainer);
-
-                divCommentsContainer.appendChild(divCommentToDisplayContainer);
+        let addedOrModifiedDocs = {}
+        // https://firebase.google.com/docs/firestore/query-data/listen#view_changes_between_snapshots
+        querySnapshot.docChanges().forEach((change) => {
+            // shows only documents that changed. If first time loading, loads all documents as new changes.
+            if (change.type === "added") {
+                addedOrModifiedDocs[change.doc.id] = {"data": change.doc.data(), "type": "added"};
             }
-            divEventContainer.appendChild(divCommentsContainer);
+            if (change.type === "modified") {
+                addedOrModifiedDocs[change.doc.id] = {"data": change.doc.data(), "type": "modified"};
+            } 
+            if (change.type === "removed") {
+                removeExistingEventDomElements(change.doc.id);
+            }
+        });
 
-            // add event modal to DOM
-            createEventDetailsModal(eventData);
+        let allSortedEvents = getSortedEvents(querySnapshot);
 
-            divEventContainer.addEventListener('click', function(){
-                $(`#${eventData.docID}-new-event-modal`).show();
-            });
-
-            eventsContainer.appendChild(divEventContainer);
-
+        for (let event of allSortedEvents){
+            if(addedOrModifiedDocs.hasOwnProperty(event.docID)){
+                // deal with events to add or remove
+                if (addedOrModifiedDocs[event.docID].type === "added") {
+                    addNewEventDomElements(addedOrModifiedDocs[event.docID].data, 
+                                           event.docID, allSortedEvents);
+                }
+                if (addedOrModifiedDocs[event.docID].type === "modified") {
+                    removeExistingEventDomElements(event.docID);
+                    addNewEventDomElements(addedOrModifiedDocs[event.docID].data, 
+                                           event.docID, allSortedEvents);
+                }
+            }
         }
 
         // called when user navigates to trip event URL. Automatically open requested modal
