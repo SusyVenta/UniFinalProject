@@ -357,7 +357,9 @@ function getTripEvents(tripID){
             pNumberComments.innerHTML = eventData.comments.length + " comments ";
             pNumberComments.addEventListener('click', function(event){
                 event.stopPropagation(); // don't open event modal
-                console.log("expanding comments");
+                
+                let commentsSection = document.getElementById(`comments-container-`+ eventData.docID);
+                commentsSection.style.display = commentsSection.style.display === 'none' ? 'flex' : 'none';
             });
             divParticipantsAndCommentsContainer.appendChild(pNumberComments);
 
@@ -429,6 +431,44 @@ function getTripEvents(tripID){
             });
             divAddCommentContainer.appendChild(addCommentButton);
             divEventContainer.appendChild(divAddCommentContainer);
+
+            // display comments
+            let divCommentsContainer = document.createElement("div");
+            divCommentsContainer.setAttribute("id", `comments-container-`+ eventData.docID);
+            divCommentsContainer.setAttribute("class", `comments-container`);
+
+            let parsedTripParticipantsUIDsPictures = JSON.parse(tripParticipantsUIDsPictures);
+            for (let commentData of eventData.comments){
+                let divCommentToDisplayContainer = document.createElement("div");
+                divCommentToDisplayContainer.setAttribute("class", `saved-event-comment`);
+                
+                let commenterImage = document.createElement("img");
+                let profilePic = parsedTripParticipantsUIDsPictures[commentData.userID].picture;
+                if(profilePic === null){
+                    profilePic = "/assets/defaultUserImage.jpg";
+                }
+                commenterImage.setAttribute("src", profilePic);
+                commenterImage.setAttribute("class", "commenter-image");
+                divCommentToDisplayContainer.appendChild(commenterImage);
+
+                let commenterUsernameAndTextContainer = document.createElement("div");
+                commenterUsernameAndTextContainer.setAttribute("class", `commenterUsernameAndTextContainer`);
+
+                let commenerUsername = document.createElement("p");
+                commenerUsername.setAttribute("class", "commenter-username");
+                commenerUsername.innerHTML = parsedTripParticipantsUIDsPictures[commentData.userID].username;
+                commenterUsernameAndTextContainer.appendChild(commenerUsername);
+
+                let commentText = document.createElement("p");
+                commentText.setAttribute("class", "comment-text");
+                commentText.innerHTML = commentData.commentText;
+                commenterUsernameAndTextContainer.appendChild(commentText);
+
+                divCommentToDisplayContainer.appendChild(commenterUsernameAndTextContainer);
+
+                divCommentsContainer.appendChild(divCommentToDisplayContainer);
+            }
+            divEventContainer.appendChild(divCommentsContainer);
 
             // add event modal to DOM
             createEventDetailsModal(eventData);

@@ -19,36 +19,6 @@ p{
     padding: 2%;
 }
 
-.number-comments-p{
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.number-comments-p:hover{
-    color:cadetblue;
-}
-
-.add-comment-container{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-}
-
-[id^=post-comment-button-], [id^=add-comment-button-]{
-    font-size: small;
-}
-
-
-[id^=add-comment-input]{
-    font-size: small;
-}
-
-[id^=add-comment-input-container]{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
 /* new event modal -------------------------------------------------------------------------------*/
 /* event type drop down ----------------------*/
 
@@ -148,4 +118,74 @@ p{
 #hidden-friends-profiles, #hidden-user-uid, 
 #hidden-trip-participants, #hidden-trip-id, #hidden-eventToOpen{
     visibility: hidden;
+}
+
+.number-comments-p{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.number-comments-p:hover{
+    color:cadetblue;
+}
+
+.add-comment-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.516);
+    padding-bottom: 1%;
+}
+
+[id^=post-comment-button-], [id^=add-comment-button-]{
+    font-size: small;
+}
+
+
+[id^=add-comment-input]{
+    font-size: small;
+}
+
+[id^=add-comment-input-container]{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.comments-container{
+    display: none;
+    max-height: 300px;
+    overflow-y: scroll;
+    flex-direction: column;
+}
+
+/* each comment: picture, username, comment text */
+.saved-event-comment{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.commenter-image{
+    height: 40px;
+    width: 40px;
+    margin-right: 2%;
+    border-radius: 50%;
+}
+
+.commenterUsernameAndTextContainer{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+.commenter-username{
+    margin-bottom: 1%;
+    font-weight: bold;
+}
+
+.comment-text{
+    background-color: whitesmoke;
+    border-radius: 20px;
+    padding: 2%;
 }

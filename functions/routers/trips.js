@@ -213,6 +213,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         let uid = userSessionDetails.userSessionDetails.uid;
         let profileDetails = await db.userQueries.getUserDetails(uid);
         let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
+        let tripParticipantsUIDsPictures = await db.tripQueries.getUsernamesAndPicturesForUIDsInTrip(tripID);
 
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
           let payload = {
@@ -226,7 +227,8 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
             profileDetails: profileDetails,
             friendsProfiles: friendsProfiles,
             tripID: tripID,
-            eventToOpen: 'null'
+            eventToOpen: 'null',
+            tripParticipantsUIDsPictures: JSON.stringify(tripParticipantsUIDsPictures)
           };
   
           return response.status(200).render(templatePath, payload);
@@ -297,6 +299,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         let uid = userSessionDetails.userSessionDetails.uid;
         let profileDetails = await db.userQueries.getUserDetails(uid);
         let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
+        let tripParticipantsUIDsPictures = await db.tripQueries.getUsernamesAndPicturesForUIDsInTrip(tripID);
 
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
           let payload = {
@@ -310,7 +313,8 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
             profileDetails: profileDetails,
             friendsProfiles: friendsProfiles,
             tripID: tripID,
-            eventToOpen: eventID
+            eventToOpen: eventID,
+            tripParticipantsUIDsPictures: JSON.stringify(tripParticipantsUIDsPictures)
           };
   
           return response.status(200).render(templatePath, payload);

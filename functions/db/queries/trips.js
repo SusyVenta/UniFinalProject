@@ -90,6 +90,25 @@ export class TripQueries{
         return await idUsernameMap;
     }  
 
+    async getUsernamesAndPicturesForUIDsInTrip(tripID){
+        // each trip has 1+ participants. Participants' UIDs are listed 
+        // in field 'participantsStatus'. This function returns a map
+        // {uid: username} for all users in the trip
+        let tripDetail = await this.parent.getDocument("trips", tripID);
+        let userIDs = Object.keys(tripDetail.participantsStatus); // array
+
+        let idUsernamePictureMap = {};
+
+        for (let uid of userIDs){
+            let userData = await this.parent.getDocument("users", uid);
+            let username = userData.username;
+            let picture = userData.picturePath;
+
+            idUsernamePictureMap[uid] = {"username": username, "picture": picture};
+        }
+        return await idUsernamePictureMap;
+    }  
+
     async updateTrip(data, userID){
         /* 
         Called when adding friends to trip:
