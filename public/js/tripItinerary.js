@@ -356,9 +356,67 @@ function getTripEvents(tripID){
             let pNumberComments = document.createElement("p");
             pNumberComments.setAttribute("class", `number-comments-p`);
             pNumberComments.innerHTML = eventData.comments.length + " comments ";
+            pNumberComments.addEventListener('click', function(event){
+                event.stopPropagation(); // don't open event modal
+                console.log("expanding comments");
+            });
             divParticipantsAndCommentsContainer.appendChild(pNumberComments);
 
             divEventContainer.appendChild(divParticipantsAndCommentsContainer);
+
+            // add comment section
+            let divAddCommentContainer = document.createElement("div");
+            divAddCommentContainer.setAttribute("class", `add-comment-container`);
+
+            let addCommentButton = document.createElement("button");
+            addCommentButton.setAttribute("class", `btn btn-secondary`);
+            addCommentButton.setAttribute("id", `add-comment-button-` + eventData.docID);
+            addCommentButton.setAttribute("name", eventData.docID);
+            addCommentButton.innerHTML = " Comment";
+            let addCommentIcon = document.createElement("i");
+            addCommentIcon.setAttribute("class", `fas fa-comment`);
+            addCommentButton.prepend(addCommentIcon);
+            addCommentButton.addEventListener('click', function(event){
+                event.stopPropagation(); // don't open event modal
+
+                // check if comment section exists
+                let commentSection = document.getElementById(`add-comment-input-` + event.target.name);
+                if (commentSection === null){
+                    // create comment input section
+                    let divAddCommentInputContainer = document.createElement("div");
+                    divAddCommentInputContainer.setAttribute("id", `add-comment-input-container-`+ eventData.docID);
+                    divAddCommentInputContainer.setAttribute("class", `input-group mb-3`);
+                    let inputField = document.createElement("input");
+                    inputField.setAttribute("id", `add-comment-input-` + eventData.docID);
+                    inputField.setAttribute("class", `form-control form-control-lg`);
+                    inputField.setAttribute("placeholder", `Add a comment...`);
+                    inputField.setAttribute("type", `text`);
+                    inputField.setAttribute("aria-describedby", `post-comment-button-` + eventData.docID);
+                    inputField.addEventListener('click', function(event){
+                        event.stopPropagation(); // don't open event modal
+                    });
+                    divAddCommentInputContainer.appendChild(inputField);
+                    // post button
+                    let postCommentButton = document.createElement("button");
+                    postCommentButton.setAttribute("id", `post-comment-button-` + eventData.docID);
+                    postCommentButton.setAttribute("class", `btn btn-secondary`);
+                    postCommentButton.setAttribute("type", `button`);
+                    postCommentButton.innerHTML = "post";
+                    postCommentButton.addEventListener('click', function(event){
+                        event.stopPropagation(); // don't open event modal
+                        let commentText = document.getElementById(`add-comment-input-` + eventData.docID).value;
+                        console.log(commentText);
+                    });
+                    divAddCommentInputContainer.appendChild(postCommentButton);
+
+                    let commentEventContainer = document.getElementById(event.target.name);
+                    commentEventContainer.appendChild(divAddCommentInputContainer);
+                } else {
+                    document.getElementById(`add-comment-input-container-` + eventData.docID).remove();
+                }
+            });
+            divAddCommentContainer.appendChild(addCommentButton);
+            divEventContainer.appendChild(divAddCommentContainer);
 
             // add event modal to DOM
             createEventDetailsModal(eventData);

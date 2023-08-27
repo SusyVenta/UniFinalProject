@@ -19,6 +19,36 @@ p{
     padding: 2%;
 }
 
+.number-comments-p{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.number-comments-p:hover{
+    color:cadetblue;
+}
+
+.add-comment-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+[id^=post-comment-button-], [id^=add-comment-button-]{
+    font-size: small;
+}
+
+
+[id^=add-comment-input]{
+    font-size: small;
+}
+
+[id^=add-comment-input-container]{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 /* new event modal -------------------------------------------------------------------------------*/
 /* event type drop down ----------------------*/
 
@@ -108,6 +138,7 @@ p{
     flex-wrap: wrap;
     justify-content: space-between;
     height: fit-content;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.516);
 }
 
 .event-dates, .event-status, .number-participants-p, .number-comments-p{

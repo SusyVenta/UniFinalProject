@@ -68,7 +68,6 @@ function getUserNotifications(userID){
             ){
                 // remove notification when user clicks on it
                 a.addEventListener('click', function(event) { 
-                    console.log("deleting notification: " + notification.notification_id);
                     event.preventDefault(); 
                     deleteNotification(notification.notification_id, notification.URL); 
                 });
