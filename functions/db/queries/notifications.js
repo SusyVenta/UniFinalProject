@@ -93,6 +93,16 @@ export class NotificationsQueries{
                     notificationType: "trip_dates_can_be_chosen"
                 },
                 notificationsSettings: "friendsRequestYourInput"
+            },
+            addedToTripEvent: {
+                data: {
+                    message: "%SENDER% added you to event '%ITINERARYEVENT%'. Please remove yourself from the event if you won't join.",
+                    URL: "/trips/%TRIPID%/itinerary/%ITINERARYEVENTID%",
+                    senderUID: "%SENDERID%",
+                    notification_id: "addedToTripEvent_%TRIPID%_%ITINERARYEVENTID%",
+                    notificationType: "addedToTripEvent"
+                },
+                notificationsSettings: "friendsRequestYourInput"
             }
         }
     };
@@ -121,14 +131,17 @@ export class NotificationsQueries{
         return notificationToRemove;
     }
 
-    async sendNotification(senderID, recipientID, notificationType, tripID = null){
+    async sendNotification(senderID, recipientID, notificationType, 
+                           tripID = null, itineraryID=null, itineraryEventTitle=null){
         // if the recipient wishes to be notified, sends the specific notification
         let senderDoc = await this.parent.getDocument("users", senderID);
 
         let stringReplacements = {
             "%SENDERID%": senderID, 
             "%SENDER%": senderDoc.username,
-            "%TRIPID%": tripID
+            "%TRIPID%": tripID,
+            "%ITINERARYEVENTID%": itineraryID,
+            "%ITINERARYEVENT%": itineraryEventTitle,
         };
 
         if (tripID != null){

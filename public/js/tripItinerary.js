@@ -68,8 +68,9 @@ function deleteEvent(tripID, eventID){
     });
 }
 
-function showEventDetails(eventData){
+function createEventDetailsModal(eventData){
     let eventID = eventData.docID;
+    let tripID = document.getElementById("hidden-trip-id").innerHTML.trim();
 
     // clone new-event-modal
     let newEventModal = document.getElementById("new-event-modal");
@@ -100,7 +101,16 @@ function showEventDetails(eventData){
 
     // reset title
     document.getElementById(eventID + "-new-event-modal-title").innerHTML = eventData.title;
-    document.getElementById(eventID + "-new-event-modal-close-button").setAttribute("onclick", `$('#${newDivID}').hide();`);
+    
+    // close button
+    let closeButton = document.getElementById(eventID + "-new-event-modal-close-button");
+    if(closeButton !== null){
+        closeButton.setAttribute("onclick", `$('#${newDivID}').hide();`);
+    }
+    let closeButtonRedirect = document.getElementById(eventID + "-new-event-modal-close-button-redirect-itinerary");
+    if(closeButtonRedirect !== null){
+        closeButtonRedirect.setAttribute("onclick", `window.location = '//${window.location.host}/trips/${tripID}/itinerary';`);
+    }
     
     document.getElementById(eventID + "-event-type").innerHTML = eventData.eventType;
     let eventTypeOptions = document.querySelectorAll(`[id^="${eventID}-event-type-option"]`);
@@ -193,7 +203,6 @@ function showEventDetails(eventData){
     deleteEventButton.setAttribute("id", `${eventID}-event-delete-button`);
     deleteEventButton.innerHTML = "Delete event";
 
-    let tripID = document.getElementById("hidden-trip-id").innerHTML.trim();
     deleteEventButton.addEventListener(
         "click", 
         function(){
@@ -206,7 +215,26 @@ function showEventDetails(eventData){
     let deleteEventContainer = document.getElementById(`${eventID}-event-modal-footer-left`);
     deleteEventContainer.appendChild(deleteEventButton);
 
-    $(`#${newDivID}`).show();
+    //cancel button
+    let cancelButton = document.getElementById(`${eventID}-new-event-cancel-button`);
+    if(cancelButton !== null){
+        // element not present when loading 'trips/<trip id>/itinerary/<event id>
+        cancelButton.setAttribute(
+            "onclick", 
+            `$('#${eventID}-new-event-modal').hide();`);
+    }
+
+    let cancelButtonRedirect = document.getElementById(`${eventID}-new-event-cancel-button-redirect-itinerary`);
+    if(cancelButtonRedirect !== null){
+        // element not present when loading 'trips/<trip id>/itinerary/<event id>
+        cancelButtonRedirect.addEventListener(
+            "click", 
+            function(){
+                window.location = `//${window.location.host}/trips/${tripID}/itinerary`
+            }
+        );
+    }
+
 }
   
 function saveEvent(tripID, eventID=null){
@@ -332,11 +360,21 @@ function getTripEvents(tripID){
 
             divEventContainer.appendChild(divParticipantsAndCommentsContainer);
 
+            // add event modal to DOM
+            createEventDetailsModal(eventData);
+
             divEventContainer.addEventListener('click', function(){
-                showEventDetails(eventData);
+                $(`#${eventData.docID}-new-event-modal`).show();
             });
 
             eventsContainer.appendChild(divEventContainer);
+
+        }
+
+        // called when user navigates to trip event URL. Automatically open requested modal
+        let eventToOpen = document.getElementById("hidden-eventToOpen").innerHTML.trim();
+        if(eventToOpen != 'null'){
+            $(`#${eventToOpen}-new-event-modal`).show();
         }
         
     });

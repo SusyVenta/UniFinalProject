@@ -53,7 +53,8 @@ export class Database{
         // document ID is assigned automatically and returned
         let addedDoc = await this.db.collection(collectionName).doc(docID).collection(subcollectionName).add(dataToAdd);
         
-        let addedDocID = addedDoc["_path"]["segments"][1];
+         //  [ 'trips', <doc id>, 'events', <doc id>, ]
+        let addedDocID = addedDoc["_path"]["segments"][3];
         return addedDocID;
     }
 
