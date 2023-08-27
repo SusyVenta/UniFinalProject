@@ -274,7 +274,7 @@ function saveEvent(tripID, eventID=null){
         data: jQuery.param(payload),
         success: function() {   
           // if successful call, reload page
-          location.reload();  
+          window.location.href = `/trips/` + tripID + "/itinerary/"
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) { 
           alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
