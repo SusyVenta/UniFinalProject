@@ -8,7 +8,7 @@ if (location.hostname === "localhost") {
     db.useEmulator("127.0.0.1", 8080);
   }
 
-function deleteNotification(notificationId){
+function deleteNotification(notificationId, newURL){
     // deletes selected notification by calling API endpoint
 
     $.ajax({
@@ -16,6 +16,12 @@ function deleteNotification(notificationId){
         method: "DELETE",
         xhrFields: {
             withCredentials: true
+        },
+        success : function () {
+            window.location.href = newURL;
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
         }
     });
 };
@@ -37,7 +43,6 @@ function getUserNotifications(userID){
     .collection("users")
     .doc(userID).onSnapshot((doc) => {
         let data = doc.data();
-        console.log("Current data: ", data);
         // update notifications number
         let notificationsNumber = document.getElementById("number-notifications-badge");
         notificationsNumber.innerHTML = data.notifications.length;
@@ -54,7 +59,7 @@ function getUserNotifications(userID){
             a.setAttribute("href", notification.URL);
             a.setAttribute("rel", "nofollow");
             a.textContent = notification.message;
-
+      
             if(
                 (notification.notificationType).includes("accepted") || 
                 (notification.notificationType).includes("rejected") ||
@@ -63,9 +68,9 @@ function getUserNotifications(userID){
             ){
                 // remove notification when user clicks on it
                 a.addEventListener('click', function(event) { 
+                    console.log("deleting notification: " + notification.notification_id);
                     event.preventDefault(); 
-                    deleteNotification(notification.notification_id); 
-                    window.location = this.href;
+                    deleteNotification(notification.notification_id, notification.URL); 
                 });
             }
 

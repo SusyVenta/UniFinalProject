@@ -65,7 +65,16 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
       if(userSessionDetails.userSessionDetails !== null){
         let tripID = request.params.id;
-        let tripDetails = await db.tripQueries.getTripByID(tripID);
+        let tripDetails = '';
+        try{
+          tripDetails = await db.tripQueries.getTripByID(tripID);
+        } catch(e){
+          // redirect to trips if requested trip no longer exists
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/trips');
+        }
+
         let commonDateRanges = new TimeUtils().commonDateRanges(tripDetails.datesPreferences);
         let uid = userSessionDetails.userSessionDetails.uid;
         let profileDetails = await db.userQueries.getUserDetails(uid);
@@ -190,7 +199,16 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
       if(userSessionDetails.userSessionDetails !== null){
         let tripID = request.params.id;
-        let tripDetails = await db.tripQueries.getTripByID(tripID);
+        let tripDetails = '';
+        try{
+          tripDetails = await db.tripQueries.getTripByID(tripID);
+        } catch(e){
+          // redirect to trips if requested trip no longer exists
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/trips');
+        }
+        
         let commonDateRanges = new TimeUtils().commonDateRanges(tripDetails.datesPreferences);
         let uid = userSessionDetails.userSessionDetails.uid;
         let profileDetails = await db.userQueries.getUserDetails(uid);
@@ -266,7 +284,15 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
       if(userSessionDetails.userSessionDetails !== null){
         let tripID = request.params.tripId;
         let eventID = request.params.eventID;
-        let tripDetails = await db.tripQueries.getTripByID(tripID);
+        let tripDetails = '';
+        try{
+          tripDetails = await db.tripQueries.getTripByID(tripID);
+        } catch(e){
+          // redirect to trips if requested trip no longer exists
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/trips');
+        }
         let commonDateRanges = new TimeUtils().commonDateRanges(tripDetails.datesPreferences);
         let uid = userSessionDetails.userSessionDetails.uid;
         let profileDetails = await db.userQueries.getUserDetails(uid);
