@@ -7,7 +7,11 @@ export class TripItineraryQueries{
         // adds comment to the list of event comments
         let dataObj = {
             arrayName: "comments",
-            valueToUpdate: {"userID": userID, "commentText": dataToAdd.comment.trim()}
+            valueToUpdate: {
+                "userID": userID, 
+                "commentText": dataToAdd.comment.trim(),
+                "time": dataToAdd.time
+            }
         }
      
         return await this.parent.updateDocumentAppendToArrayInSubcollection(

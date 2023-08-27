@@ -413,7 +413,10 @@ function getTripEvents(tripID){
                             xhrFields: {
                               withCredentials: true
                             },
-                            data: jQuery.param({"comment": commentText}),
+                            data: jQuery.param({
+                                "comment": commentText,
+                                "time": moment().format('DD/MM/YYYY hh:mm A')
+                            }),
                             success: function() {   
                             },
                             error: function(XMLHttpRequest, textStatus, errorThrown) { 
@@ -458,6 +461,11 @@ function getTripEvents(tripID){
                 commenerUsername.setAttribute("class", "commenter-username");
                 commenerUsername.innerHTML = parsedTripParticipantsUIDsPictures[commentData.userID].username;
                 commenterUsernameAndTextContainer.appendChild(commenerUsername);
+
+                let commentDateTime = document.createElement("p");
+                commentDateTime.setAttribute("class", "comment-datetime");
+                commentDateTime.innerHTML = commentData.time;
+                commenterUsernameAndTextContainer.appendChild(commentDateTime);
 
                 let commentText = document.createElement("p");
                 commentText.setAttribute("class", "comment-text");

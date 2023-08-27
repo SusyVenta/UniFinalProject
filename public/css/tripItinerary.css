@@ -191,3 +191,8 @@ p{
     padding: 5px;
     font-size: small;
 }
+
+.comment-datetime{
+    font-size: smaller;
+    color:grey;
+}
