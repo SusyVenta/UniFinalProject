@@ -3,6 +3,17 @@ export class TripItineraryQueries{
     constructor(parentClass){
         this.parent = parentClass;
     };
+    async addCommentToEvent(tripID, dataToAdd, userID, eventID){
+        // adds comment to the list of event comments
+        let dataObj = {
+            arrayName: "comments",
+            valueToUpdate: {"userID": userID, "commentText": dataToAdd.comment.trim()}
+        }
+     
+        return await this.parent.updateDocumentAppendToArrayInSubcollection(
+            "trips", tripID, "events", eventID, dataObj
+        );
+    }
 
     async createOrModifyEvent(tripID, dataToAdd, userID, eventID=null){
         // if eventID is null, adds document to trip collection 'events'. Otherwise modifies existing event.
@@ -82,9 +93,8 @@ export class TripItineraryQueries{
         }
 
         // comments
-        if (dataToAdd.hasOwnProperty('comments')){
-            sanitizedDataToAdd.comments = comments;
-        }else{
+        if(eventID === null){
+            // only add comments when creating new event
             sanitizedDataToAdd.comments = [];
         }
         

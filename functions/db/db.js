@@ -69,6 +69,19 @@ export class Database{
         await docRef.update(dataToAdd);
     }
 
+    async updateDocumentAppendToArrayInSubcollection(collectionName, docID, subcollectionName, 
+                                                     subcollectionID, dataObj){
+        /* 
+        dataObj: {arrayName: <name>, valueToUpdate: <value>}
+        */
+        let docRef = await this.db.collection(collectionName).doc(docID)
+                    .collection(subcollectionName).doc(subcollectionID);
+
+        let payload = {};
+        payload[dataObj.arrayName] = FieldValue.arrayUnion(dataObj.valueToUpdate);
+        await docRef.update(payload);
+    }
+
     async deleteDocumentInSubcollection(collectionName, docID, subcollectionName, subcollectionID){
         // deletes document in sub collection
         let docRef = await this.db.collection(collectionName).doc(docID)

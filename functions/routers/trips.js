@@ -342,7 +342,11 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         let tripDetails = await db.tripQueries.getTripByID(tripID);
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
           try {
-            await db.tripItineraryQueries.createOrModifyEvent(tripID, request.body, uid, eventID);
+            if (request.body.hasOwnProperty('comment')){
+              await db.tripItineraryQueries.addCommentToEvent(tripID, request.body, uid, eventID);
+            } else{
+              await db.tripItineraryQueries.createOrModifyEvent(tripID, request.body, uid, eventID);
+            }
 
             return response.status(200).send("Updated trip event");
           } catch (e){

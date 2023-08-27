@@ -256,8 +256,7 @@ function saveEvent(tripID, eventID=null){
         address: document.getElementById(`${idPart}new-event-address`).value,
         description: document.getElementById(`${idPart}new-event-description`).value,
         askParticipantsIfTheyJoin: document.getElementById(`${idPart}new-event-ask-participation-confirmation`).checked,
-        status: document.getElementById(`${idPart}event-status`).innerHTML,
-        comments: []
+        status: document.getElementById(`${idPart}event-status`).innerHTML
     }
 
     let urlEnd = eventID;
@@ -405,7 +404,20 @@ function getTripEvents(tripID){
                     postCommentButton.addEventListener('click', function(event){
                         event.stopPropagation(); // don't open event modal
                         let commentText = document.getElementById(`add-comment-input-` + eventData.docID).value;
-                        console.log(commentText);
+                        
+                        $.ajax({
+                            url: `/trips/` + tripID + "/itinerary/" + eventData.docID,
+                            method: "POST",
+                            xhrFields: {
+                              withCredentials: true
+                            },
+                            data: jQuery.param({"comment": commentText}),
+                            success: function() {   
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                              alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+                            }
+                          });
                     });
                     divAddCommentInputContainer.appendChild(postCommentButton);
 
