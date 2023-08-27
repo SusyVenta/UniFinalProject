@@ -487,6 +487,7 @@ function addNewEventDomElements(eventData, docID, allEvents){
 }
 
 function getSortedEvents(querySnapshot){
+    // returns list of trip events, sorted by start date in ascending order
     let allEvents = [];
 
     querySnapshot.forEach((doc) => {
@@ -556,6 +557,7 @@ function getTripEvents(tripID){
                                            event.docID, allSortedEvents);
                 }
                 if (addedOrModifiedDocs[event.docID].type === "modified") {
+                    // TODO: IMPROVE - update existing elements instead of deleting and recreating
                     removeExistingEventDomElements(event.docID);
                     addNewEventDomElements(addedOrModifiedDocs[event.docID].data, 
                                            event.docID, allSortedEvents);
