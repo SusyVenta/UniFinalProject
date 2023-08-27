@@ -25,8 +25,11 @@ function alterEditUsername(){
               withCredentials: true
             },
             data: jQuery.param(payload),
-            fail: function(xhr, textStatus, errorThrown){ 
-                alert("somethign went wrong whlie saving your information. Error: " + textStatus);
+            success : function () {
+              alert("New username saved");
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
             }
         });
     }
@@ -81,21 +84,16 @@ function initializeCroppie(input) {
                     xhrFields: {
                     withCredentials: true
                     },
-                    data: jQuery.param(payload)
+                    data: jQuery.param(payload),
+                    success : function () {
+                      let uid = document.getElementById("current-user-uid").innerHTML.trim();
+                      window.location.href = "/profile/" + uid;
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                        alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+                    }
                 });
             })
-
-            // remove croppie container 
-            let croppieContainers = document.getElementsByClassName("croppie-container");
-            for(let croppieContainer of croppieContainers){
-                croppieContainer.remove();
-            }
-            
-            // reload page to reflect changes
-            let uid = document.getElementById("current-user-uid").innerHTML;
-            let domain = (window.location.href).split("/");
-            let url = domain[0] + "/profile/" + uid;
-            window.location.assign(url);
         })
       }
       reader.readAsDataURL(input.files[0]);

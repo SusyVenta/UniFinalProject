@@ -182,10 +182,12 @@ p{
 .commenter-username{
     margin-bottom: 1%;
     font-weight: bold;
+    font-size: small;
 }
 
 .comment-text{
     background-color: whitesmoke;
     border-radius: 20px;
-    padding: 2%;
+    padding: 5px;
+    font-size: small;
 }
