@@ -384,6 +384,11 @@ export class TripQueries{
             await this.parent.notificationsQueries.removeNotification(
                 participantUID, "trip_invite_received_" + tripID
             );
+
+            // remove notifications to join trip event if present
+            let notificationID = `addedToTripEvent_${tripID}_`;
+            this.parent.notificationsQueries.removeNotification(
+                participantUID, notificationID, true);
         }
 
         // delete trip document

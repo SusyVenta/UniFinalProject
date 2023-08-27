@@ -107,16 +107,24 @@ export class NotificationsQueries{
         }
     };
 
-    async removeNotification(recipientUid, notificationID){
+    async removeNotification(recipientUid, notificationID, searchStartsWith=false){
+        // if searchStartsWith === True: searches notificationID that starts with notificationID
 
         let userDoc = await this.parent.getDocument("users", recipientUid);
         let notifications = userDoc.notifications;
 
         let notificationToRemove = null;
         for (let notification of notifications){
-            if (notification.notification_id === notificationID){
-                notificationToRemove = notification;
-                break;
+            if(searchStartsWith === false){
+                if (notification.notification_id === notificationID){
+                    notificationToRemove = notification;
+                    break;
+                }
+            } else {
+                if (notification.notification_id.startsWith(notificationID)){
+                    notificationToRemove = notification;
+                    break;
+                }
             }
         }
         

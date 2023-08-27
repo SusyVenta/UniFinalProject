@@ -112,7 +112,18 @@ export class TripItineraryQueries{
     }
 
     async removeTripEvent(tripID, eventID){
+        // get trip participants
+        let tripDoc = await this.parent.tripQueries.getTripByID(tripID);
+        let tripParticipants = Object.keys(tripDoc.participantsStatus);
+
+        for (let participantUID of tripParticipants){
+            // remove notifications if present
+            let notificationID = `addedToTripEvent_${tripID}_${eventID}`;
+            this.parent.notificationsQueries.removeNotification(participantUID, notificationID);
+        }
+
         // removes trip event from trip
         this.parent.deleteDocumentInSubcollection("trips", tripID, "events", eventID);
+        
     }
 };
