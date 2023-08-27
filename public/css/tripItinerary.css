@@ -10,13 +10,13 @@ p{
 }
 
 #itinerary-tab > *{
-    margin-top: 2%;
+    margin-top: 5px;
 }
 
 #finalized-dates{
     /* draws dotted line */ 
     border: 3px dotted #bbb;
-    padding: 2%;
+    padding: 5px;
 }
 
 /* new event modal -------------------------------------------------------------------------------*/
