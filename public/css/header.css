@@ -195,3 +195,9 @@
     border-radius: 50%;
   }
 }
+
+/* Make all buttons clickable from Chrome on Android */
+/* https://stackoverflow.com/questions/48661418/onclick-event-is-not-working-on-android-chrome */
+button{
+  cursor: pointer;
+}

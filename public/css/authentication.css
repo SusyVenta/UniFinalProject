@@ -49,11 +49,6 @@
   font-size: small;
 }
 
-/* https://stackoverflow.com/questions/48661418/onclick-event-is-not-working-on-android-chrome */
-#login-button{
-  cursor: pointer;
-}
-
 @media only screen and (max-width: 600px) {
   #auth-background {
     background-image: linear-gradient(coral,#FF5555);
