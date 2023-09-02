@@ -486,5 +486,38 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
     }
   });
 
+  router.delete("/:tripId/polls/:pollID", async(request, response) => {
+    // Deletes trip poll
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        let uid = userSessionDetails.userSessionDetails.uid;
+        let tripID = request.params.tripId;
+        let pollID = request.params.pollID;
+
+        let tripDetails = await db.tripQueries.getTripByID(tripID);
+        if (tripDetails.participantsStatus.hasOwnProperty(uid)){
+          try {
+            // delete trip document and all dependencies
+            await db.tripPollQueries.removeTripPoll(tripID, pollID);
+
+            return response.status(200).send("Deleted trip poll");
+          } catch (e){
+
+            return response.status(500).send(e.message);
+          }
+        } else {
+          return response.status(302).redirect('/auth/login');
+        }
+        
+      } else {
+        return response.status(302).redirect('/auth/login');
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
   return router;
 };
