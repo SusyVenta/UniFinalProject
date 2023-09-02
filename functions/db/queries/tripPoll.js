@@ -76,8 +76,8 @@ export class TripPollQueries{
         
     }
 
-    async addCommentToEvent(tripID, dataToAdd, userID, eventID){
-        // adds comment to the list of event comments
+    async addCommentToPoll(tripID, dataToAdd, userID, pollID){
+        // adds comment to the list of poll comments
         let dataObj = {
             arrayName: "comments",
             valueToUpdate: {
@@ -88,7 +88,7 @@ export class TripPollQueries{
         }
      
         return await this.parent.updateDocumentAppendToArrayInSubcollection(
-            "trips", tripID, "events", eventID, dataObj
+            "trips", tripID, "polls", pollID, dataObj
         );
     }
 
