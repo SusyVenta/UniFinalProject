@@ -36,7 +36,8 @@ export class TripPollQueries{
             let unsanitizedOptions = dataToAdd.options;
             let sanitizedOptions = {};
             for (const [key, value] of Object.entries(unsanitizedOptions)) {
-                sanitizedOptions[parseInt(key)] = value.trim();
+                let optionNumber = parseInt(key) + 1;
+                sanitizedOptions["option_" + optionNumber] = value.trim();
             }
             sanitizedDataToAdd.options = sanitizedOptions;
         }else{
@@ -47,6 +48,9 @@ export class TripPollQueries{
         if(pollID === null){
             // only add comments when creating new event
             sanitizedDataToAdd.comments = [];
+
+            // set poll owner 
+            sanitizedDataToAdd.pollOwner = userID;
         }
         
         if (pollID === null){

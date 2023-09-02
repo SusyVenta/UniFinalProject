@@ -52,59 +52,67 @@ function showAddPollModal(tripParticipants, friendsProfilesIn, userID){
 
 };
 
-function addPollOptionsInput(pollOptionsContainerID){
+function addPollOptionsInput(pollOptionsContainerID, pollID=null){
     /* Adds poll options inputs within the div containing all poll options inputs */
+    let idPart = `${pollID}-`;
+    if (pollID === null){
+        idPart = '';
+    }
+
     let parentDiv = document.getElementById(pollOptionsContainerID);
 
-    let numberExistingPollOptions = document.querySelectorAll('[id^="input-poll-option-"]').length;
+    let numberExistingPollOptions = document.querySelectorAll(`[id^="${idPart}input-poll-option-"]`).length;
     let newPollOptionNumber = numberExistingPollOptions + 1;
 
     let inputDiv = document.createElement("div");
     inputDiv.setAttribute("class", `input-group mb-3`);
-    inputDiv.setAttribute("id", `poll-option-container-div-` + newPollOptionNumber);
+    inputDiv.setAttribute("id", `${idPart}poll-option-container-div-` + newPollOptionNumber);
 
     let span = document.createElement("span");
     span.setAttribute("class", `input-group-text`);
-    span.setAttribute("id", `poll-option-label-` + newPollOptionNumber);
+    span.setAttribute("id", `${idPart}poll-option-label-` + newPollOptionNumber);
     span.innerHTML = "Option " + newPollOptionNumber;
 
     let input = document.createElement("input");
     input.setAttribute("type", `text`);
     input.setAttribute("autocomplete", `one-time-code`);
     input.setAttribute("class", `form-control`);
-    input.setAttribute("id", `input-poll-option-` + newPollOptionNumber);
+    input.setAttribute("id", `${idPart}input-poll-option-` + newPollOptionNumber);
     input.setAttribute("required", `true`);
     input.setAttribute("aria-describedby", `poll-option-label-` + newPollOptionNumber);
 
     let deleteOptionButton = document.createElement("button");
     deleteOptionButton.setAttribute("class", `btn btn-secondary`);
     deleteOptionButton.setAttribute("type", `button`);
-    deleteOptionButton.setAttribute("id", `option-delete-button-` + newPollOptionNumber);
+    deleteOptionButton.setAttribute("id", `${idPart}option-delete-button-` + newPollOptionNumber);
     deleteOptionButton.innerHTML = "✘";
     deleteOptionButton.addEventListener(
         "click", 
         function(event){
-            let optionNumberBeingRemoved = parseInt(event.target.parentNode.id.replace("poll-option-container-div-", ""));
-            let existingOptions = document.querySelectorAll('[id^="input-poll-option-"]').length;
+            let optionNumberBeingRemoved = parseInt(event.target.parentNode.id.replace(`${idPart}poll-option-container-div-`, ""));
+            let existingOptions = document.querySelectorAll(`[id^="${idPart}input-poll-option-"]`).length;
 
             event.target.parentNode.remove();
 
             // rename IDs after the one we're removing
             let idsToRename = [
-                `poll-option-container-div-`, 
-                `poll-option-label-`, 
-                `input-poll-option-`,
-                `option-delete-button-`
+                `${idPart}poll-option-container-div-`, 
+                `${idPart}poll-option-label-`, 
+                `${idPart}input-poll-option-`,
+                `${idPart}option-delete-button-`
             ];
             for (let i=optionNumberBeingRemoved + 1; i <= existingOptions; i++){
                 let newID = i - 1;
 
                 for (let idToRename of idsToRename){
-                    let inputDivToChange = document.getElementById(idToRename + i);
-                    inputDivToChange.setAttribute("id", idToRename + newID);
+                    let domElementToChange = document.getElementById(idToRename + i);
+                    domElementToChange.setAttribute("id", idToRename + newID);
 
-                    if(idToRename == `poll-option-label-`){
-                        inputDivToChange.innerHTML = "Option " + newID;
+                    if(idToRename == `${idPart}poll-option-label-`){
+                        domElementToChange.innerHTML = "Option " + newID;
+                    }
+                    if(idToRename == `${idPart}input-poll-option-`){
+                        domElementToChange.setAttribute("aria-describedby", `${idPart}poll-option-label-` + newID);
                     }
                 }
             }
@@ -172,9 +180,9 @@ function savePoll(tripID, pollID=null){
       });
 };
 
-function deleteEvent(tripID, eventID){
+function deletePoll(tripID, eventID){
     $.ajax({
-        url: `/trips/` + tripID + "/itinerary/" + eventID,
+        url: `/trips/` + tripID + "/polls/" + eventID,
         method: "DELETE",
         xhrFields: {
           withCredentials: true
@@ -194,7 +202,7 @@ function createEventDetailsModal(eventData){
     let tripID = document.getElementById("hidden-trip-id").innerHTML.trim();
 
     // clone new-event-modal
-    let newEventModal = document.getElementById("new-event-modal");
+    let newEventModal = document.getElementById("new-poll-modal");
     let selectedEventModal = newEventModal.cloneNode(true); //clone element and children
 
     // change element id
@@ -221,59 +229,43 @@ function createEventDetailsModal(eventData){
     document.body.appendChild(selectedEventModal);
 
     // reset title
-    document.getElementById(eventID + "-new-event-modal-title").innerHTML = eventData.title;
+    document.getElementById(eventID + "-new-poll-modal-title").innerHTML = eventData.question;
+
+    // choosable options 
+    document.getElementById(eventID + "-number-poll-options").value = eventData.numberOptionsToChoose;
+
+    // add options button
+    document.getElementById(eventID + "-add-options-button").addEventListener(
+        "click", 
+        function(){
+            addPollOptionsInput(eventID + '-new-poll-options-container', eventID);
+        }
+    );
+
+    // options
+    document.getElementById(eventID + "-input-poll-option-1").value = eventData.options["option_1"];
+    document.getElementById(eventID + "-input-poll-option-2").value = eventData.options["option_2"];
+
+    for (const [key, value] of Object.entries(eventData.options)) {
+        if ((key != "option_1") && (key != "option_2")){
+            addPollOptionsInput(eventID + '-new-poll-options-container', eventID);
+            let optionNumber = key.split("_").pop();
+            document.getElementById(eventID + "-input-poll-option-" + optionNumber).value = value;
+        }
+    }
     
     // close button
-    let closeButton = document.getElementById(eventID + "-new-event-modal-close-button");
+    let closeButton = document.getElementById(eventID + "-new-poll-modal-close-button");
     if(closeButton !== null){
         closeButton.setAttribute("onclick", `$('#${newDivID}').hide();`);
     }
-    let closeButtonRedirect = document.getElementById(eventID + "-new-event-modal-close-button-redirect-itinerary");
+    let closeButtonRedirect = document.getElementById(eventID + "-new-poll-modal-close-button-redirect-polls");
     if(closeButtonRedirect !== null){
-        closeButtonRedirect.setAttribute("onclick", `window.location = '//${window.location.host}/trips/${tripID}/itinerary';`);
-    }
-    
-    document.getElementById(eventID + "-event-type").innerHTML = eventData.eventType;
-    let eventTypeOptions = document.querySelectorAll(`[id^="${eventID}-event-type-option"]`);
-    for (let eventTypeOption of eventTypeOptions){
-        eventTypeOption.setAttribute(
-            "onclick", 
-            `document.getElementById('${eventID}-event-type').innerHTML = '${eventTypeOption.innerHTML.trim()}';`);
+        closeButtonRedirect.setAttribute("onclick", `window.location = '//${window.location.host}/trips/${tripID}/polls';`);
     }
 
-    document.getElementById(eventID + "-event-status").innerHTML = eventData.status;
-    let eventStatusOptions = document.querySelectorAll(`[id^="${eventID}-event-status-option"]`);
-    for (let eventStatusOption of eventStatusOptions){
-        eventStatusOption.setAttribute(
-            "onclick", 
-            `document.getElementById('${eventID}-event-status').innerHTML = '${eventStatusOption.innerHTML.trim()}';`);
-    }
+    document.getElementById(eventID + "-new-poll-question").value = eventData.question;
 
-    document.getElementById(eventID + "-new-event-title").value = eventData.title;
-
-    for (let startOrEnd of ["start", "end"]){
-        document.getElementById(eventID + `-new-event-availability-${startOrEnd}`).value = eventData[`${startOrEnd}Datetime`];
-        
-        $(`#${eventID}-new-event-availability-${startOrEnd}`).daterangepicker({
-            timePicker: true,
-            singleDatePicker: true,
-            opens: 'left',
-            locale: {
-              format: 'DD/MM/YYYY hh:mm A'
-            }
-        });
-    
-        $(`#${eventID}-new-event-availability-${startOrEnd}`).on('apply.daterangepicker', function(event, picker) {
-          let newValue = picker.startDate.format('DD/MM/YYYY hh:mm A');
-    
-          document.getElementById(`${eventID}-new-event-availability-${startOrEnd}`).value = newValue;
-        });
-    }
-    
-    document.getElementById(eventID + "-new-event-address").value = eventData.address;
-    document.getElementById(eventID + "-new-event-description").value = eventData.description;
-    document.getElementById(eventID + "-new-event-ask-participation-confirmation").checked = eventData.askParticipantsIfTheyJoin;
-    
     // event participants 
     let friendsProfiles = JSON.parse(document.getElementById("hidden-friends-profiles").innerHTML);
     let tripParticipants = JSON.parse(document.getElementById("hidden-trip-participants").innerHTML);
@@ -291,7 +283,7 @@ function createEventDetailsModal(eventData){
 
     try{
         // render prepopulated searchable select showing existing event participants
-        let tomElement = document.getElementById(`${eventID}-new-trip-event-multiselect-friends`);
+        let tomElement = document.getElementById(`${eventID}-new-poll-multiselect-friends`);
         new TomSelect(tomElement, {
             plugins: ['remove_button'],
             create: true,
@@ -312,46 +304,46 @@ function createEventDetailsModal(eventData){
     }
 
     // change save function
-    let saveButton = document.getElementById(`${eventID}-new-event-create-button`);
+    let saveButton = document.getElementById(`${eventID}-new-poll-create-button`);
     saveButton.setAttribute(
         "onclick", 
-        `saveEvent('${saveButton.name}', '${eventID}');`);
+        `savePoll('${saveButton.name}', '${eventID}');`);
 
     // add delete event button
     let deleteEventButton = document.createElement("button");
     deleteEventButton.setAttribute("class", `btn btn-secondary`);
     deleteEventButton.setAttribute("type", `button`);
-    deleteEventButton.setAttribute("id", `${eventID}-event-delete-button`);
-    deleteEventButton.innerHTML = "Delete event";
+    deleteEventButton.setAttribute("id", `${eventID}-poll-delete-button`);
+    deleteEventButton.innerHTML = "Delete poll";
 
     deleteEventButton.addEventListener(
         "click", 
         function(){
             // opens pop up with OK or Cancel buttons
-            if (confirm("Are you sure you want to remove this trip event?")) {
-                deleteEvent(tripID, eventID);
+            if (confirm("Are you sure you want to remove this trip poll?")) {
+                deletePoll(tripID, eventID);
             }
         }
     );
-    let deleteEventContainer = document.getElementById(`${eventID}-event-modal-footer-left`);
+    let deleteEventContainer = document.getElementById(`${eventID}-poll-modal-footer-left`);
     deleteEventContainer.appendChild(deleteEventButton);
 
     //cancel button
-    let cancelButton = document.getElementById(`${eventID}-new-event-cancel-button`);
+    let cancelButton = document.getElementById(`${eventID}-new-poll-cancel-button`);
     if(cancelButton !== null){
         // element not present when loading 'trips/<trip id>/itinerary/<event id>
         cancelButton.setAttribute(
             "onclick", 
-            `$('#${eventID}-new-event-modal').hide();`);
+            `$('#${eventID}-new-poll-modal').hide();`);
     }
 
-    let cancelButtonRedirect = document.getElementById(`${eventID}-new-event-cancel-button-redirect-itinerary`);
+    let cancelButtonRedirect = document.getElementById(`${eventID}-new-poll-cancel-button-redirect-polls`);
     if(cancelButtonRedirect !== null){
         // element not present when loading 'trips/<trip id>/itinerary/<event id>
         cancelButtonRedirect.addEventListener(
             "click", 
             function(){
-                window.location = `//${window.location.host}/trips/${tripID}/itinerary`
+                window.location = `//${window.location.host}/trips/${tripID}/polls`
             }
         );
     }
@@ -360,35 +352,15 @@ function createEventDetailsModal(eventData){
 
 function createNewEventDOMElements(eventData){
     // create div for the event
-    let divEventContainer = document.createElement("div");
-    divEventContainer.setAttribute("class", `event-container`);
-    divEventContainer.setAttribute("id", eventData.docID);
-
-    let divEventTitleAndTypeContainer = document.createElement("div");
-    divEventTitleAndTypeContainer.setAttribute("class", `event-type-title-container`);
-
-    let divEventCategory = document.createElement("p");
-    divEventCategory.setAttribute("class", `listed-event-event-type`);
-    divEventCategory.innerHTML = eventData.eventType;
+    let divPollContainer = document.createElement("div");
+    divPollContainer.setAttribute("class", `poll-container`);
+    divPollContainer.setAttribute("id", eventData.docID);
 
     let pEventTitle = document.createElement("p");
-    pEventTitle.setAttribute("class", `event-title`);
-    pEventTitle.innerHTML = eventData.title;
+    pEventTitle.setAttribute("class", `poll-title`);
+    pEventTitle.innerHTML = eventData.question;
 
-    divEventTitleAndTypeContainer.appendChild(pEventTitle);
-    divEventTitleAndTypeContainer.appendChild(divEventCategory);
-    divEventContainer.appendChild(divEventTitleAndTypeContainer);
-
-    let pEventDates = document.createElement("p");
-    pEventDates.setAttribute("class", `event-dates`);
-    pEventDates.innerHTML = eventData.startDatetime + " - " + eventData.endDatetime;
-    divEventContainer.appendChild(pEventDates);
-
-    let eventStatus = document.createElement("p");
-    eventStatus.setAttribute("class", `event-status`);
-    eventStatus.innerHTML = "Status: " + eventData.status;
-    divEventContainer.appendChild(eventStatus);
-    
+    divPollContainer.appendChild(pEventTitle);
 
     let divParticipantsAndCommentsContainer = document.createElement("div");
     divParticipantsAndCommentsContainer.setAttribute("class", `participants-comments-container`);
@@ -412,7 +384,7 @@ function createNewEventDOMElements(eventData){
     });
     divParticipantsAndCommentsContainer.appendChild(pNumberComments);
 
-    divEventContainer.appendChild(divParticipantsAndCommentsContainer);
+    divPollContainer.appendChild(divParticipantsAndCommentsContainer);
 
     // add comment section
     let divAddCommentContainer = document.createElement("div");
@@ -457,7 +429,7 @@ function createNewEventDOMElements(eventData){
                 let commentText = document.getElementById(`add-comment-input-` + eventData.docID).value;
                 
                 $.ajax({
-                    url: `/trips/` + tripID + "/itinerary/" + eventData.docID,
+                    url: `/trips/` + tripID + "/polls/" + eventData.docID,
                     method: "POST",
                     xhrFields: {
                       withCredentials: true
@@ -482,7 +454,7 @@ function createNewEventDOMElements(eventData){
         }
     });
     divAddCommentContainer.appendChild(addCommentButton);
-    divEventContainer.appendChild(divAddCommentContainer);
+    divPollContainer.appendChild(divAddCommentContainer);
 
     // display comments
     let divCommentsContainer = document.createElement("div");
@@ -525,45 +497,34 @@ function createNewEventDOMElements(eventData){
 
         divCommentsContainer.appendChild(divCommentToDisplayContainer);
     }
-    divEventContainer.appendChild(divCommentsContainer);
+    divPollContainer.appendChild(divCommentsContainer);
 
     // add event modal to DOM
     createEventDetailsModal(eventData);
 
-    divEventContainer.addEventListener('click', function(){
-        $(`#${eventData.docID}-new-event-modal`).show();
+    divPollContainer.addEventListener('click', function(){
+        $(`#${eventData.docID}-new-poll-modal`).show();
     });
-    return divEventContainer;
+    return divPollContainer;
 }
 
-function removeExistingEventDomElements(docID){
+function removeExistingPollDomElements(docID){
     let elementToRemove = document.getElementById(docID);
     if(elementToRemove !== null){
         elementToRemove.remove();
     }
 }
 
-function addNewEventDomElements(eventData, docID, allEvents){
+function addNewPollDomElements(eventData, docID){
     eventData.docID = docID;
 
-    let eventsContainer = document.getElementById("events-container");
-    let docIDMapTODocIDMinusOne = getPreviousDocIDMap(allEvents);
-    console.log(docIDMapTODocIDMinusOne);
-
+    let eventsContainer = document.getElementById("polls-container");
     let newEventDomElements = createNewEventDOMElements(eventData);
-    let elementBeforeID = docIDMapTODocIDMinusOne[docID];
-    if(elementBeforeID === null){
-        // add as first element
-        eventsContainer.prepend(newEventDomElements);
-    }else{
-        let elementBefore = document.getElementById(elementBeforeID);
-        // https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentElement
-        elementBefore.insertAdjacentElement('afterend', newEventDomElements);
-    }
+    eventsContainer.appendChild(newEventDomElements);
 }
 
-function getSortedEvents(querySnapshot){
-    // returns list of trip events, sorted by start date in ascending order
+function getAllEvents(querySnapshot){
+    // returns list of trip events
     let allEvents = [];
 
     querySnapshot.forEach((doc) => {
@@ -571,35 +532,10 @@ function getSortedEvents(querySnapshot){
         data.docID = doc.id;
         allEvents.push(data);
     });
-
-    allEvents.sort(function(a,b){
-        // Sort ascending (oldest to newest). To get descending, swap a and b below
-        return moment(a.startDatetime, 'DD/MM/YYYY hh:mm A') - moment(b.startDatetime, 'DD/MM/YYYY hh:mm A');
-    });
     return allEvents;
 }
-
-function getPreviousDocIDMap(allEvents){
-    /* Events appear ordered by event date on the page.
-    If any new events are added, we need to make sure to add them in the correct order,
-    after existing elements with previous start dates.
-
-    :returns: {<null or previous docID>: <next docID>}
-    */
-
-    // for new elements, need to know after what existing element to insert
-    let docIDMapTODocIDMinusOne = {};
-    for (let i = 0; i < allEvents.length; i++) {
-        if(i > 0){
-            docIDMapTODocIDMinusOne[allEvents[i].docID] = allEvents[i - 1].docID;
-        }else{
-            docIDMapTODocIDMinusOne[allEvents[i].docID] = null;
-        }
-    }
-    return docIDMapTODocIDMinusOne;
-}
  
-function getTripEvents(tripID){
+function getTripPolls(tripID){
     /* 
     Gets data for currently authenticates user in real time. 
     Whenever anything changes in this document, data is pushed to the client.
@@ -607,7 +543,7 @@ function getTripEvents(tripID){
 
     https://firebase.google.com/docs/firestore/query-data/listen
     */
-    db.collection(`trips`).doc(tripID).collection("events").onSnapshot((querySnapshot) => {
+    db.collection(`trips`).doc(tripID).collection("polls").onSnapshot((querySnapshot) => {
         let addedOrModifiedDocs = {}
         // https://firebase.google.com/docs/firestore/query-data/listen#view_changes_between_snapshots
         querySnapshot.docChanges().forEach((change) => {
@@ -619,32 +555,32 @@ function getTripEvents(tripID){
                 addedOrModifiedDocs[change.doc.id] = {"data": change.doc.data(), "type": "modified"};
             } 
             if (change.type === "removed") {
-                removeExistingEventDomElements(change.doc.id);
+                removeExistingPollDomElements(change.doc.id);
             }
         });
 
-        let allSortedEvents = getSortedEvents(querySnapshot);
+        let allEvents = getAllEvents(querySnapshot);
 
-        for (let event of allSortedEvents){
+        for (let event of allEvents){
             if(addedOrModifiedDocs.hasOwnProperty(event.docID)){
                 // deal with events to add or remove
                 if (addedOrModifiedDocs[event.docID].type === "added") {
-                    addNewEventDomElements(addedOrModifiedDocs[event.docID].data, 
-                                           event.docID, allSortedEvents);
+                    addNewPollDomElements(addedOrModifiedDocs[event.docID].data, 
+                                           event.docID);
                 }
                 if (addedOrModifiedDocs[event.docID].type === "modified") {
                     // TODO: IMPROVE - update existing elements instead of deleting and recreating
-                    removeExistingEventDomElements(event.docID);
-                    addNewEventDomElements(addedOrModifiedDocs[event.docID].data, 
-                                           event.docID, allSortedEvents);
+                    removeExistingPollDomElements(event.docID);
+                    addNewPollDomElements(addedOrModifiedDocs[event.docID].data, 
+                                           event.docID);
                 }
             }
         }
 
         // called when user navigates to trip event URL. Automatically open requested modal
-        let eventToOpen = document.getElementById("hidden-eventToOpen").innerHTML.trim();
-        if(eventToOpen != 'null'){
-            $(`#${eventToOpen}-new-event-modal`).show();
+        let pollToOpen = document.getElementById("hidden-pollToOpen").innerHTML.trim();
+        if(pollToOpen != 'null'){
+            $(`#${pollToOpen}-new-poll-modal`).show();
         }
         
     });

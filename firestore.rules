@@ -29,6 +29,12 @@ service cloud.firestore {
           allow read: if isAuthenticated() && isOneOfRoles(get(/databases/$(database)/documents/trips/$(trip)), ['owner', 'collaborator', 'pending']); 
           allow write: if false; // don't allow write operations
       }
+
+      // Explicitly define rules for the 'polls' subcollection
+      match /polls/{pollId} {
+          allow read: if isAuthenticated() && isOneOfRoles(get(/databases/$(database)/documents/trips/$(trip)), ['owner', 'collaborator', 'pending']); 
+          allow write: if false; // don't allow write operations
+      }
     }
   }
 }

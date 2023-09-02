@@ -81,7 +81,7 @@
           <div>
             <button class="btn btn-secondary" onclick="showAddPollModal('<%= JSON.stringify(trip.participantsStatus) %>', '<%= JSON.stringify(friendsProfiles) %>', '<%= userID %>');">New Poll</button>
           </div>
-          <div id="events-container">
+          <div id="polls-container">
 
           </div>
         </div>
@@ -110,11 +110,11 @@
       <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title" id="new-poll-title">New Poll</h1>
+            <h1 class="modal-title" id="new-poll-modal-title">New Poll</h1>
             <% if (pollToOpen === 'null') { %>
-              <button type="button" id="new-poll-close-button" class="btn-close" onclick="$('#new-poll-modal').hide();" aria-label="Close"></button>
+              <button type="button" id="new-poll-modal-close-button" class="btn-close" onclick="$('#new-poll-modal').hide();" aria-label="Close"></button>
             <%} else { %>
-              <button type="button" id="new-poll-close-button-redirect-itinerary" class="btn-close" aria-label="Close"></button>
+              <button type="button" id="new-poll-modal-close-button-redirect-polls" class="btn-close" aria-label="Close"></button>
             <%} %>
             </div>
           <div class="modal-body">
@@ -137,7 +137,7 @@
 
             <!-- button to add more poll options -->
             <div id="add-options-div">
-              <button class="btn btn-secondary" onclick="addPollOptionsInput('new-poll-options-container');">
+              <button id="add-options-button" class="btn btn-secondary" onclick="addPollOptionsInput('new-poll-options-container');">
                 Add options</span>
               </button>
             </div>
@@ -175,11 +175,11 @@
     </div>
   </section>
 
-  <!-- trip event listeners -->
+  <!-- trip polls listeners -->
   <script>
     // get live notifications
     let tripID = '<%= trip.tripID %>'; 
-    getTripEvents(tripID);
+    getTripPolls(tripID);
 
     let tripParticipantsUIDsPictures = '<%- tripParticipantsUIDsPictures %>';
   </script>
