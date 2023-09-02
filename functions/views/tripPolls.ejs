@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- SHARED HEAD -->
+  <%- include('partials/sharedHead') %>
+
+  <!-- Title tag in the browser and Google results -->
+  <title>GroupTripper | Trip polls</title>
+  <meta property="og:title" content="GroupTripper: best free group trip planner app - your trips" data-rh="true">
+  <meta property="twitter:title" content="GroupTripper: best free group trip planner app - your trips" data-rh="true">
+  <meta name="description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta name="twitter:description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:image:alt" content="Screenshot of GroupTripper: one view for your map and itinerary" data-rh="true">
+
+  <!-- css -->
+  <link rel="stylesheet" href="/css/generic.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+  <link rel="stylesheet" href="/css/tripCommon.css">
+  <link rel="stylesheet" href="/css/tripPolls.css">
+
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+  <!-- Tom Select -->
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+  <script src="/js/tripCommon.js"></script>
+  <script src="/js/tripPolls.js"></script>
+</head>
+
+<body>
+  <div>
+    <%- include('partials/header'); %>
+  </div>
+  <div class="outer-container">
+    <div class="title-container"
+      style="background-image: url('<%= trip.picture.src.landscape %>');"
+      alt="'<%= trip.picture.alt %>' by <%= trip.picture.photographer %>" src="<%= trip.picture.src.medium %>">
+      <div id="title-inner-container">
+        <h1 id="title"><%= trip.tripTitle %></h1>
+        <% if (trip.participantsStatus[userID] !== 'pending') { %>
+          <button id="edit-trip-title-button" class="btn btn-secondary" onclick="alterTripTitle('<%= tripID %>');">
+            <i id="edit-trip-title-button-icon" class="fas fa-pencil"></i>
+          </button>
+        <%} %>
+      </div>
+    </div>
+
+    <div class="trip-tab" id="trip-<%= trip.tripID %>" >
+      <!-- tab names -->
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" href="/trips/<%= trip.tripID %>/participants" >Participants</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/trips/<%= trip.tripID %>/itinerary" >Itinerary</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/trips/<%= trip.tripID %>/polls" >Polls</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/trips/<%= trip.tripID %>/settings" >Settings</a>
+        </li>
+      </ul>
+      <!-- tab content -->
+      <div class="tab-content">
+        <!-- friendship types -->
+        <% var friendshipsUIDs = profileDetails.friends; %>
+        <% var friendshipsAccepted = []; %>
+        <% Object.keys(friendshipsUIDs).forEach(function(friendUid) { %>
+          <% if (friendshipsUIDs[friendUid] === 'friends') { %>
+            <% friendshipsAccepted.push(friendUid) %>
+          <% } %>
+        <% }); %>
+        <!-- ---------------------------- itinerary ------------------------->
+        <div id="polls-tab" class="tab-pane active">
+          <div>
+            <button class="btn btn-secondary" onclick="showAddPollModal('<%= JSON.stringify(trip.participantsStatus) %>', '<%= JSON.stringify(friendsProfiles) %>', '<%= userID %>');">New Poll</button>
+          </div>
+          <div id="events-container">
+
+          </div>
+        </div>
+        <div id="hidden-friends-profiles">
+          <%= JSON.stringify(friendsProfiles) %>
+        </div>
+        <div id="hidden-trip-participants">
+          <%= JSON.stringify(trip.participantsStatus) %>
+        </div>
+        <div id="hidden-user-uid">
+          <%= userID %>
+        </div>
+        <div id="hidden-trip-id">
+          <%= trip.tripID %>
+        </div>
+        <div id="hidden-eventToOpen">
+          <%= eventToOpen %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <!-- modal displaying form to add new trip event-->
+    <div id="new-poll-modal" class="modal" tabindex="-1" data-bs-backdrop="static">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title" id="new-poll-title">New Poll</h1>
+            <% if (eventToOpen === 'null') { %>
+              <button type="button" id="new-poll-close-button" class="btn-close" onclick="$('#new-poll-modal').hide();" aria-label="Close"></button>
+            <%} else { %>
+              <button type="button" id="new-poll-close-button-redirect-itinerary" class="btn-close" aria-label="Close"></button>
+            <%} %>
+            </div>
+          <div class="modal-body">
+            <!-- name / description -->
+            <p>Question</p>
+            <input autocomplete="one-time-code" class="form-control" id="new-poll-question" required=true >
+
+            <!-- options -->
+            <div id="new-poll-options-container">
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="poll-option-label-1">Option 1</span>
+                <input type="text" autocomplete="one-time-code" class="form-control" id="input-poll-option-1" required=true aria-describedby="poll-option-1-label">
+              </div>
+
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="poll-option-label-2">Option 2</span>
+                <input type="text" autocomplete="one-time-code" class="form-control" id="input-poll-option-2" required=true aria-describedby="poll-option-1-label">
+              </div>
+            </div>
+
+            <!-- button to add more poll options -->
+            <div id="add-options-div">
+              <button class="btn btn-secondary" onclick="addPollOptionsInput('new-poll-options-container');">
+                Add options</span>
+              </button>
+            </div>
+
+            <!-- input - how many options can participants choose? -->
+            <label for="number-poll-options" class="form-label">
+              How many options can participants choose?
+            </label>
+            <input autocomplete="one-time-code" type="number" 
+              class="form-control" id="number-poll-options" required=true 
+              value="<%- trip.workingDaysAvailability[userID] %>"
+              >
+
+            <!-- add friends to event -->
+            <p>Participants: </p>
+            <select id="new-poll-multiselect-friends" multiple placeholder="">
+            </select>
+
+          </div>
+          <div class="modal-footer" id="new-poll-modal-footer">
+            <div class="footer-left" id="poll-modal-footer-left">
+            </div>
+            <div class="footer-right">
+              <% if (eventToOpen === 'null') { %>
+                <button id="new-poll-cancel-button" type="button" class="btn btn-secondary" onclick="$('#new-poll-modal').hide();">Cancel</button>
+              <%} else { %>
+                <button id="new-poll-cancel-button-redirect-polls" type="button" class="btn btn-secondary">Cancel</button>
+              <%} %>
+              <button id="new-poll-create-button" type="submit" class="btn btn-secondary" name='<%= trip.tripID %>' onclick="saveEvent('<%= trip.tripID %>');">Save</button>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- trip event listeners -->
+  <script>
+    // get live notifications
+    let tripID = '<%= trip.tripID %>'; 
+    getTripEvents(tripID);
+
+    let tripParticipantsUIDsPictures = '<%- tripParticipantsUIDsPictures %>';
+  </script>
+  
+  <%- include('partials/footer'); %>
+
+</body>
+
+</html>

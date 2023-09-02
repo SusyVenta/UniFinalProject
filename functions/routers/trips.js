@@ -402,5 +402,58 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
     }
   });
 
+  /* trip polls --------------------------------------------------------------------*/
+  router.get("/:id/polls", async(request, response) => {
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+      let templatePath = path.join(__dirname, '..',"views/tripPolls.ejs");
+
+      if(userSessionDetails.userSessionDetails !== null){
+        let tripID = request.params.id;
+        let tripDetails = '';
+        try{
+          tripDetails = await db.tripQueries.getTripByID(tripID);
+        } catch(e){
+          // redirect to trips if requested trip no longer exists
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/trips');
+        }
+        
+        let uid = userSessionDetails.userSessionDetails.uid;
+        let profileDetails = await db.userQueries.getUserDetails(uid);
+        let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
+        let tripParticipantsUIDsPictures = await db.tripQueries.getUsernamesAndPicturesForUIDsInTrip(tripID);
+
+        if (tripDetails.participantsStatus.hasOwnProperty(uid)){
+          let payload = {
+            name: userSessionDetails.userSessionDetails.name, 
+            trip: tripDetails,
+            userIsAuthenticated: true,
+            userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(request.params.id),
+            userID: uid,
+            profileDetails: profileDetails,
+            friendsProfiles: friendsProfiles,
+            tripID: tripID,
+            eventToOpen: 'null',
+            tripParticipantsUIDsPictures: JSON.stringify(tripParticipantsUIDsPictures)
+          };
+  
+          return response.status(200).render(templatePath, payload);
+        } else {
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/trips');
+        }
+      } else {
+        let sessionCookie = request.cookies.__session;
+        response.cookie("__session", sessionCookie);
+        return response.status(302).redirect('/trips');
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
   return router;
 };

@@ -1,0 +1,148 @@
+p{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#polls-tab{
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+}
+
+#polls-tab > *{
+    margin-top: 5px;
+}
+
+/* hidden info --------------------------------------------------------------------------*/
+#hidden-friends-profiles, #hidden-user-uid, 
+#hidden-trip-participants, #hidden-trip-id, #hidden-eventToOpen{
+    visibility: hidden;
+}
+
+/* new polls modal -------------------------------------------------------------------------------*/
+
+.modal-content{
+    padding: 2%;
+    padding-right: 4%;
+}
+
+.modal-body > *{
+    margin-top: 1%;
+}
+
+.modal-footer{
+    justify-content: space-between;
+}
+
+#add-options-div{
+    display: flex;
+    flex: row;
+    justify-content: center;
+}
+
+
+/* polls list view divs --------------------------------------------------------------------------*/
+.poll-container{
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+    padding: 1%;
+}
+
+.poll-container > * {
+    margin-top: 5px;
+}
+
+.event-title{
+    font-weight: bold;
+}
+
+.participants-comments-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: fit-content;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.516);
+}
+
+.poll-status, .number-participants-p, .number-comments-p{
+    font-size: small;
+}
+
+.number-comments-p{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.number-comments-p:hover{
+    color:cadetblue;
+}
+
+.add-comment-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.516);
+    padding-bottom: 1%;
+}
+
+[id^=post-comment-button-], [id^=add-comment-button-]{
+    font-size: small;
+}
+
+
+[id^=add-comment-input]{
+    font-size: small;
+}
+
+[id^=add-comment-input-container]{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.comments-container{
+    display: none;
+    max-height: 300px;
+    overflow-y: scroll;
+    flex-direction: column;
+}
+
+/* each comment: picture, username, comment text */
+.saved-event-comment{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.commenter-image{
+    height: 40px;
+    width: 40px;
+    margin-right: 2%;
+    border-radius: 50%;
+}
+
+.commenterUsernameAndTextContainer{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+.commenter-username{
+    margin-bottom: 1%;
+    font-weight: bold;
+    font-size: small;
+}
+
+.comment-text{
+    background-color: whitesmoke;
+    border-radius: 20px;
+    padding: 5px;
+    font-size: small;
+}
+
+.comment-datetime{
+    font-size: smaller;
+    color:grey;
+}
