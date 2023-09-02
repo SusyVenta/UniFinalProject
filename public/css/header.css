@@ -168,6 +168,13 @@
   border-radius: 50%;
 }
 
+#notifications-dropdown > li > a{
+  width: 100vw;
+  max-width: 100vw;
+  word-wrap: break-word;
+  white-space: break-spaces;
+}
+
 @media only screen and (max-width: 600px) {
   #navbar-notifications{
     position: relative;
