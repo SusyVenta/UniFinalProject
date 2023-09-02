@@ -118,6 +118,60 @@ function addPollOptionsInput(pollOptionsContainerID){
     parentDiv.appendChild(inputDiv);
 }
 
+function savePoll(tripID, pollID=null){
+    /* Calls API endpoint to add friends to trip */
+    let idPart = `${pollID}-`;
+    if (pollID === null){
+        idPart = '';
+    }
+
+    let select = document.getElementById(`${idPart}new-poll-multiselect-friends`);
+    let control = select.tomselect;
+
+    let existingOptions = document.querySelectorAll(`[id^="${idPart}input-poll-option-"]`);
+    let options = {};
+    for (let optionElement of existingOptions){
+        let optionNumber = parseInt(optionElement.id.split("-").pop());
+        options[optionNumber] = optionElement.value;
+    }
+
+    let optionsToChoose = parseInt(document.getElementById(`${idPart}number-poll-options`).value);
+
+    if(optionsToChoose > existingOptions.length){
+        alert("Please specify a number of selectable options less than or equal to the number of options available.");
+        return;
+    }
+
+    let payload = {
+        participants: control.items,
+        question: document.getElementById(`${idPart}new-poll-question`).value,
+        options: options,
+        numberOptionsToChoose: optionsToChoose
+    }
+    console.log(JSON.stringify(payload));
+
+    let urlEnd = pollID;
+    if (pollID === null){
+        urlEnd = "new";
+    }
+
+    $.ajax({
+        url: `/trips/` + tripID + "/polls/" + urlEnd,
+        method: "POST",
+        xhrFields: {
+          withCredentials: true
+        },
+        data: jQuery.param(payload),
+        success: function() {   
+          // if successful call, reload page
+          window.location.href = `/trips/` + tripID + "/polls/"
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+          alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+        }
+      });
+};
+
 function deleteEvent(tripID, eventID){
     $.ajax({
         url: `/trips/` + tripID + "/itinerary/" + eventID,
@@ -303,50 +357,6 @@ function createEventDetailsModal(eventData){
     }
 
 }
-  
-function saveEvent(tripID, eventID=null){
-    /* Calls API endpoint to add friends to trip */
-    let idPart = `${eventID}-`;
-    if (eventID === null){
-        idPart = '';
-    }
-
-    let select = document.getElementById(`${idPart}new-trip-event-multiselect-friends`);
-    let control = select.tomselect;
-
-    let payload = {
-        participants: control.items,
-        eventType: document.getElementById(`${idPart}event-type`).innerHTML,
-        title: document.getElementById(`${idPart}new-event-title`).value,
-        startDatetime: document.getElementById(`${idPart}new-event-availability-start`).value,
-        endDatetime: document.getElementById(`${idPart}new-event-availability-end`).value,
-        address: document.getElementById(`${idPart}new-event-address`).value,
-        description: document.getElementById(`${idPart}new-event-description`).value,
-        askParticipantsIfTheyJoin: document.getElementById(`${idPart}new-event-ask-participation-confirmation`).checked,
-        status: document.getElementById(`${idPart}event-status`).innerHTML
-    }
-
-    let urlEnd = eventID;
-    if (eventID === null){
-        urlEnd = "new";
-    }
-
-    $.ajax({
-        url: `/trips/` + tripID + "/itinerary/" + urlEnd,
-        method: "POST",
-        xhrFields: {
-          withCredentials: true
-        },
-        data: jQuery.param(payload),
-        success: function() {   
-          // if successful call, reload page
-          window.location.href = `/trips/` + tripID + "/itinerary/"
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) { 
-          alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
-        }
-      });
-};
 
 function createNewEventDOMElements(eventData){
     // create div for the event

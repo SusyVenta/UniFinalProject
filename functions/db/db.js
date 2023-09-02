@@ -1,6 +1,7 @@
 import { getFirestore, FieldValue, FieldPath } from 'firebase-admin/firestore';
 import { TripQueries } from './queries/trips.js';
 import { TripItineraryQueries } from './queries/tripItinerary.js';
+import { TripPollQueries } from './queries/tripPoll.js';
 import { UserQueries } from './queries/users.js';
 import { SettingsQueries } from './queries/settings.js';
 import { NotificationsQueries } from './queries/notifications.js';
@@ -22,6 +23,7 @@ export class Database{
         this.userQueries = new UserQueries(this);
         this.tripQueries = new TripQueries(this);
         this.tripItineraryQueries = new TripItineraryQueries(this);
+        this.tripPollQueries = new TripPollQueries(this);
         this.settingsQueries = new SettingsQueries(this);
     }
 

@@ -15,7 +15,7 @@ p{
 
 /* hidden info --------------------------------------------------------------------------*/
 #hidden-friends-profiles, #hidden-user-uid, 
-#hidden-trip-participants, #hidden-trip-id, #hidden-eventToOpen{
+#hidden-trip-participants, #hidden-trip-id, #hidden-pollToOpen{
     visibility: hidden;
 }
 

@@ -435,7 +435,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
             profileDetails: profileDetails,
             friendsProfiles: friendsProfiles,
             tripID: tripID,
-            eventToOpen: 'null',
+            pollToOpen: 'null',
             tripParticipantsUIDsPictures: JSON.stringify(tripParticipantsUIDsPictures)
           };
   
@@ -449,6 +449,37 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         let sessionCookie = request.cookies.__session;
         response.cookie("__session", sessionCookie);
         return response.status(302).redirect('/trips');
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
+  router.post("/:tripId/polls/new", async(request, response) => {
+    // Creates new poll for the trip
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        let uid = userSessionDetails.userSessionDetails.uid;
+        let tripID = request.params.tripId;
+
+        let tripDetails = await db.tripQueries.getTripByID(tripID);
+        if (tripDetails.participantsStatus.hasOwnProperty(uid)){
+          try {
+            await db.tripPollQueries.createOrModifyPoll(tripID, request.body, uid);
+
+            return response.status(200).send("Created new poll");
+          } catch (e){
+
+            return response.status(500).send(e.message);
+          }
+        } else {
+          return response.status(302).redirect('/auth/login');
+        }
+        
+      } else {
+        return response.status(302).redirect('/auth/login');
       }
     } catch(error){
       response.status(500).send(error.message);

@@ -103,6 +103,16 @@ export class NotificationsQueries{
                     notificationType: "addedToTripEvent"
                 },
                 notificationsSettings: "friendsRequestYourInput"
+            },
+            addedToTripPoll: {
+                data: {
+                    message: "%SENDER% added you to poll '%POLLQUESTION%'. Please reply to the poll.",
+                    URL: "/trips/%TRIPID%/polls/%POLLID%",
+                    senderUID: "%SENDERID%",
+                    notification_id: "addedToTripPoll_%TRIPID%_%POLLID%",
+                    notificationType: "addedToTripPoll"
+                },
+                notificationsSettings: "pollRequiresInput"
             }
         }
     };
@@ -139,7 +149,9 @@ export class NotificationsQueries{
     }
 
     async sendNotification(senderID, recipientID, notificationType, 
-                           tripID = null, itineraryID=null, itineraryEventTitle=null){
+                           tripID=null, itineraryID=null, itineraryEventTitle=null,
+                           pollQuestion=null, pollID=null, 
+                           ){
         // if the recipient wishes to be notified, sends the specific notification
         let senderDoc = await this.parent.getDocument("users", senderID);
 
@@ -149,6 +161,8 @@ export class NotificationsQueries{
             "%TRIPID%": tripID,
             "%ITINERARYEVENTID%": itineraryID,
             "%ITINERARYEVENT%": itineraryEventTitle,
+            "%POLLQUESTION%": pollQuestion,
+            "%POLLID%": pollID
         };
 
         if (tripID != null){
