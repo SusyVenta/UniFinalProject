@@ -585,3 +585,39 @@ function getTripPolls(tripID){
         
     });
 }
+
+function submitAnswerPoll(tripID, pollID){
+    let allOptions = document.getElementsByClassName("form-check-input available-poll-options");
+    let selectedOptions = [];
+
+    for (let option of allOptions){
+        if(option.checked === true){
+            selectedOptions.push(option.value);
+        }
+    }
+
+    let choosableOptionsElement = document.getElementById("number-poll-options-choosable").innerHTML.trim().replace("Please select ", "");
+    choosableOptionsElement = parseInt(choosableOptionsElement.replace(" options", ""));
+
+    if(selectedOptions.length > choosableOptionsElement){
+        alert("Please only choose " + choosableOptionsElement + " options.")
+        return;
+    }
+
+    $.ajax({
+        url: `/trips/` + tripID + "/polls/" + pollID,
+        method: "POST",
+        xhrFields: {
+          withCredentials: true
+        },
+        data: jQuery.param({
+            "answersToPoll": selectedOptions
+        }),
+        success: function() {   
+            window.location.href = `/trips/` + tripID + "/polls/"
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+          alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+        }
+      });
+}

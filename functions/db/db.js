@@ -92,6 +92,25 @@ export class Database{
         await docRef.delete();
     }
 
+    async getDocumentInSubcollection(collectionName, docID, subcollectionName, subcollectionID){
+        // return content of a document in a subcollection
+        let docRef = await this.db.collection(collectionName).doc(docID)
+                    .collection(subcollectionName).doc(subcollectionID);
+
+        let querySnapshot = await this.db.collection(collectionName).doc(docID)
+            .collection(subcollectionName).where(
+                FieldPath.documentId(), "==", subcollectionID).get();
+        let documentSnapshot = await querySnapshot.docs[0];
+
+        if (documentSnapshot === undefined) {
+            // doc not found
+            return undefined;
+        }
+
+        let document = await documentSnapshot.data();
+        return document;
+    }
+
     async createDocumentWithDataSpecifyDocID(collectionName, docID, dataToAdd){
         // adds document to the specified collection
         // If the collection doesn't exist, it creates it.

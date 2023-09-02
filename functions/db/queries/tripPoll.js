@@ -107,4 +107,8 @@ export class TripPollQueries{
         this.parent.deleteDocumentInSubcollection("trips", tripID, "polls", pollID);
         
     }
+
+    async getPollDetails(tripID, pollID){
+        return await this.parent.getDocumentInSubcollection("trips", tripID, "polls", pollID);
+    }
 };

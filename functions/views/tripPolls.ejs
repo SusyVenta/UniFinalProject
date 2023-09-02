@@ -175,6 +175,53 @@
     </div>
   </section>
 
+  <!-- section that opens when user clicks on notification to answer poll -->
+  <% if (answerPoll === 'yes') { %>
+    <section>
+      <!-- modal displaying form to add new trip event-->
+      <div id="answer-poll-modal" class="modal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title" id="answer-poll-modal-title">Answer poll</h1>
+              <button type="button" 
+                onclick="window.location.href = '/trips/<%= trip.tripID %>/polls';"
+                class="btn-close" aria-label="Close">
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- name / description -->
+              <h5>Question: <%- pollData.question %></h5>
+
+              <p id="number-poll-options-choosable" class="n_<%- pollData.numberOptionsToChoose %>">Please select <%- pollData.numberOptionsToChoose %> options:</p>
+
+              <% for (const [optionNumber, optionText] of Object.entries(pollData.options)) { %>
+                <div class="form-check">
+                  <input class="form-check-input available-poll-options" type="checkbox" value=<%- optionNumber %>>
+                  <label class="form-check-label">
+                    <%- optionText %>
+                  </label>
+                </div>
+              <%} %>
+            </div>
+            <div class="modal-footer" id="answer-poll-modal-footer">
+              <div class="footer-left" id="poll-modal-footer-left">
+              </div>
+              <div class="footer-right">
+                <button type="button" 
+                  onclick="window.location.href = '/trips/<%= trip.tripID %>/polls';"
+                  class="btn btn-secondary" >Cancel
+                </button>
+                <button id="answer-poll-submit-button" type="submit" class="btn btn-secondary" name='<%= trip.tripID %>' onclick="submitAnswerPoll('<%= trip.tripID %>', '<%= pollID %>');">Submit</button>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  <%} %>
+
   <!-- trip polls listeners -->
   <script>
     // get live notifications
@@ -182,6 +229,12 @@
     getTripPolls(tripID);
 
     let tripParticipantsUIDsPictures = '<%- tripParticipantsUIDsPictures %>';
+
+    // if answerPoll === 'yes', show modal to answer poll
+    let answerPoll = '<%= answerPoll %>'; 
+    if(answerPoll === "yes"){
+      $('#answer-poll-modal').show();
+    }
   </script>
   
   <%- include('partials/footer'); %>

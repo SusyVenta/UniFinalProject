@@ -279,6 +279,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
   });
 
   router.get("/:tripId/itinerary/:eventID", async(request, response) => {
+    // called when user opens notifications of new trip events received
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
       let templatePath = path.join(__dirname, '..',"views/tripItinerary.ejs");
@@ -436,6 +437,9 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
             friendsProfiles: friendsProfiles,
             tripID: tripID,
             pollToOpen: 'null',
+            answerPoll: "no",
+            pollData: null,
+            pollID: null,
             tripParticipantsUIDsPictures: JSON.stringify(tripParticipantsUIDsPictures)
           };
   
@@ -534,6 +538,10 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           try {
             if (request.body.hasOwnProperty('comment')){
               await db.tripPollQueries.addCommentToPoll(tripID, request.body, uid, pollID);
+            } else if (request.body.hasOwnProperty('answersToPoll')){
+              // todo: update selected fields in poll
+              console.log("-----------------------------TO IMPLEMENT");
+              console.log(request.body.answersToPoll);
             } else{
               await db.tripPollQueries.createOrModifyPoll(tripID, request.body, uid, pollID);
             }
@@ -549,6 +557,67 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         
       } else {
         return response.status(302).redirect('/auth/login');
+      }
+    } catch(error){
+      response.status(500).send(error.message);
+    }
+  });
+
+  router.get("/:tripId/polls/:pollID", async(request, response) => {
+    // called when user opens notifications of new trip polls received
+    // lets users answer the poll
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+      let templatePath = path.join(__dirname, '..',"views/tripPolls.ejs");
+
+      if(userSessionDetails.userSessionDetails !== null){
+        let tripID = request.params.tripId;
+        let pollID = request.params.pollID;
+        let tripDetails = '';
+        try{
+          tripDetails = await db.tripQueries.getTripByID(tripID);
+        } catch(e){
+          // redirect to trips if requested trip no longer exists
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/trips');
+        }
+        let commonDateRanges = new TimeUtils().commonDateRanges(tripDetails.datesPreferences);
+        let uid = userSessionDetails.userSessionDetails.uid;
+        let profileDetails = await db.userQueries.getUserDetails(uid);
+        let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
+        let tripParticipantsUIDsPictures = await db.tripQueries.getUsernamesAndPicturesForUIDsInTrip(tripID);
+        let pollData = await db.tripPollQueries.getPollDetails(tripID, pollID);
+
+        if (tripDetails.participantsStatus.hasOwnProperty(uid)){
+          let payload = {
+            name: userSessionDetails.userSessionDetails.name, 
+            trip: tripDetails,
+            userIsAuthenticated: true,
+            moment: moment,
+            userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(tripID),
+            commonAvailabilities: commonDateRanges,
+            userID: uid,
+            profileDetails: profileDetails,
+            friendsProfiles: friendsProfiles,
+            tripID: tripID,
+            pollToOpen: null,
+            answerPoll: "yes",
+            pollData: pollData,
+            pollID: pollID,
+            tripParticipantsUIDsPictures: JSON.stringify(tripParticipantsUIDsPictures)
+          };
+  
+          return response.status(200).render(templatePath, payload);
+        } else {
+          let sessionCookie = request.cookies.__session;
+          response.cookie("__session", sessionCookie);
+          return response.status(302).redirect('/trips');
+        }
+      } else {
+        let sessionCookie = request.cookies.__session;
+        response.cookie("__session", sessionCookie);
+        return response.status(302).redirect('/trips');
       }
     } catch(error){
       response.status(500).send(error.message);
