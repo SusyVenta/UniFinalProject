@@ -453,9 +453,11 @@ function createPollResultsModal(pollData, parsedTripParticipantsUIDsPictures){
             "chosenBy": []
         }
     }
-    for (const [uid, optionNumber] of Object.entries(pollData.answersToPoll)) {
-        answers[optionNumber]["chosenTimes"] += 1;
-        answers[optionNumber]["chosenBy"].push(parsedTripParticipantsUIDsPictures[uid].username);
+    for (const [uid, optionNumbersArray] of Object.entries(pollData.answersToPoll)) {
+        for (let optionNumber of optionNumbersArray){
+            answers[optionNumber]["chosenTimes"] += 1;
+            answers[optionNumber]["chosenBy"].push(parsedTripParticipantsUIDsPictures[uid].username);
+        }
     }
     let sortedAnswers = [];
     for (let answer in answers) {
