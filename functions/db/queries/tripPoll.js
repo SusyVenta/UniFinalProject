@@ -129,5 +129,22 @@ export class TripPollQueries{
         // remove notification
         let notificationID = `addedToTripPoll_${tripID}_${pollID}`;
         this.parent.notificationsQueries.removeNotification(userID, notificationID);
+
+        // if all participants finished voting, notify poll owner
+        let pollDetails = await this.getPollDetails(tripID, pollID);
+        let numberPollParticipants = pollDetails.participants.length;
+        let numberAnswersReceived = Object.keys(pollDetails.answersToPoll).length;
+        if (numberPollParticipants === numberAnswersReceived){
+            this.parent.notificationsQueries.sendNotification(
+                userID, 
+                pollDetails.pollOwner, 
+                "allPollAnswersSubmitted",
+                tripID,
+                null,
+                null,
+                pollDetails.question,
+                pollID,
+            );
+        }
     }
 };

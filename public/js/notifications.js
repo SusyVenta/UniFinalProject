@@ -64,7 +64,8 @@ function getUserNotifications(userID){
                 (notification.notificationType).includes("accepted") || 
                 (notification.notificationType).includes("rejected") ||
                 (notification.notificationType == "trip_cannot_choose_dates") ||
-                (notification.notificationType == "addedToTripEvent")
+                (notification.notificationType == "addedToTripEvent") ||
+                (notification.notificationType == "allPollAnswersSubmitted")
             ){
                 // remove notification when user clicks on it
                 a.addEventListener('click', function(event) { 

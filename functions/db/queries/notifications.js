@@ -113,6 +113,16 @@ export class NotificationsQueries{
                     notificationType: "addedToTripPoll"
                 },
                 notificationsSettings: "pollRequiresInput"
+            },
+            allPollAnswersSubmitted: {
+                data: {
+                    message: "All participants answered your poll '%POLLQUESTION%'.",
+                    URL: "/trips/%TRIPID%/polls/",
+                    senderUID: "%SENDERID%",
+                    notification_id: "allPollAnswersSubmitted_%TRIPID%_%POLLID%",
+                    notificationType: "allPollAnswersSubmitted"
+                },
+                notificationsSettings: "allParticipantsVoted"
             }
         }
     };
