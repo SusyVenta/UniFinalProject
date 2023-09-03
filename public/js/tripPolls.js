@@ -347,11 +347,188 @@ function createEventDetailsModal(eventData){
             }
         );
     }
+}
 
+function createPollResultsModal(pollData, parsedTripParticipantsUIDsPictures){
+    // pollData: all data about poll as saved in DB
+    let existingModal = document.getElementById(pollData.docID + "-poll-results-modal");
+    if(existingModal !== null){
+        existingModal.remove();
+    }
+
+    let modalDiv = document.createElement("div");
+    modalDiv.setAttribute("class", `modal`);
+    modalDiv.setAttribute("id", pollData.docID + "-poll-results-modal");
+    modalDiv.setAttribute("tabindex", "-1");
+    modalDiv.setAttribute("data-bs-backdrop", "static");
+
+    let modalDialogDiv = document.createElement("div");
+    modalDialogDiv.setAttribute("class", `modal-dialog modal-fullscreen`);
+
+    let modalContentDiv = document.createElement("div");
+    modalContentDiv.setAttribute("class", `modal-content`);
+
+    // --------------------- modal header ------------------------------------------
+    let modalHeaderDiv = document.createElement("div");
+    modalHeaderDiv.setAttribute("class", `modal-header`);
+
+    let h1 = document.createElement("h1");
+    h1.setAttribute("class", `modal-title`);
+    h1.innerHTML = pollData.question;
+
+    let buttonCloseModalX = document.createElement("button");
+    buttonCloseModalX.setAttribute("class", `btn-close`);
+    buttonCloseModalX.setAttribute("type", `button`);
+    buttonCloseModalX.setAttribute("aria-label", `Close`);
+    buttonCloseModalX.addEventListener('click', function(event){
+        event.stopPropagation(); 
+        $(`#${pollData.docID}-poll-results-modal`).hide()
+    });
+    modalHeaderDiv.appendChild(h1);
+    modalHeaderDiv.appendChild(buttonCloseModalX);
+    modalContentDiv.appendChild(modalHeaderDiv);
+
+    // --------------------- modal body --------------------------------------------
+    let modalBodyDiv = document.createElement("div");
+    modalBodyDiv.setAttribute("class", `modal-body`);
+    modalBodyDiv.setAttribute("id", `poll-answers-modal-body-` + pollData.docID);
+
+    let pOwner = document.createElement("p");
+    pOwner.innerHTML = `Asked by: ${parsedTripParticipantsUIDsPictures[pollData.pollOwner].username}`;
+    modalBodyDiv.appendChild(pOwner);
+
+    let pAnswersReceived = document.createElement("p");
+    pAnswersReceived.innerHTML = Object.keys(pollData.answersToPoll).length + " / " + pollData.participants.length + " answers received";
+    modalBodyDiv.appendChild(pAnswersReceived);
+
+    // users still to answer
+    let usersStillToAnswer = [];
+    for (let participantUID of pollData.participants){
+        if (!pollData.answersToPoll.hasOwnProperty(participantUID)){
+            usersStillToAnswer.push(parsedTripParticipantsUIDsPictures[participantUID]);
+        }
+    }
+
+    let divUsersStillToAnswer = document.createElement("div");
+    divUsersStillToAnswer.setAttribute("class", `users-still-answering-container`);
+    if (usersStillToAnswer.length === 0){
+        let pUsersStillToAnswer = document.createElement("p");
+        pUsersStillToAnswer.innerHTML = "All users submitted their answers.";
+        divUsersStillToAnswer.appendChild(pUsersStillToAnswer);
+    }else{
+        let pUsersStillToAnswer = document.createElement("p");
+        pUsersStillToAnswer.innerHTML = "The following users still need to reply:";
+        divUsersStillToAnswer.appendChild(pUsersStillToAnswer);
+
+        for (let userStillToAnswer of usersStillToAnswer){
+            let divUserStillToAnswer = document.createElement("div");
+            divUserStillToAnswer.setAttribute("class", `user-still-answering-container`);
+
+            let profilePic = userStillToAnswer.picture;
+            if(profilePic === null){
+                profilePic = "/assets/defaultUserImage.jpg";
+            }
+
+            let userImg = document.createElement("img"); 
+            userImg.setAttribute("class", `user-img`);
+            userImg.setAttribute("src", profilePic);
+            divUserStillToAnswer.appendChild(userImg);
+
+            let username = document.createElement("p"); 
+            username.setAttribute("class", `username`);
+            username.innerHTML = userStillToAnswer.username;
+            divUserStillToAnswer.appendChild(username);
+
+            divUsersStillToAnswer.appendChild(divUserStillToAnswer);
+        }
+    }
+    modalBodyDiv.appendChild(divUsersStillToAnswer);
+
+    // answers
+    let answers = {};
+    for (const [optionNumber, optionValue] of Object.entries(pollData.options)) {
+        answers[optionNumber] = {
+            "value": optionValue,
+            "chosenTimes": 0,
+            "chosenBy": []
+        }
+    }
+    for (const [uid, optionNumber] of Object.entries(pollData.answersToPoll)) {
+        answers[optionNumber]["chosenTimes"] += 1;
+        answers[optionNumber]["chosenBy"].push(parsedTripParticipantsUIDsPictures[uid].username);
+    }
+    let sortedAnswers = [];
+    for (let answer in answers) {
+        sortedAnswers.push([answer, answers[answer]]);
+    }
+    
+    sortedAnswers.sort(function(a, b) {
+        // sort descending. highest number of votes first
+        return b[1].chosenTimes - a[1].chosenTimes;
+    });
+
+    let divAnswersContainer = document.createElement("div");
+    divAnswersContainer.setAttribute("class", `answers-container`);
+
+    let pAnswerTitle = document.createElement("p");
+    pAnswerTitle.innerHTML = "Answers: ";
+    divAnswersContainer.appendChild(pAnswerTitle);
+
+    for (let optionNumberAndData of sortedAnswers) {
+        let divAnswerContainer = document.createElement("div");
+        divAnswerContainer.setAttribute("class", `answer-container`); 
+
+        let pAnswerText = document.createElement("p");
+        pAnswerText.innerHTML = optionNumberAndData[1].value;
+        divAnswerContainer.appendChild(pAnswerText);
+
+        let pNumberVotes = document.createElement("p");
+        pNumberVotes.innerHTML = "Votes: " + optionNumberAndData[1].chosenTimes;
+        divAnswerContainer.appendChild(pNumberVotes);
+
+        if(optionNumberAndData[1].chosenTimes > 0){
+            let pVotedBy = document.createElement("p"); 
+            pVotedBy.innerHTML = "Voted by: " + optionNumberAndData[1].chosenBy.join(", ");
+            divAnswerContainer.appendChild(pVotedBy);
+        }
+
+        divAnswersContainer.appendChild(divAnswerContainer);
+    }
+    modalBodyDiv.appendChild(divAnswersContainer);
+
+    modalContentDiv.appendChild(modalBodyDiv);
+
+    // --------------------- modal footer ------------------------------------------
+    let divModalFooter = document.createElement("div");
+    divModalFooter.setAttribute("class", `modal-footer`); 
+
+    let divModalFooterLeft = document.createElement("div");
+    divModalFooterLeft.setAttribute("class", `footer-left`); 
+    divModalFooter.appendChild(divModalFooterLeft);
+
+    let divModalFooterRight = document.createElement("div");
+    divModalFooterRight.setAttribute("class", `footer-right`); 
+
+    let closeButton = document.createElement("button");
+    closeButton.setAttribute("class", `btn btn-secondary`); 
+    closeButton.setAttribute("type", `button`); 
+    closeButton.innerHTML = "Close"; 
+    closeButton.addEventListener('click', function(event){
+        event.stopPropagation(); 
+        $(`#${pollData.docID}-poll-results-modal`).hide()
+    });
+    divModalFooterRight.appendChild(closeButton);
+    divModalFooter.appendChild(divModalFooterRight);
+    modalContentDiv.appendChild(divModalFooter);
+
+    // ---------------------- assemble modal parts ------------------------------------------
+    modalDialogDiv.appendChild(modalContentDiv);
+    modalDiv.appendChild(modalDialogDiv);
+    document.body.appendChild(modalDiv);
 }
 
 function createNewEventDOMElements(eventData){
-    // create div for the event
+    // create div for the poll
     let divPollContainer = document.createElement("div");
     divPollContainer.setAttribute("class", `poll-container`);
     divPollContainer.setAttribute("id", eventData.docID);
@@ -367,10 +544,10 @@ function createNewEventDOMElements(eventData){
 
     let participants = document.createElement("div");
     participants.setAttribute("class", `participants-container`);
-    let participantsTextP = document.createElement("p");
-    participantsTextP.setAttribute("class", `number-participants-p`);
-    participantsTextP.innerHTML = eventData.participants.length + " participants ";
-    participants.appendChild(participantsTextP);
+    let answersReceived = document.createElement("p");
+    answersReceived.setAttribute("class", `number-participants-p`);
+    answersReceived.innerHTML = Object.keys(eventData.answersToPoll).length + " / " + eventData.participants.length + " answers received";
+    participants.appendChild(answersReceived);
     divParticipantsAndCommentsContainer.appendChild(participants);
 
     let pNumberComments = document.createElement("p");
@@ -453,6 +630,36 @@ function createNewEventDOMElements(eventData){
             document.getElementById(`add-comment-input-container-` + eventData.docID).remove();
         }
     });
+    
+    // view poll results button
+    let viewPollResultsButton = document.createElement("button");
+    viewPollResultsButton.setAttribute("class", `btn btn-secondary`);
+    viewPollResultsButton.setAttribute("id", `view-poll-results-button-` + eventData.docID);
+    viewPollResultsButton.setAttribute("type", `button`);
+    viewPollResultsButton.innerHTML = "See poll results";
+
+    let parsedTripParticipantsUIDsPictures = JSON.parse(tripParticipantsUIDsPictures);
+    createPollResultsModal(eventData, parsedTripParticipantsUIDsPictures);
+    viewPollResultsButton.addEventListener('click', function(event){
+        event.stopPropagation(); 
+        $(`#${eventData.docID}-poll-results-modal`).show();
+    });
+    divAddCommentContainer.appendChild(viewPollResultsButton);
+
+    // if user is poll owner, display button to edit poll details
+    let userUID = document.getElementById("hidden-user-uid").innerHTML.trim();
+    if(userUID === eventData.pollOwner){
+        let editPollButton = document.createElement("button");
+        editPollButton.setAttribute("class", `btn btn-secondary`);
+        editPollButton.setAttribute("id", `edit-poll-button-` + eventData.docID);
+        editPollButton.setAttribute("type", `button`);
+        editPollButton.innerHTML = "Edit poll";
+        editPollButton.addEventListener('click', function(event){
+            event.stopPropagation(); 
+            $(`#${eventData.docID}-new-poll-modal`).show();
+        });
+        divAddCommentContainer.appendChild(editPollButton);
+    }
     divAddCommentContainer.appendChild(addCommentButton);
     divPollContainer.appendChild(divAddCommentContainer);
 
@@ -461,7 +668,6 @@ function createNewEventDOMElements(eventData){
     divCommentsContainer.setAttribute("id", `comments-container-`+ eventData.docID);
     divCommentsContainer.setAttribute("class", `comments-container`);
 
-    let parsedTripParticipantsUIDsPictures = JSON.parse(tripParticipantsUIDsPictures);
     for (let commentData of eventData.comments){
         let divCommentToDisplayContainer = document.createElement("div");
         divCommentToDisplayContainer.setAttribute("class", `saved-event-comment`);
@@ -502,9 +708,6 @@ function createNewEventDOMElements(eventData){
     // add event modal to DOM
     createEventDetailsModal(eventData);
 
-    divPollContainer.addEventListener('click', function(){
-        $(`#${eventData.docID}-new-poll-modal`).show();
-    });
     return divPollContainer;
 }
 

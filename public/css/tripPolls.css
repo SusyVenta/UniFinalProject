@@ -87,7 +87,12 @@ p{
     padding-bottom: 1%;
 }
 
-[id^=post-comment-button-], [id^=add-comment-button-]{
+.add-comment-container > *{
+    margin-left: 5px;
+}
+
+[id^=post-comment-button-], [id^=add-comment-button-], 
+[id^=edit-poll-button-], [id^=view-poll-results-button-]{
     font-size: small;
 }
 
@@ -145,4 +150,38 @@ p{
 .comment-datetime{
     font-size: smaller;
     color:grey;
+}
+
+/* view poll results modal ------------------------------------------------------------*/
+
+.user-img{
+    height: 20px;
+    width: 20px;
+    margin-right: 2%;
+    border-radius: 50%;
+}
+
+[id^=poll-answers-modal-body-] > p, .users-still-answering-container > p, 
+.user-still-answering-container > p, .answer-container > p {
+    font-size: small;
+}
+
+.user-still-answering-container{
+    display: flex;
+    flex-direction: row;
+}
+
+.users-still-answering-container > .user-still-answering-container:nth-of-type(1) {
+    margin-top: 5px;
+}
+
+.answer-container{
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 6px rgba(0,0,0,0.10);
+    padding: 1%;
+}
+
+.answer-container > p ~ p {
+    font-weight: lighter;
 }
