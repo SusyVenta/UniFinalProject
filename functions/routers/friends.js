@@ -20,7 +20,6 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
         try {
           let uid = userSessionDetails.userSessionDetails.uid;
           let profileDetails = await db.userQueries.getUserDetails(uid);
-          
           let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
 
           let payload = {
