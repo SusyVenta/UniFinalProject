@@ -584,7 +584,6 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           response.cookie("__session", sessionCookie);
           return response.status(302).redirect('/trips');
         }
-        let commonDateRanges = new TimeUtils().commonDateRanges(tripDetails.datesPreferences);
         let uid = userSessionDetails.userSessionDetails.uid;
         let profileDetails = await db.userQueries.getUserDetails(uid);
         let friendsProfiles = await db.userQueries.getFriendsProfiles(profileDetails);
@@ -598,7 +597,6 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
             userIsAuthenticated: true,
             moment: moment,
             userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(tripID),
-            commonAvailabilities: commonDateRanges,
             userID: uid,
             profileDetails: profileDetails,
             friendsProfiles: friendsProfiles,
@@ -643,7 +641,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
           response.cookie("__session", sessionCookie);
           return response.status(302).redirect('/trips');
         }
-        
+
         let uid = userSessionDetails.userSessionDetails.uid;
 
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
