@@ -540,8 +540,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
               await db.tripPollQueries.addCommentToPoll(tripID, request.body, uid, pollID);
             } else if (request.body.hasOwnProperty('answersToPoll')){
               // todo: update selected fields in poll
-              console.log("-----------------------------TO IMPLEMENT");
-              console.log(request.body.answersToPoll);
+              await db.tripPollQueries.savePollAnswers(tripID, request.body, uid, pollID);
             } else{
               await db.tripPollQueries.createOrModifyPoll(tripID, request.body, uid, pollID);
             }

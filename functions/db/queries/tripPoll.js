@@ -51,6 +51,9 @@ export class TripPollQueries{
 
             // set poll owner 
             sanitizedDataToAdd.pollOwner = userID;
+
+            // answers to poll
+            sanitizedDataToAdd.answersToPoll = {};
         }
         
         if (pollID === null){
@@ -109,6 +112,22 @@ export class TripPollQueries{
     }
 
     async getPollDetails(tripID, pollID){
+        // returns poll data
         return await this.parent.getDocumentInSubcollection("trips", tripID, "polls", pollID);
+    }
+
+    async savePollAnswers(tripID, dataToAdd, userID, pollID){
+        // save to db. If answer is already present, overrides it
+        await this.parent.updateSingleKeyValueInMapInSubcollection(
+            "trips", 
+            tripID, 
+            "polls", 
+            pollID, 
+            {mapName: "answersToPoll", key: userID, newValue: dataToAdd.answersToPoll}
+        )
+
+        // remove notification
+        let notificationID = `addedToTripPoll_${tripID}_${pollID}`;
+        this.parent.notificationsQueries.removeNotification(userID, notificationID);
     }
 };

@@ -84,6 +84,21 @@ export class Database{
         await docRef.update(payload);
     }
 
+    async updateSingleKeyValueInMapInSubcollection(collectionName, docID, subcollectionName, 
+                                                   subcollectionID, dataObj){
+        /* 
+        Given an existing map containing N <key, value> pairs, updates only the 
+        specified <key, value> pair.
+        dataObj: {mapName: <name>, key: <key>, newValue: <new value>}
+        */
+        let docRef = await this.db.collection(collectionName).doc(docID)
+                    .collection(subcollectionName).doc(subcollectionID);
+        
+        let payload = {};
+        payload[`${dataObj.mapName}.${dataObj.key}`] = dataObj.newValue;
+        await docRef.update(payload);
+    }
+
     async deleteDocumentInSubcollection(collectionName, docID, subcollectionName, subcollectionID){
         // deletes document in sub collection
         let docRef = await this.db.collection(collectionName).doc(docID)
