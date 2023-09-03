@@ -10,11 +10,10 @@ describe('tripsRouterDeleteTrip', () => {
   }
 
   const db = {
-    deleteDocument: function(collectionName, docID){
-      return true
-    },
-    updateDocumentRemoveFromArray: function(collectionName, docID, data){
-      return true
+    tripQueries: {
+      removeTrip: function(tripID){
+        return true
+      },
     }
   };
 
@@ -76,7 +75,7 @@ describe('tripsRouterDeleteTrip', () => {
     });
   });
 
-  it("DELETE /:id should return 401 when user is logged out", () => {
+  it("DELETE /:id should redirect to login when user is logged out", () => {
     function getUserSessionDetails(adminAuth, request){
       return Promise.resolve({userSessionDetails: null});
     };
@@ -89,8 +88,8 @@ describe('tripsRouterDeleteTrip', () => {
 
     let response = httpMocks.createResponse({eventEmitter: EventEmitter});
 
-    response.on("send", () => {
-      assert.strictEqual(response.statusCode, 401);
+    response.on("end", () => {
+      assert.strictEqual(response.statusCode, 302);
     });
 
     let router = tripsRouter(

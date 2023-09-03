@@ -54,6 +54,44 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
         return response.status(302).redirect('/auth/login');
       }
     } catch(error){
+      console.log(JSON.stringify(error));
+      response.status(500).send(error.message);
+    }
+  });
+
+  router.post("/", async(request, response) => {
+    // Creates new trip
+    try {
+      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
+
+      if(userSessionDetails.userSessionDetails !== null){
+        try {
+          // get image matching the title of the trip
+          let pictures = await searchImage(request.body.tripTitle);
+          let picture = pictures.photos[0];
+          request.body.picture = picture;
+
+          let tripDocId = await db.tripQueries.createTrip(
+            request.body, 
+            userSessionDetails.userSessionDetails.uid
+          );
+
+          // add trip ID to owner's document
+          await db.updateDocumentAppendToArray(
+            "users", 
+            userSessionDetails.userSessionDetails.uid, 
+            {arrayName: "trips", valueToUpdate: tripDocId}
+          ); 
+
+          return response.status(200).send("Created trip");
+        } catch (e){
+          return response.status(500).send(e.message);
+        }
+        
+      } else {
+        return response.status(302).redirect('/auth/login');
+      }
+    } catch(error){
       response.status(500).send(error.message);
     }
   });
@@ -110,43 +148,6 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
     }
   });
 
-  router.post("/", async(request, response) => {
-    // Creates new trip
-    try {
-      let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
-
-      if(userSessionDetails.userSessionDetails !== null){
-        try {
-          // get image matching the title of the trip
-          let pictures = await searchImage(request.body.tripTitle);
-          let picture = pictures.photos[0];
-          request.body.picture = picture;
-
-          let tripDocId = await db.tripQueries.createTrip(
-            request.body, 
-            userSessionDetails.userSessionDetails.uid
-          );
-
-          // add trip ID to owner's document
-          await db.updateDocumentAppendToArray(
-            "users", 
-            userSessionDetails.userSessionDetails.uid, 
-            {arrayName: "trips", valueToUpdate: tripDocId}
-          ); 
-
-          return response.status(200).send("Created trip");
-        } catch (e){
-          return response.status(500).send(e.message);
-        }
-        
-      } else {
-        return response.status(302).redirect('/auth/login');
-      }
-    } catch(error){
-      response.status(500).send(error.message);
-    }
-  });
-
   router.post("/:tripId/participants", async(request, response) => {
     // Modifies trip details
     try {
@@ -192,7 +193,9 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
     }
   });
 
+  /* trip itinerary --------------------------------------------------------------------*/
   router.get("/:id/itinerary", async(request, response) => {
+    // opens trip itinerary details
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
       let templatePath = path.join(__dirname, '..',"views/tripItinerary.ejs");

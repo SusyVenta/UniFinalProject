@@ -68,71 +68,71 @@ describe('authenticationRouter', () => {
       
   });
 
-    it("POST /signup with correct form data should render authentication.ejs with success message", () => {
-      function createUserWithEmailAndPassword(clientAuth, email, password) {
-        return Promise.resolve({ user: "someuser", displayName: "" });
-      }
-    
-      function updateProfile(user, profileData) {
-        return Promise.resolve({ user: "someuser", displayName: "new name" });
-      }
-    
-      function sendEmailVerification(user) {
-        return Promise.resolve();
-      }
-    
-      function signOut(clientAuth) {
-        return Promise.resolve();
-      }
-    
-      function sendPasswordResetEmail(clientAuth, email) {
-        return Promise.resolve();
-      }
+  it("POST /signup with correct form data should render authentication.ejs with success message", () => {
+    function createUserWithEmailAndPassword(clientAuth, email, password) {
+      return Promise.resolve({ user: "someuser", displayName: "" });
+    }
+  
+    function updateProfile(user, profileData) {
+      return Promise.resolve({ user: "someuser", displayName: "new name" });
+    }
+  
+    function sendEmailVerification(user) {
+      return Promise.resolve();
+    }
+  
+    function signOut(clientAuth) {
+      return Promise.resolve();
+    }
+  
+    function sendPasswordResetEmail(clientAuth, email) {
+      return Promise.resolve();
+    }
 
-      // Create a mock request object
-      let request = httpMocks.createRequest({
-        method: 'POST',
-        url: '/signup',
-        body: {
-          name: "CorrectName",
-          email: "correct@gmail.com",
-          password: "Mypassword-123",
-          termsandconditions: "on",
-          betaCode: "girotondo"
-        },
-        headers: {
-          "accept": "text/html"
-        }
-      });
-
-      let response = httpMocks.createResponse({eventEmitter: EventEmitter});
-
-      response.on("render", () => {
-        // wait until event "render" is fired before checking results
-        assert.strictEqual(response.statusCode, 200);
-        let payload = {authType: "signup", statusCode: 200, title: "Thank you!", authInfoTitle: "Success!",
-                       authInfoMessage: "Please verify your email, then log in"};
-        assert.deepEqual(response._getRenderData(), payload);
-      });
-
-      return new Promise((resolve, reject) => {
-        response.on("end", () => {
-          resolve();
-        });
-      
-        let router = authenticationRouter(
-          {},
-          {},
-          db,
-          createUserWithEmailAndPassword,
-          signOut,
-          sendPasswordResetEmail,
-          sendEmailVerification,
-          updateProfile
-        );
-        router.handle(request, response);
-      });
-      
+    // Create a mock request object
+    let request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/signup',
+      body: {
+        name: "CorrectName",
+        email: "correct@gmail.com",
+        password: "Mypassword-123",
+        termsandconditions: "on",
+        betaCode: "girotondo"
+      },
+      headers: {
+        "accept": "text/html"
+      }
     });
+
+    let response = httpMocks.createResponse({eventEmitter: EventEmitter});
+
+    response.on("render", () => {
+      // wait until event "render" is fired before checking results
+      assert.strictEqual(response.statusCode, 200);
+      let payload = {authType: "signup", statusCode: 200, title: "Thank you!", authInfoTitle: "Success!",
+                      authInfoMessage: "Please verify your email, then log in"};
+      assert.deepEqual(response._getRenderData(), payload);
+    });
+
+    return new Promise((resolve, reject) => {
+      response.on("end", () => {
+        resolve();
+      });
+    
+      let router = authenticationRouter(
+        {},
+        {},
+        db,
+        createUserWithEmailAndPassword,
+        signOut,
+        sendPasswordResetEmail,
+        sendEmailVerification,
+        updateProfile
+      );
+      router.handle(request, response);
+    });
+    
+  });
     
 });

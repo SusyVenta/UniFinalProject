@@ -81,167 +81,167 @@ describe('authenticationRouter', () => {
       });
     });
 
-    it("POST /sessionLogin with decodedIdToken.auth_time refreshed more than " +
-       "5 minutes ago should return 401 unauthorized", () => {
-      adminAuth.verifyIdToken = function(idToken){
-        let now = new Date();
-        let minusTwentyMin = moment(now).subtract(20, "minutes").toDate().getTime() / 1000; // in seconds
-        return Promise.resolve({ auth_time: minusTwentyMin });
-      };
+  it("POST /sessionLogin with decodedIdToken.auth_time refreshed more than " +
+      "5 minutes ago should return 401 unauthorized", () => {
+    adminAuth.verifyIdToken = function(idToken){
+      let now = new Date();
+      let minusTwentyMin = moment(now).subtract(20, "minutes").toDate().getTime() / 1000; // in seconds
+      return Promise.resolve({ auth_time: minusTwentyMin });
+    };
 
-      // Create a mock request object
-      let request = httpMocks.createRequest({
-        method: 'POST',
-        url: '/sessionLogin',
-        body: {
-          idToken: "encryptedIDToken",
-          csrfToken: "12345"
-        },
-        headers: {
-          "accept": "text/html"
-        },
-        cookies: {
-          csrfToken: "12345"
+    // Create a mock request object
+    let request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/sessionLogin',
+      body: {
+        idToken: "encryptedIDToken",
+        csrfToken: "12345"
+      },
+      headers: {
+        "accept": "text/html"
+      },
+      cookies: {
+        csrfToken: "12345"
+      }
+    });
+
+    let response = httpMocks.createResponse({eventEmitter: EventEmitter});
+
+    response.on("send", () => {
+      // wait until event "send" is fired before checking results
+      assert.strictEqual(response.statusCode, 401);
+      assert.deepEqual(response._getData(), 'Recent sign in required!');
+    });
+
+    return new Promise((resolve, reject) => {
+      response.on("end", () => {
+        resolve();
+      });
+    
+      let router = authenticationRouter(
+        {},
+        adminAuth,
+        db,
+        createUserWithEmailAndPassword,
+        signOut,
+        sendPasswordResetEmail,
+        sendEmailVerification,
+        updateProfile
+      );
+      router.handle(request, response);
+    });
+  });
+
+  it("POST /sessionLogin successfully generates session cookie", async() => {
+    adminAuth.verifyIdToken = function(idToken){
+      let now = new Date();
+      let minusTwentyMin = moment(now).subtract(1, "minutes").toDate().getTime() / 1000; // in seconds
+      return Promise.resolve({ auth_time: minusTwentyMin });
+    };
+    adminAuth.createSessionCookie = function(idToken, expiresIn){
+      return Promise.resolve();
+    };
+
+    // Create a mock request object
+    let request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/sessionLogin',
+      body: {
+        idToken: "encryptedIDToken",
+        csrfToken: "12345"
+      },
+      headers: {
+        "accept": "text/html"
+      },
+      cookies: {
+        csrfToken: "12345"
+      }
+    });
+
+    let response = httpMocks.createResponse({eventEmitter: EventEmitter});
+
+    response.on("send", () => {
+      // wait until event "send" is fired before checking results
+      assert.strictEqual(response.statusCode, 200);
+      assert.deepEqual(response._getData(), 'success');
+      assert.deepEqual(response.cookies, {
+        __session: {
+          value: undefined,
+          options: { maxAge: 28800000, httpOnly: true, secure: true, SameSite: 'strict' }
         }
-      });
-
-      let response = httpMocks.createResponse({eventEmitter: EventEmitter});
-
-      response.on("send", () => {
-        // wait until event "send" is fired before checking results
-        assert.strictEqual(response.statusCode, 401);
-        assert.deepEqual(response._getData(), 'Recent sign in required!');
-      });
-
-      return new Promise((resolve, reject) => {
-        response.on("end", () => {
-          resolve();
-        });
-      
-        let router = authenticationRouter(
-          {},
-          adminAuth,
-          db,
-          createUserWithEmailAndPassword,
-          signOut,
-          sendPasswordResetEmail,
-          sendEmailVerification,
-          updateProfile
-        );
-        router.handle(request, response);
       });
     });
 
-    it("POST /sessionLogin successfully generates session cookie", async() => {
-      adminAuth.verifyIdToken = function(idToken){
-        let now = new Date();
-        let minusTwentyMin = moment(now).subtract(1, "minutes").toDate().getTime() / 1000; // in seconds
-        return Promise.resolve({ auth_time: minusTwentyMin });
-      };
-      adminAuth.createSessionCookie = function(idToken, expiresIn){
-        return Promise.resolve();
-      };
-
-      // Create a mock request object
-      let request = httpMocks.createRequest({
-        method: 'POST',
-        url: '/sessionLogin',
-        body: {
-          idToken: "encryptedIDToken",
-          csrfToken: "12345"
-        },
-        headers: {
-          "accept": "text/html"
-        },
-        cookies: {
-          csrfToken: "12345"
-        }
-      });
-
-      let response = httpMocks.createResponse({eventEmitter: EventEmitter});
-
+    return new Promise((resolve, reject) => {
       response.on("send", () => {
-        // wait until event "send" is fired before checking results
-        assert.strictEqual(response.statusCode, 200);
-        assert.deepEqual(response._getData(), 'success');
-        assert.deepEqual(response.cookies, {
-          __session: {
-            value: undefined,
-            options: { maxAge: 28800000, httpOnly: true, secure: true }
-          }
-        });
+        resolve();
       });
+    
+      let router = authenticationRouter(
+        {},
+        adminAuth,
+        db,
+        createUserWithEmailAndPassword,
+        signOut,
+        sendPasswordResetEmail,
+        sendEmailVerification,
+        updateProfile
+      );
+      router.handle(request, response);
+    });
+  });
 
-      return new Promise((resolve, reject) => {
-        response.on("send", () => {
-          resolve();
-        });
-      
-        let router = authenticationRouter(
-          {},
-          adminAuth,
-          db,
-          createUserWithEmailAndPassword,
-          signOut,
-          sendPasswordResetEmail,
-          sendEmailVerification,
-          updateProfile
-        );
-        router.handle(request, response);
-      });
+  it("POST /sessionLogin throws error", async() => {
+    adminAuth.verifyIdToken = function(idToken){
+      let now = new Date();
+      let minusTwentyMin = moment(now).subtract(1, "minutes").toDate().getTime() / 1000; // in seconds
+      return Promise.resolve({ auth_time: minusTwentyMin });
+    };
+
+    adminAuth.createSessionCookie = function(idToken, expiresIn) {
+      return Promise.reject(new Error("Some error"));
+    };
+
+    // Create a mock request object
+    let request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/sessionLogin',
+      body: {
+        idToken: "encryptedIDToken",
+        csrfToken: "12345"
+      },
+      headers: {
+        "accept": "text/html"
+      },
+      cookies: {
+        csrfToken: "12345"
+      }
     });
 
-    it("POST /sessionLogin throws error", async() => {
-      adminAuth.verifyIdToken = function(idToken){
-        let now = new Date();
-        let minusTwentyMin = moment(now).subtract(1, "minutes").toDate().getTime() / 1000; // in seconds
-        return Promise.resolve({ auth_time: minusTwentyMin });
-      };
+    let response = httpMocks.createResponse({eventEmitter: EventEmitter});
 
-      adminAuth.createSessionCookie = function(idToken, expiresIn) {
-        return Promise.reject(new Error("Some error"));
-      };
-
-      // Create a mock request object
-      let request = httpMocks.createRequest({
-        method: 'POST',
-        url: '/sessionLogin',
-        body: {
-          idToken: "encryptedIDToken",
-          csrfToken: "12345"
-        },
-        headers: {
-          "accept": "text/html"
-        },
-        cookies: {
-          csrfToken: "12345"
-        }
-      });
-
-      let response = httpMocks.createResponse({eventEmitter: EventEmitter});
-
-      response.on("send", () => {
-        // wait until event "send" is fired before checking results
-        assert.strictEqual(response.statusCode, 500);
-        assert.deepEqual(String(response._getData()), 'Error: Some error');
-      });
-
-      return new Promise((resolve, reject) => {
-        response.on("send", () => {
-          resolve();
-        });
-      
-        let router = authenticationRouter(
-          {},
-          adminAuth,
-          db,
-          createUserWithEmailAndPassword,
-          signOut,
-          sendPasswordResetEmail,
-          sendEmailVerification,
-          updateProfile
-        );
-        router.handle(request, response);
-      });
+    response.on("send", () => {
+      // wait until event "send" is fired before checking results
+      assert.strictEqual(response.statusCode, 500);
+      assert.deepEqual(String(response._getData()), 'Error: Some error');
     });
+
+    return new Promise((resolve, reject) => {
+      response.on("send", () => {
+        resolve();
+      });
+    
+      let router = authenticationRouter(
+        {},
+        adminAuth,
+        db,
+        createUserWithEmailAndPassword,
+        signOut,
+        sendPasswordResetEmail,
+        sendEmailVerification,
+        updateProfile
+      );
+      router.handle(request, response);
+    });
+  });
 });

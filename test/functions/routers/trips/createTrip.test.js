@@ -78,7 +78,7 @@ describe('tripsRouterCreateTrip', () => {
     });
   });
 
-  it("POST / should return 401 when user is logged out", () => {
+  it("POST / should redirect to login when user is logged out", () => {
     function getUserSessionDetails(adminAuth, request){
       return Promise.resolve({userSessionDetails: null});
     };
@@ -91,8 +91,8 @@ describe('tripsRouterCreateTrip', () => {
 
     let response = httpMocks.createResponse({eventEmitter: EventEmitter});
 
-    response.on("send", () => {
-      assert.strictEqual(response.statusCode, 401);
+    response.on("end", () => {
+      assert.strictEqual(response.statusCode, 302);
     });
 
     let router = tripsRouter(
