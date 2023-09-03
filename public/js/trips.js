@@ -83,6 +83,9 @@ function deleteTrip(item){
     success : function () {
       // reload trips page on status 200
       window.location.href = "/trips";
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
     }
   });
 };
@@ -269,6 +272,9 @@ function saveTrip(){
     success : function () {
       // reload trips page on status 200
       window.location.href = "/trips";
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
     }
   });
 };

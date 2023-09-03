@@ -1,0 +1,14 @@
+p{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#settings-tab{
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+}
+
+#settings-tab > *{
+    margin-top: 5px;
+}

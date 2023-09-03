@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- SHARED HEAD -->
+  <%- include('partials/sharedHead') %>
+
+  <!-- Title tag in the browser and Google results -->
+  <title>GroupTripper | Trip polls</title>
+  <meta property="og:title" content="GroupTripper: best free group trip planner app - your trips" data-rh="true">
+  <meta property="twitter:title" content="GroupTripper: best free group trip planner app - your trips" data-rh="true">
+  <meta name="description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta name="twitter:description" content="Plan your group vacation or trip with the best online travel planner app. Create itineraries faster as a group by sharing suggestions, creating polls, and voting with your friends." data-rh="true">
+  <meta property="og:image:alt" content="Screenshot of GroupTripper: one view for your map and itinerary" data-rh="true">
+
+  <!-- css -->
+  <link rel="stylesheet" href="/css/generic.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/tripCommon.css">
+  <link rel="stylesheet" href="/css/tripSettings.css">
+
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+  <script src="/js/tripCommon.js"></script>
+  <script src="/js/tripSettings.js"></script>
+</head>
+
+<body>
+  <div>
+    <%- include('partials/header'); %>
+  </div>
+  <div class="outer-container">
+    <div class="title-container"
+      style="background-image: url('<%= trip.picture.src.landscape %>');"
+      alt="'<%= trip.picture.alt %>' by <%= trip.picture.photographer %>" src="<%= trip.picture.src.medium %>">
+      <div id="title-inner-container">
+        <h1 id="title"><%= trip.tripTitle %></h1>
+        <% if (trip.participantsStatus[userID] !== 'pending') { %>
+          <button id="edit-trip-title-button" class="btn btn-secondary" onclick="alterTripTitle('<%= tripID %>');">
+            <i id="edit-trip-title-button-icon" class="fas fa-pencil"></i>
+          </button>
+        <%} %>
+      </div>
+    </div>
+
+    <div class="trip-tab" id="trip-<%= trip.tripID %>" >
+      <!-- tab names -->
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" href="/trips/<%= trip.tripID %>/participants" >Participants</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/trips/<%= trip.tripID %>/itinerary" >Itinerary</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/trips/<%= trip.tripID %>/polls" >Polls</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/trips/<%= trip.tripID %>/settings" >Settings</a>
+        </li>
+      </ul>
+      <!-- tab content -->
+      <div class="tab-content">
+        <!-- ---------------------------- settings ------------------------->
+        <div id="settings-tab" class="tab-pane active">
+          <div>
+            <button class="btn btn-secondary" onclick="deleteTrip('<%= trip.tripID %>');">Delete trip</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <%- include('partials/footer'); %>
+
+</body>
+
+</html>
