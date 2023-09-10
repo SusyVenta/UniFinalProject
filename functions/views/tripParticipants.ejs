@@ -107,13 +107,15 @@
               <% if (trip.finalizedEndDate === null) { %>
                 <% if ((numberParticipants == Object.keys(trip.datesPreferences).length) && (numberPendingParticipants == 0)) { %>
                   <p>All participants entered their availability. The trip owner can now finalize the trip dates! Common availabilities:</p>
-                  
+                  <% if (commonAvailabilities.length == 0) { %>
+                    <p>None</p>
+                  <%} else { %>  
                   <ul>
                     <% for(let dateset of commonAvailabilities) { %>
                       <li><%= moment(dateset.start).format('DD MMM YYYY') %> - <%= moment(dateset.end).format('DD MMM YYYY') %></li>
                     <% } %>
                   </ul>   
-
+                  <%} %>
                   <% if (trip.participantsStatus[userID] === 'owner') { %>
                     <button id="edit-preferences-button" class="btn btn-secondary" onclick="$('#choose-final-dates-modal').show();">
                       Choose final dates
@@ -314,7 +316,7 @@
               </ul> 
             </div>
             <!-- existing availability date-range picker -->
-            <div id="date-availabilities-container">
+            <div id="date-availabilities-container-final-dates">
               <p>Choose final dates:</p>
               <div id="final-date-availability" class="date-availability-container">
                 <div class="horizontal-flex">
