@@ -1,0 +1,59 @@
+.outer-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.instruction-container{
+    display: flex;
+    flex-direction: column;
+    background-image: linear-gradient(coral,#FF5555);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+    padding: 10px;
+    border-radius: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+#add-new-trip-gif{
+    width: 300px;
+    height: auto;
+}
+
+#add-friends-gif, #add-friend-to-trip-gif, #collaborate-itinerary-gif, #polls-gif{
+    width: 600px;
+    height: auto;
+}
+
+.instruction-container{
+    margin-top: 10px;
+}
+
+
+/* phone view */
+@media only screen and (max-width: 600px) {
+    .outer-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2px;
+    }
+
+    #add-friends-gif, #add-friend-to-trip-gif, #collaborate-itinerary-gif, #polls-gif{
+        width: 100%;
+        height: auto;
+    }
+
+    .instruction-container{
+        display: flex;
+        flex-direction: column;
+        background-image: linear-gradient(coral,#FF5555);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.23), 0 6px 6px rgba(0,0,0,0.23);
+        padding: 2px;
+        border-radius: 0px;
+    }
+    
+}

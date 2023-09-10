@@ -20,11 +20,14 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
+
+        let profileDetails = await db.userQueries.getUserDetails(userSessionDetails.userSessionDetails.uid);
+
         let tripDetails = await db.tripQueries.getTripsForUser(
           userSessionDetails.userSessionDetails.uid
           );
         let payload = {
-          name: userSessionDetails.userSessionDetails.name, 
+          name: profileDetails.username, 
           trips: tripDetails,
           userIsAuthenticated: true,
           userID: userSessionDetails.userSessionDetails.uid
@@ -120,7 +123,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
           let payload = {
-            name: userSessionDetails.userSessionDetails.name, 
+            name: profileDetails.username, 
             trip: tripDetails,
             userIsAuthenticated: true,
             moment: moment,
@@ -220,7 +223,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
           let payload = {
-            name: userSessionDetails.userSessionDetails.name, 
+            name: profileDetails.username, 
             trip: tripDetails,
             userIsAuthenticated: true,
             moment: moment,
@@ -307,7 +310,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
           let payload = {
-            name: userSessionDetails.userSessionDetails.name, 
+            name: profileDetails.username, 
             trip: tripDetails,
             userIsAuthenticated: true,
             moment: moment,
@@ -431,7 +434,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
           let payload = {
-            name: userSessionDetails.userSessionDetails.name, 
+            name: profileDetails.username, 
             trip: tripDetails,
             userIsAuthenticated: true,
             userIDUsernameMap: await db.tripQueries.getUsernamesForUIDsInTrip(request.params.id),
@@ -592,7 +595,7 @@ export function tripsRouter(adminAuth, db, getUserSessionDetails = importedGetUs
 
         if (tripDetails.participantsStatus.hasOwnProperty(uid)){
           let payload = {
-            name: userSessionDetails.userSessionDetails.name, 
+            name: profileDetails.username, 
             trip: tripDetails,
             userIsAuthenticated: true,
             moment: moment,
