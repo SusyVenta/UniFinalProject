@@ -66,7 +66,7 @@ const adminAuth = getAdminAuth(firebaseAdminApp);
 const db = new Database(firebaseAdminApp);
 
 // optimize headers for security https://www.npmjs.com/package/helmet
-app.use(helmet());
+// app.use(helmet());
 
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
 app.use("/", homeRouter(adminAuth));
