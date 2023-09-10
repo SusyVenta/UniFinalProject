@@ -64,6 +64,27 @@ const adminAuth = getAdminAuth(firebaseAdminApp);
 
 const db = new Database(firebaseAdminApp);
 
+/*app.use(function(req, res, next) {
+  // security settings
+  res.append('Access-Control-Allow-Origin', ['*']);
+  res.append('X-Content-Type-Options', "nosniff");
+  res.append("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  res.append("Referrer-Policy", "no-referrer");
+  res.header("Cross-Origin-Resource-Policy", "same-site");
+  
+  const options = { 
+    maxAge: 8 * 60 * 60 * 1000, // 8 hours 
+    httpOnly: true, 
+    secure: true,
+    sameSite: 'strict'// browsers will not send it in any cross-site requests.,
+  };
+  let sessionCookie = req.cookies.__session;
+  res.cookie('__session', sessionCookie, options);
+  
+  //res.append("Content-Security-Policy", "default-src * data: blob: 'self' wss: ws: localhost:; script-src https:* 127.0.0.1:* *.spotilocal.com:* 'unsafe-inline' 'unsafe-eval' blob: data: 'self'; style-src data: blob: 'unsafe-inline' 'self'");
+  next();
+});*/
+
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
 app.use("/", homeRouter(adminAuth));
 app.use("/auth", authenticationRouter(clientAuth, adminAuth, db));

@@ -170,7 +170,7 @@ export function authenticationRouter(
           maxAge: expiresIn, 
           httpOnly: true, 
           secure: true,
-          SameSite: 'strict' // browsers will not send it in any cross-site requests.
+          sameSite: 'strict' // browsers will not send it in any cross-site requests.
          };
         // https://firebase.google.com/docs/hosting/manage-cache#using_cookies
         // https://stackoverflow.com/questions/44929653/firebase-cloud-function-wont-store-cookie-named-other-than-session
