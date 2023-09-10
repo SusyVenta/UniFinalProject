@@ -1,0 +1,21 @@
+.container-404{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1{
+    font-size: xxx-large;
+    font-style: normal;
+    font-family: monospace;
+}
+
+a{
+    font-family: monospace;
+    font-size: large;
+}
+
+img{
+    width: 100%;
+}

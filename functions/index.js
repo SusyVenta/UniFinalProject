@@ -21,6 +21,7 @@ import { serviceAccountCreds } from './config/serviceAccount.js';
 import cookieParser from 'cookie-parser';
 import { attachCsrfToken } from './utils/authUtils.js'
 import { Database } from './db/db.js'
+import path from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -72,5 +73,22 @@ app.use("/profile", profileRouter(adminAuth, db));
 app.use("/settings", settingsRouter(adminAuth, db));
 app.use("/friends", friendsRouter(adminAuth, db));
 app.use("/notifications", notificationsRouter(adminAuth, db));
+
+app.use(function(req, res, next) {
+  // render 404 template for any 404 response
+  let templatePath = path.join(__dirname, "views/404.ejs");
+  if (req.accepts('html')) {
+    return res.status(404).render(templatePath);
+  }
+
+  // respond with json
+  if (req.accepts('json')) {
+    res.json({ error: 'Not found' });
+    return;
+  }
+
+  // default to plain-text. send()
+  res.type('txt').send('Not found');
+});
 
 export const exportedapp = functions.https.onRequest(app);
