@@ -49,6 +49,14 @@ export class Database{
         return addedDocID;
     }
 
+    async listDocumentIDsInSubcollection(collectionName, collectionDocID, subcollectionName){
+        // returns list of document IDs in subcollection
+        const docRef = await this.db.collection(collectionName).doc(collectionDocID)
+                    .collection(subcollectionName).listDocuments();
+        const documentIds = docRef.map(doc => doc.id);
+        return documentIds
+    }
+
     async createDocumentWithDataInSubCollection(collectionName, docID, subcollectionName, dataToAdd){
         // creates document with content in a subcollection within the specified collection and document.
         // If the subcollection doesn't exist, it creates it.
@@ -109,9 +117,6 @@ export class Database{
 
     async getDocumentInSubcollection(collectionName, docID, subcollectionName, subcollectionID){
         // return content of a document in a subcollection
-        let docRef = await this.db.collection(collectionName).doc(docID)
-                    .collection(subcollectionName).doc(subcollectionID);
-
         let querySnapshot = await this.db.collection(collectionName).doc(docID)
             .collection(subcollectionName).where(
                 FieldPath.documentId(), "==", subcollectionID).get();
@@ -222,8 +227,27 @@ export class Database{
     }
 
     async deleteDocument(collectionName, docID){
-        // deletes the specified document
+        // deletes the specified document and all documents in subcollections
         let docRef = await this.db.collection(collectionName).doc(docID);
         await docRef.delete();
+
+        if (collectionName == "trips"){
+            let subcollections = ["events", "polls"];
+
+            for (let subcollectionName of subcollections){
+                let existingSubcollectionDocs = await this.listDocumentIDsInSubcollection(
+                    collectionName, 
+                    docID, 
+                    subcollectionName);
+    
+                for (let subcollectionDocID of existingSubcollectionDocs){
+                    this.deleteDocumentInSubcollection(
+                        collectionName, 
+                        docID, 
+                        subcollectionName, 
+                        subcollectionDocID);
+                }
+            }
+        }
     }
 };

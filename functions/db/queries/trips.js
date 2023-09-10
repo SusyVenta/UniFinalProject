@@ -384,10 +384,22 @@ export class TripQueries{
     async removeTrip(tripID){
         /* 
         removes trip from trips collection, removes trip from all trip participants'
-        trips in user collections, and removes invitations to join trip */
+        trips in user collections, and removes all notifications containing tripID */
 
         let tripDetails = await this.getTripByID(tripID);
         let participantsUIDs = Object.keys(tripDetails.participantsStatus);
+
+        let notificationIDsToRemove = [
+            `trip_invite_received_${tripID}`,
+            `trip_invite_accepted_${tripID}`,
+            `trip_invite_rejected_${tripID}`,
+            `trip_must_choose_dates_${tripID}`,
+            `trip_cannot_choose_dates_${tripID}`,
+            `trip_dates_can_be_chosen_${tripID}`,
+            `addedToTripEvent_${tripID}_`,
+            `addedToTripPoll_${tripID}_`,
+            `allPollAnswersSubmitted_${tripID}_`
+        ];
 
         for (let participantUID of participantsUIDs){
             // remove tripID from user's trips
@@ -399,15 +411,20 @@ export class TripQueries{
                 );
             }
 
-            // remove tripID from user's notifications
-            await this.parent.notificationsQueries.removeNotification(
-                participantUID, "trip_invite_received_" + tripID
-            );
+            const allUserNotifications = await this.parent.notificationsQueries.getAllNotificationsForUser(
+                participantUID);
+       
+            for (let notificationReceived of allUserNotifications){
+                for (let notificationIDToRemove of notificationIDsToRemove){
+                    let receivedNotificationID = notificationReceived.notification_id;
 
-            // remove notifications to join trip event if present
-            let notificationID = `addedToTripEvent_${tripID}_`;
-            this.parent.notificationsQueries.removeNotification(
-                participantUID, notificationID, true);
+                    if (receivedNotificationID.includes(notificationIDToRemove)){
+                        await this.parent.notificationsQueries.removeNotification(
+                            participantUID, receivedNotificationID, true
+                        );
+                    }
+                }
+            }
         }
 
         // delete trip document

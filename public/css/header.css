@@ -169,7 +169,6 @@
 }
 
 #notifications-dropdown > li > a{
-  width: 100vw;
   max-width: 100vw;
   word-wrap: break-word;
   white-space: break-spaces;

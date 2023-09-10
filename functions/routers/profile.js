@@ -42,20 +42,20 @@ export function profileRouter(adminAuth, db, getUserSessionDetails = importedGet
   });
 
   router.delete("/:id", async(request, response) => {
+    // delete user profile and all dependencies
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
       if(userSessionDetails.userSessionDetails !== null){
-        // delete trip document
-        await db.deleteDocument("trips", request.params.id);
-        // remove tripID from user's trips
-        await db.updateDocumentRemoveFromArray(
-          "users", 
-          userSessionDetails.userSessionDetails.uid, 
-          {arrayName: "trips", valueToRemove: request.params.id}
-          );
-
-        return response.status(200).send("Deleted " + request.params.id);
+        let uid = userSessionDetails.userSessionDetails.uid;
+        if(uid === request.params.id){
+          await db.userQueries.deleteUserProfile(request.params.id);
+          await adminAuth.deleteUser(uid); // delete from auth as well
+          return response.status(200).send("Deleted " + request.params.id);
+        } else {
+          response.status(500).send("You can only delete your own profile");
+        }
+        
       } else {
         return response.status(302).redirect('/auth/login');
       }

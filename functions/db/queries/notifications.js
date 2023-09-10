@@ -127,6 +127,12 @@ export class NotificationsQueries{
         }
     };
 
+    async getAllNotificationsForUser(userID){
+        let userDoc = await this.parent.getDocument("users", userID);
+        let notifications = userDoc.notifications;
+        return notifications;
+    }
+
     async removeNotification(recipientUid, notificationID, searchStartsWith=false){
         // if searchStartsWith === True: searches notificationID that starts with notificationID
         let userDoc = await this.parent.getDocument("users", recipientUid);

@@ -52,7 +52,7 @@
           <% } else { %>  
             <% var friendsClass = "nav-link" %>
           <% } %> 
-          <a class="<%= friendsClass %>" href="#friends-tab" data-bs-toggle="tab" data-bs-toggle="tab">Friends</a>
+          <a class="<%= friendsClass %>" href="#friends-tab" data-bs-toggle="tab">Friends</a>
         </li>
       </ul>
       <!-- tab content -->
@@ -64,30 +64,38 @@
           <% var personalInfoPaneClass = "tab-pane fade" %>
         <% } %> 
         <div id="personal-info-tab" class="<%= personalInfoPaneClass %>">
-          <div id="profile-picture-container">
-            <% if (profileDetails.picturePath === null) { %>
-              <img id="profile-pic" src="/assets/defaultUserImage.jpg" alt="User profile picture">
-            <% } else { %>  
-              <img id="profile-pic" src="<%= profileDetails.picturePath %>" alt="User profile picture">
-            <% } %> 
-          </div>
-          <div id="edit-profile-picture-container">
-            <!-- Profile picture edit button -->
-            <button type="button" id="change-picture-button" class="btn btn-secondary" onclick="openEditPictureModal()">
-              Edit picture
-            </button>
-          </div>
-          <div id="username-container">
-            <label id="username-input-label" for="username-input" class="form-label">Username</label>
-            <input 
-              autocomplete="one-time-code" 
-              class="form-control" id="username-input" 
-              required=true 
-              value="<%= profileDetails.username %>"
-              disabled>
-            <button id="edit-username-button" class="btn btn-secondary" onclick="alterEditUsername();">
-              <i id="edit-username-button-icon" class="fas fa-pencil"></i>
-            </button>
+          <div id="personal-info-tab-inner-container">
+            <div id="profile-picture-container">
+              <% if (profileDetails.picturePath === null) { %>
+                <img id="profile-pic" src="/assets/defaultUserImage.jpg" alt="User profile picture">
+              <% } else { %>  
+                <img id="profile-pic" src="<%= profileDetails.picturePath %>" alt="User profile picture">
+              <% } %> 
+            </div>
+            <div id="edit-profile-picture-container">
+              <!-- Profile picture edit button -->
+              <button type="button" id="change-picture-button" class="btn btn-secondary" onclick="openEditPictureModal()">
+                Edit picture
+              </button>
+            </div>
+            <div id="username-container">
+              <label id="username-input-label" for="username-input" class="form-label">Username</label>
+              <input 
+                autocomplete="one-time-code" 
+                class="form-control" id="username-input" 
+                required=true 
+                value="<%= profileDetails.username %>"
+                disabled>
+              <button id="edit-username-button" class="btn btn-secondary" onclick="alterEditUsername();">
+                <i id="edit-username-button-icon" class="fas fa-pencil"></i>
+              </button>
+            </div>
+            <div id="delete-profile-container">
+              <!-- Profile picture edit button -->
+              <button type="button" id="delete-profile-button" class="btn btn-secondary" onclick="deleteProfile('<%= userID %>')">
+                DeleteProfile
+              </button>
+            </div>
           </div>
         </div>
         <!-- ---------------------------- friends tab ------------------------------->
@@ -234,10 +242,12 @@
               <% } %> 
             <% } %> 
           </div>
-        </div>
-    </div>
+        </div> <!-- end friend tab -->
+      </div><!-- end tab content -->
+    </div> <!--end profile-tab-container-->
     <p id="current-user-uid"><%= userID %></p>
-  </div>
+  </div> <!-- end outer-container-->
+
   <section>
     <!-- edit picture modal 
     https://codepen.io/rsales/pen/XyWORN
@@ -265,7 +275,6 @@
       </div>
     </div>
   </section>
-  <section>
 
   <%- include('partials/footer'); %>
 </body>

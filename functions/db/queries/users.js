@@ -189,4 +189,36 @@ export class UserQueries{
             await this.parent.notificationsQueries.sendNotification(uid, friendID, "friendship_request_accepted");
         }
     }
+
+    async deleteUserProfile(uid){
+        let user = await this.parent.getDocument("users", uid);
+
+        let friendsIDs = Object.keys(user.friends);
+
+        // remove friends notifications that were sent by you
+        for (let friendID of friendsIDs ){
+            let friend = await this.parent.getDocument("users", friendID);
+            let friendNotifications = friend.notifications;
+            for(let notification of friendNotifications){
+                if(notification.senderUID === uid){
+                    await this.parent.notificationsQueries.removeNotification(
+                        friendID, notification.notification_id, searchStartsWith=false)
+                }
+            }
+        }
+
+        // delete trips if you're the owner
+        let tripsIDs = user.trips;
+
+        // also delete trips from the collaborators' profiles
+        for (let tripID of tripsIDs){
+            let trip = await this.parent.getDocument("trips", tripID);
+            if(trip.tripOwner === uid){
+                await this.parent.tripQueries.removeTrip(tripID);
+            }
+        }
+
+        // delete user document
+        await this.parent.deleteDocument("users", uid);
+    }
 };

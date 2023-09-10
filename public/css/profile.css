@@ -34,8 +34,10 @@
 }
 
 /* ------------------- personal info tab ------------------- */
-#personal-info-tab {
+#personal-info-tab-inner-container {
     padding: 3%;
+    display: flex;
+    flex-direction: column;
 }
 
 #profile-picture-container, #username-container{
@@ -89,6 +91,13 @@
 #profile-pic-input{
     align-self: center;
     margin-bottom: 2%;
+}
+
+#delete-profile-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 2%;
 }
 
 /* -------------------- friends tab ------------------------------------*/

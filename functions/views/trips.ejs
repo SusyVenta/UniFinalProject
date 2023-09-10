@@ -76,9 +76,11 @@
             </a>
             <!-- https://fonts.google.com/icons?selected=Material+Symbols+Outlined:share:FILL@0;wght@400;GRAD@0;opsz@48&icon.query=share -->
             <!-- when clicked, stops propagation of click event so it doesn't trigger click on parent div -->
-            <button id="delete_trip_button_<%= trip.tripID %>" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);" name="delete_<%= trip.tripID %>">
-              <span class="fas fa-trash"></span>
-            </button>
+            <% if (trip.participantsStatus[userID] === 'owner') { %>
+              <button id="delete_trip_button_<%= trip.tripID %>" class="btn btn-secondary" onclick="event.stopPropagation(); showModal(this);" name="delete_<%= trip.tripID %>">
+                <span class="fas fa-trash"></span>
+              </button>
+            <%} %>
           </div>
         </div>
       <%} %>

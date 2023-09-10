@@ -410,7 +410,7 @@ function abandonTrip(tripID, participantsStatus, userID){
 
   // alert that first some other participant needs to be made owner. 
   if (otherOwnersFound === false){
-    let message = "You are currently the only owner of this trip. Please assign someone else as owner before removing yourself."
+    let message = "You are currently the owner of this trip. Please remove all participants before removing yourself."
     fillGenericModal(message, ``, false);
     return;
   }

@@ -126,3 +126,21 @@ function initializeCroppie(input) {
       }
     });
   }
+
+  function deleteProfile(userID){
+    if (confirm("Are you sure you want to completely delete your profile?")) {
+      $.ajax({
+        url: `/profile/${userID}`,
+        method: "DELETE",
+        xhrFields: {
+          withCredentials: true
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+          alert(XMLHttpRequest.responseText, textStatus, errorThrown); 
+        },
+        success : function () {
+          window.location.href = "/auth/signup";
+        }
+      });
+    }
+  }

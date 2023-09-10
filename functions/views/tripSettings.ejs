@@ -67,7 +67,11 @@
         <!-- ---------------------------- settings ------------------------->
         <div id="settings-tab" class="tab-pane active">
           <div>
+            <% if (trip.participantsStatus[userID] === 'owner') { %>
             <button class="btn btn-secondary" onclick="deleteTrip('<%= trip.tripID %>');">Delete trip</button>
+            <%} else{ %>
+              <p>Trip settings are only available for trip owners</p>
+            <%} %>
           </div>
         </div>
       </div>
