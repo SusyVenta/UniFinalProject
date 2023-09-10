@@ -131,7 +131,7 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
   });
 
   router.delete("/:id", async(request, response) => {
-    // search for users whose username or email matches the searched string
+    // remove friend or decline friendship request
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
@@ -156,7 +156,7 @@ export function friendsRouter(adminAuth, db, getUserSessionDetails = importedGet
   });
 
   router.post("/accept", async(request, response) => {
-    // search for users whose username or email matches the searched string
+    // accept friend request
     try {
       let userSessionDetails = await getUserSessionDetails(adminAuth, request); // {errors: <>/null, userSessionDetails: <obj>/null}
 
