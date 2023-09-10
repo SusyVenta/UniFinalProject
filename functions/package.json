@@ -39,7 +39,8 @@
     "firebase-functions": "^4.4.1",
     "express-validator": "7.0.0",
     "cookie-parser": "1.4.6",
-    "pexels": "1.4.0"
+    "pexels": "1.4.0",
+    "helmet": "7.0.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.2.0",

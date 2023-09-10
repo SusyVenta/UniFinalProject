@@ -22,6 +22,7 @@ import cookieParser from 'cookie-parser';
 import { attachCsrfToken } from './utils/authUtils.js'
 import { Database } from './db/db.js'
 import path from "path";
+import helmet from "helmet";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -71,6 +72,7 @@ const db = new Database(firebaseAdminApp);
   res.append("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   res.append("Referrer-Policy", "no-referrer");
   res.header("Cross-Origin-Resource-Policy", "same-site");
+  res.header("X-Frame-Options", "DENY");
   
   const options = { 
     maxAge: 8 * 60 * 60 * 1000, // 8 hours 
@@ -84,6 +86,8 @@ const db = new Database(firebaseAdminApp);
   //res.append("Content-Security-Policy", "default-src * data: blob: 'self' wss: ws: localhost:; script-src https:* 127.0.0.1:* *.spotilocal.com:* 'unsafe-inline' 'unsafe-eval' blob: data: 'self'; style-src data: blob: 'unsafe-inline' 'self'");
   next();
 });*/
+
+app.use(helmet());
 
 /* Enables all URLs defined in homeRouter and starting with http://<domain>/home */
 app.use("/", homeRouter(adminAuth));
