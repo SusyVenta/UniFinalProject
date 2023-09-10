@@ -272,12 +272,13 @@
           </div>
           <div class="modal-body">
             <div>
-              <p>Step 1. If you haven't already</p>
+              <p>Step 1. Send this link to your friend and ask them to sign up: https://grouptripper-3c7f1.web.app/auth/signup </p>
+              <p>Step 2. If you haven't already</p>
               <a class="btn btn-secondary" href="/friends" rel="nofollow">Add friends to your profile</a>
             </div>
             <!-- https://stackoverflow.com/questions/69530889/adding-bootstrap-5-search-bar-dropdown -->
             <div class="multiselect-friends-container">
-              <p>Step 2. Select friends you want to add to this trip</p>
+              <p>Step 3. Select friends you want to add to this trip</p>
               <select id="multiselect-friends" multiple placeholder="Add friends">
                 <% for (let friendUid of friendshipsAccepted) { %>
                   <% if (! trip.participantsStatus.hasOwnProperty(friendUid)) { %>
