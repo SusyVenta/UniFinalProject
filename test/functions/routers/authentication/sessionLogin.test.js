@@ -167,7 +167,7 @@ describe('authenticationRouter', () => {
       assert.deepEqual(response.cookies, {
         __session: {
           value: undefined,
-          options: { maxAge: 28800000, httpOnly: true, secure: true, SameSite: 'strict' }
+          options: { maxAge: 28800000, httpOnly: true, secure: true, sameSite: 'strict' }
         }
       });
     });
