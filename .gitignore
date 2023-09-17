@@ -4,3 +4,4 @@
 ui-debug.log
 firebase-debug.log
 .firebase/
+/functions/config/serviceAccount.js
